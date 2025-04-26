@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Tabela Completa em HTML</title>
+  <style>
+    table {
+      width: 60%;
+      border-collapse: collapse;
+      margin: 20px auto;
+    }
+
+    caption {
+      font-size: 1.5em;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    th, td {
+      border: 1px solid #999;
+      padding: 10px;
+      text-align: center;
+    }
+
+    thead {
+      background-color: #f0f0f0;
+    }
+
+    tfoot {
+      background-color: #e0e0e0;
+      font-weight: bold;
+    }
+
+    colgroup col:nth-child(1) {
+      background-color: #ffeeba;
+    }
+
+    colgroup col:nth-child(2) {
+      background-color: #d4edda;
+    }
+
+    colgroup col:nth-child(3) {
+      background-color: #f8d7da;
+    }
+  </style>
+</head>
+<body>
+
+  <table>
+    <caption>Relatório de Vendas</caption>
+
+    <!-- Define estilos para as colunas -->
+    <colgroup>
+      <col>
+      <col>
+      <col>
+    </colgroup>
+
+    <!-- Cabeçalho da tabela -->
+    <thead>
+      <tr>
+        <th>Produto</th>
+        <th>Quantidade</th>
+        <th>Valor Total (R$)</th>
+      </tr>
+    </thead>
+
+    <!-- Corpo da tabela -->
+    <tbody>
+      <tr>
+        <td>Notebook</td>
+        <td>5</td>
+        <td>15.000,00</td>
+      </tr>
+      <tr>
+        <td>Mouse</td>
+        <td>10</td>
+        <td>500,00</td>
+      </tr>
+      <tr>
+        <td>Teclado</td>
+        <td>8</td>
+        <td>1.200,00</td>
+      </tr>
+    </tbody>
+
+    <!-- Rodapé da tabela -->
+    <tfoot>
+      <tr>
+        <td>Total</td>
+        <td>23</td>
+        <td>16.700,00</td>
+      </tr>
+    </tfoot>
+  </table>
+
+</body>
+</html>

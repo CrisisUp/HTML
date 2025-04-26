@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tabela Interativa com Estilo e Muitos Produtos</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #000000;
+      --header: #f4f4f4;
+      --accent: #ddd;
+    }
+
+    body.dark {
+      --bg: #1e1e1e;
+      --text: #f0f0f0;
+      --header: #2d2d2d;
+      --accent: #444;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 20px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 8px;
+      margin: 5px;
+      font-size: 1em;
+      min-width: 200px;
+      border-radius: 5%;
+    }
+
+    button {
+      margin: 5px;
+      padding: 8px 12px;
+      cursor: pointer;
+      border-radius: 5%;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-top: 10px;
+      border-radius: 5%;
+      overflow: hidden;
+    }
+
+    th, td {
+      border: 1px solid var(--accent);
+      padding: 10px;
+      text-align: center;
+      border-radius: 5%;
+    }
+
+    thead {
+      background-color: var(--header);
+      cursor: pointer;
+    }
+
+    tfoot {
+      background-color: var(--accent);
+      font-weight: bold;
+    }
+
+    th.sorted-asc::after {
+      content: " 🔼";
+    }
+
+    th.sorted-desc::after {
+      content: " 🔽";
+    }
+
+    .pagination {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .pagination button.active {
+      font-weight: bold;
+      background-color: var(--accent);
+    }
+
+    @media (max-width: 600px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead tr {
+        display: none;
+      }
+
+      td {
+        padding-left: 50%;
+        position: relative;
+      }
+
+      td::before {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 45%;
+        white-space: nowrap;
+        font-weight: bold;
+      }
+
+      td:nth-of-type(1)::before { content: "Produto"; }
+      td:nth-of-type(2)::before { content: "Quantidade"; }
+      td:nth-of-type(3)::before { content: "Valor Total (R$)"; }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📊 Tabela de Produtos de Informática</h2>
+
+  <div class="controls">
+    <input type="text" id="searchInput" placeholder="Buscar produto ou valor..." />
+    <button onclick="toggleDarkMode()">🌙/☀️ Modo Escuro</button>
+    <button onclick="exportarCSV()">📤 Exportar CSV</button>
+  </div>
+
+  <table id="tabela">
+    <caption>Catálogo de Produtos</caption>
+    <thead>
+      <tr>
+        <th onclick="sortTable(0)">Produto</th>
+        <th onclick="sortTable(1)">Quantidade</th>
+        <th onclick="sortTable(2)">Valor Total (R$)</th>
+      </tr>
+    </thead>
+    <tbody id="tabelaBody"></tbody>
+    <tfoot>
+      <tr>
+        <td>Total</td>
+        <td id="totalQtd">0</td>
+        <td id="totalValor">0</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <div class="pagination" id="paginacao"></div>
+
+  <script>
+    const dados = [
+      ["Notebook", 5, 15000], ["Mouse", 10, 500], ["Teclado", 8, 1200], ["Monitor", 3, 2100],
+      ["HD Externo", 4, 800], ["Pen Drive", 20, 400], ["Impressora", 2, 900], ["Webcam", 6, 600],
+      ["Cabo HDMI", 15, 225], ["Adaptador USB", 9, 180], ["Placa de Vídeo", 2, 4500], ["Fonte ATX", 3, 600],
+      ["Memória RAM 8GB", 7, 980], ["Processador i5", 2, 1100], ["Cooler", 5, 250], ["SSD 256GB", 6, 720],
+      ["Gabinete Gamer", 2, 780], ["Switch 8 portas", 4, 300], ["Roteador", 3, 450], ["Estabilizador", 2, 320],
+      ["Headset Gamer", 4, 860], ["Mousepad RGB", 5, 250], ["Hub USB", 8, 240], ["Carregador Portátil", 10, 500],
+      ["Controle Xbox", 2, 500], ["TV Box", 3, 390], ["Teclado Mecânico", 4, 950], ["Scanner", 1, 600],
+      ["Webcam Full HD", 3, 750], ["Tripé para Celular", 5, 125]
+    ];
+
+    const linhasPorPagina = 8;
+    let paginaAtual = 1;
+    let ordemAsc = true;
+    let colunaAtual = null;
+
+    const tbody = document.getElementById("tabelaBody");
+    const paginacao = document.getElementById("paginacao");
+    const searchInput = document.getElementById("searchInput");
+
+    function atualizarTabela() {
+      const filtro = searchInput.value.toLowerCase();
+      let dadosFiltrados = dados.filter(linha =>
+        linha.some(col => String(col).toLowerCase().includes(filtro))
+      );
+
+      const totalPaginas = Math.ceil(dadosFiltrados.length / linhasPorPagina);
+      if (paginaAtual > totalPaginas) paginaAtual = 1;
+
+      const inicio = (paginaAtual - 1) * linhasPorPagina;
+      const fim = inicio + linhasPorPagina;
+      const dadosPagina = dadosFiltrados.slice(inicio, fim);
+
+      tbody.innerHTML = "";
+      let totalQtd = 0, totalValor = 0;
+
+      dadosPagina.forEach(linha => {
+        const tr = document.createElement("tr");
+        linha.forEach(col => {
+          const td = document.createElement("td");
+          td.textContent = col;
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+        totalQtd += linha[1];
+        totalValor += linha[2];
+      });
+
+      document.getElementById("totalQtd").textContent = totalQtd;
+      document.getElementById("totalValor").textContent = totalValor;
+
+      paginacao.innerHTML = "";
+      for (let i = 1; i <= totalPaginas; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        if (i === paginaAtual) btn.classList.add("active");
+        btn.onclick = () => {
+          paginaAtual = i;
+          atualizarTabela();
+        };
+        paginacao.appendChild(btn);
+      }
+    }
+
+    function sortTable(colIndex) {
+      if (colunaAtual === colIndex) {
+        ordemAsc = !ordemAsc;
+      } else {
+        colunaAtual = colIndex;
+        ordemAsc = true;
+      }
+
+      dados.sort((a, b) => {
+        const aVal = typeof a[colIndex] === "string" ? a[colIndex].toLowerCase() : a[colIndex];
+        const bVal = typeof b[colIndex] === "string" ? b[colIndex].toLowerCase() : b[colIndex];
+        return (aVal < bVal ? -1 : aVal > bVal ? 1 : 0) * (ordemAsc ? 1 : -1);
+      });
+
+      document.querySelectorAll("th").forEach(th => th.classList.remove("sorted-asc", "sorted-desc"));
+      const th = document.querySelectorAll("th")[colIndex];
+      th.classList.add(ordemAsc ? "sorted-asc" : "sorted-desc");
+
+      atualizarTabela();
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
+    }
+
+    function exportarCSV() {
+      let csv = "Produto,Quantidade,Valor Total (R$)\n";
+      dados.forEach(l => csv += `${l.join(",")}\n`);
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "produtos.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    searchInput.addEventListener("input", atualizarTabela);
+
+    atualizarTabela();
+  </script>
+</body>
+</html>

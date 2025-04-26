@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Produtos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Reset CSS */
+        body, h1, table, th, td, input, select {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #009688;
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+
+        body.dark-mode table, body.dark-mode th, body.dark-mode td {
+            border-color: #444;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background-color: #009688;
+            color: white;
+            padding: 12px;
+            font-size: 16px;
+        }
+
+        td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #e1e1e1;
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .filters input, .filters select {
+            padding: 8px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .filters input:focus, .filters select:focus {
+            border: 1px solid #009688;
+        }
+
+        /* Pagination */
+        .pagination {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            padding: 8px 16px;
+            margin: 0 5px;
+            background-color: #009688;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .pagination button.active {
+            background-color: #004d40;
+        }
+
+        /* Stock Status */
+        .status-baixo {
+            color: red;
+        }
+
+        .status-suficiente {
+            color: green;
+        }
+
+        .status-limited {
+            color: orange;
+        }
+
+        /* Responsiveness */
+        @media (max-width: 768px) {
+            table {
+                font-size: 12px;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            .filters input, .filters select {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Lista de Produtos</h1>
+
+    <button onclick="toggleDarkMode()">Alternar Modo</button>
+
+    <!-- Filtros -->
+    <div class="filters">
+        <input type="text" id="searchInput" placeholder="Buscar produto...">
+        <select id="categoryFilter">
+            <option value="">Filtrar por Categoria</option>
+            <option value="Notebooks">Notebooks</option>
+            <option value="Mouse">Mouse</option>
+            <option value="Periféricos">Periféricos</option>
+            <option value="Componentes">Componentes</option>
+        </select>
+    </div>
+
+    <!-- Tabela de Produtos -->
+    <table id="productTable">
+        <caption>Produtos de Informática</caption>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Categoria</th>
+                <th>Preço</th>
+                <th>Estoque</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Notebook Dell</td>
+                <td>Notebooks</td>
+                <td>R$ 2.500,00</td>
+                <td>10</td>
+                <td class="status-suficiente">Disponível</td>
+            </tr>
+            <tr>
+                <td>Mouse Logitech</td>
+                <td>Mouse</td>
+                <td>R$ 150,00</td>
+                <td>50</td>
+                <td class="status-suficiente">Disponível</td>
+            </tr>
+            <tr>
+                <td>Teclado Mecânico</td>
+                <td>Periféricos</td>
+                <td>R$ 300,00</td>
+                <td>2</td>
+                <td class="status-limited">Pouco Estoque</td>
+            </tr>
+            <tr>
+                <td>HD Externo Seagate</td>
+                <td>Componentes</td>
+                <td>R$ 400,00</td>
+                <td>0</td>
+                <td class="status-baixo">Fora de Estoque</td>
+            </tr>
+            <!-- Adicione mais produtos conforme necessário -->
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5">
+                    <button class="pagination-button">Anterior</button>
+                    <button class="pagination-button">Próximo</button>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <script>
+        // Modo escuro
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        // Filtro de categoria
+        const categoryFilter = document.getElementById('categoryFilter');
+        const searchInput = document.getElementById('searchInput');
+        const productTable = document.getElementById('productTable').getElementsByTagName('tbody')[0];
+
+        categoryFilter.addEventListener('change', filterTable);
+        searchInput.addEventListener('input', filterTable);
+
+        function filterTable() {
+            const searchText = searchInput.value.toLowerCase();
+            const categoryValue = categoryFilter.value.toLowerCase();
+            const rows = productTable.getElementsByTagName('tr');
+
+            for (let i = 0; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                const name = cells[0].textContent.toLowerCase();
+                const category = cells[1].textContent.toLowerCase();
+
+                // Verificar se corresponde ao filtro
+                if (name.includes(searchText) && (category.includes(categoryValue) || categoryValue === "")) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        }
+
+        // Paginação
+        // (A funcionalidade de paginação pode ser aplicada aqui, mas depende de implementação dinâmica)
+    </script>
+
+</body>
+</html>

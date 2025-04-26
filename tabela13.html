@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Produtos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #009688;
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .filters input, .filters select {
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        .product-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .product-card img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+
+        .status-baixo {
+            color: red;
+        }
+
+        .status-limited {
+            color: orange;
+        }
+
+        .status-suficiente {
+            color: green;
+        }
+
+        .load-more-btn {
+            display: block;
+            margin: 30px auto;
+            padding: 10px 20px;
+            background-color: #009688;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Lista de Produtos</h1>
+
+    <div class="filters">
+        <input type="text" id="searchInput" placeholder="Buscar produto...">
+        <select id="categoryFilter">
+            <option value="">Todas as Categorias</option>
+            <option value="Notebooks">Notebooks</option>
+            <option value="Mouse">Mouse</option>
+            <option value="Periféricos">Periféricos</option>
+            <option value="Componentes">Componentes</option>
+        </select>
+    </div>
+
+    <div class="product-container" id="productContainer"></div>
+
+    <button class="load-more-btn" id="loadMoreButton">Carregar Mais Produtos</button>
+
+    <script>
+        const products = [];
+        const categories = ["Notebooks", "Mouse", "Periféricos", "Componentes"];
+        const names = {
+            Notebooks: ["Dell", "Lenovo", "HP", "Acer"],
+            Mouse: ["Logitech", "Razer", "Microsoft", "Multilaser"],
+            Periféricos: ["Teclado", "Monitor", "Headset", "Webcam"],
+            Componentes: ["HD", "SSD", "Placa de Vídeo", "RAM"]
+        };
+
+        for (let i = 1; i <= 50; i++) {
+            const cat = categories[Math.floor(Math.random() * categories.length)];
+            const name = `${names[cat][Math.floor(Math.random() * names[cat].length)]} ${i}`;
+            const price = `R$ ${(Math.floor(Math.random() * 4900) + 100).toLocaleString('pt-BR')},00`;
+            const stock = Math.floor(Math.random() * 51);
+            const status = stock === 0 ? "Fora de Estoque" : stock <= 5 ? "Pouco Estoque" : "Disponível";
+            const image = `https://via.placeholder.com/100?text=${encodeURIComponent(name)}`;
+            products.push({ name, category: cat, price, stock, status, image });
+        }
+
+        const container = document.getElementById("productContainer");
+        const loadMoreBtn = document.getElementById("loadMoreButton");
+        const searchInput = document.getElementById("searchInput");
+        const categoryFilter = document.getElementById("categoryFilter");
+
+        let currentIndex = 0;
+        const perPage = 10;
+
+        function getStatusClass(stock) {
+            if (stock === 0) return 'status-baixo';
+            if (stock <= 5) return 'status-limited';
+            return 'status-suficiente';
+        }
+
+        function renderProductCard(product) {
+            return `
+                <div class="product-card">
+                    <img src="${product.image}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p><strong>Categoria:</strong> ${product.category}</p>
+                    <p><strong>Preço:</strong> ${product.price}</p>
+                    <p><strong>Estoque:</strong> ${product.stock}</p>
+                    <p class="${getStatusClass(product.stock)}"><strong>Status:</strong> ${product.status}</p>
+                </div>
+            `;
+        }
+
+        function renderProducts() {
+            const end = currentIndex + perPage;
+            const filtered = getFilteredProducts();
+            const slice = filtered.slice(currentIndex, end);
+
+            container.innerHTML += slice.map(renderProductCard).join('');
+            currentIndex += perPage;
+
+            if (currentIndex >= filtered.length) {
+                loadMoreBtn.style.display = 'none';
+            } else {
+                loadMoreBtn.style.display = 'block';
+            }
+        }
+
+        function getFilteredProducts() {
+            const text = searchInput.value.toLowerCase();
+            const category = categoryFilter.value;
+            return products.filter(p =>
+                p.name.toLowerCase().includes(text) &&
+                (category === '' || p.category === category)
+            );
+        }
+
+        function resetAndRender() {
+            container.innerHTML = '';
+            currentIndex = 0;
+            renderProducts();
+        }
+
+        loadMoreBtn.addEventListener('click', renderProducts);
+        searchInput.addEventListener('input', resetAndRender);
+        categoryFilter.addEventListener('change', resetAndRender);
+
+        renderProducts();
+    </script>
+</body>
+</html>

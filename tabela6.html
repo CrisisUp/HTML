@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tabela de Produtos</title>
+  <style>
+    /* Estilo básico para a tabela */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    tr:hover {
+      background-color: #ddd;
+    }
+
+    /* Filtro e busca */
+    .filters {
+      margin: 20px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .filters select,
+    .filters input {
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+
+    .filters label {
+      font-size: 16px;
+      margin-right: 10px;
+    }
+
+    /* Estilo de botão de exportar CSV */
+    .export-btn {
+      padding: 10px 15px;
+      font-size: 14px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .export-btn:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="filters">
+    <label for="categoriaFiltro">Filtrar por categoria:</label>
+    <select id="categoriaFiltro">
+      <option value="all">Todas as Categorias</option>
+      <option value="Computador">Computador</option>
+      <option value="Periférico">Periférico</option>
+      <option value="Armazenamento">Armazenamento</option>
+      <option value="Acessório">Acessório</option>
+    </select>
+    <input type="text" id="searchInput" placeholder="Buscar produto..." />
+    <button class="export-btn" onclick="exportarCSV()">Exportar para CSV</button>
+  </div>
+
+  <table id="tabelaProdutos">
+    <caption>Tabela de Produtos</caption>
+    <thead>
+      <tr>
+        <th>Produto</th>
+        <th>Quantidade</th>
+        <th>Valor Total (R$)</th>
+        <th>Categoria</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Dados da tabela serão inseridos aqui via JS -->
+    </tbody>
+  </table>
+
+  <script>
+    const dados = [
+      ["Notebook", 5, 15000, "Computador"],
+      ["Mouse", 10, 500, "Periférico"],
+      ["HD Externo", 4, 800, "Armazenamento"],
+      ["Teclado", 8, 400, "Periférico"],
+      ["Monitor", 3, 3000, "Computador"],
+      ["Pendrive", 12, 150, "Armazenamento"],
+      ["Fone de Ouvido", 15, 250, "Acessório"],
+      ["Webcam", 7, 600, "Periférico"]
+    ];
+
+    const categoriaFiltro = document.getElementById('categoriaFiltro');
+    const searchInput = document.getElementById('searchInput');
+    const tabelaProdutos = document.getElementById('tabelaProdutos').getElementsByTagName('tbody')[0];
+
+    function atualizarTabela() {
+      const categoriaSelecionada = categoriaFiltro.value;
+      const textoBusca = searchInput.value.toLowerCase();
+      tabelaProdutos.innerHTML = '';
+
+      const dadosFiltrados = dados.filter(linha => {
+        const nomeProduto = linha[0].toLowerCase();
+        const categoriaProduto = linha[3].toLowerCase();
+        return (
+          (categoriaSelecionada === 'all' || categoriaProduto === categoriaSelecionada.toLowerCase()) &&
+          nomeProduto.includes(textoBusca)
+        );
+      });
+
+      dadosFiltrados.forEach(linha => {
+        const novaLinha = tabelaProdutos.insertRow();
+        linha.forEach((dado, index) => {
+          const novaCelula = novaLinha.insertCell();
+          novaCelula.textContent = dado;
+        });
+      });
+    }
+
+    function exportarCSV() {
+      let csv = "Produto,Quantidade,Valor Total (R$),Categoria\n";
+      dados.forEach(linha => {
+        csv += `${linha.join(",")}\n`;
+      });
+
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "produtos.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    categoriaFiltro.addEventListener("change", atualizarTabela);
+    searchInput.addEventListener("input", atualizarTabela);
+
+    atualizarTabela(); // Inicializa a tabela com todos os dados
+  </script>
+
+</body>
+</html>

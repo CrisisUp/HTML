@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Tabela Interativa com Ordenação</title>
+  <style>
+    table {
+      width: 70%;
+      margin: 30px auto;
+      border-collapse: collapse;
+    }
+
+    caption {
+      font-size: 1.5em;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    thead {
+      background-color: #f9f9f9;
+    }
+
+    tfoot {
+      background-color: #e9e9e9;
+      font-weight: bold;
+    }
+
+    th.sorted-asc::after {
+      content: " 🔼";
+    }
+
+    th.sorted-desc::after {
+      content: " 🔽";
+    }
+  </style>
+</head>
+<body>
+
+  <table id="tabelaVendas">
+    <caption>Relatório Interativo de Vendas</caption>
+
+    <colgroup>
+      <col>
+      <col>
+      <col>
+    </colgroup>
+
+    <thead>
+      <tr>
+        <th onclick="sortTable(0)">Produto</th>
+        <th onclick="sortTable(1)">Quantidade</th>
+        <th onclick="sortTable(2)">Valor Total (R$)</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>Notebook</td>
+        <td>5</td>
+        <td>15000</td>
+      </tr>
+      <tr>
+        <td>Mouse</td>
+        <td>10</td>
+        <td>500</td>
+      </tr>
+      <tr>
+        <td>Teclado</td>
+        <td>8</td>
+        <td>1200</td>
+      </tr>
+      <tr>
+        <td>Monitor</td>
+        <td>3</td>
+        <td>2100</td>
+      </tr>
+    </tbody>
+
+    <tfoot>
+      <tr>
+        <td>Total</td>
+        <td>26</td>
+        <td>18800</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <script>
+    function sortTable(colIndex) {
+      const table = document.getElementById("tabelaVendas");
+      const tbody = table.querySelector("tbody");
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+
+      const th = table.querySelectorAll("th")[colIndex];
+      const isAscending = th.classList.contains("sorted-asc");
+
+      // Remove classes de ordenação anteriores
+      table.querySelectorAll("th").forEach(th => th.classList.remove("sorted-asc", "sorted-desc"));
+
+      // Ordena as linhas
+      rows.sort((a, b) => {
+        const aText = a.children[colIndex].textContent.trim();
+        const bText = b.children[colIndex].textContent.trim();
+
+        const aValue = isNaN(aText) ? aText.toLowerCase() : parseFloat(aText);
+        const bValue = isNaN(bText) ? bText.toLowerCase() : parseFloat(bText);
+
+        if (aValue < bValue) return isAscending ? 1 : -1;
+        if (aValue > bValue) return isAscending ? -1 : 1;
+        return 0;
+      });
+
+      // Aplica nova ordenação
+      rows.forEach(row => tbody.appendChild(row));
+
+      // Atualiza indicador visual
+      th.classList.add(isAscending ? "sorted-desc" : "sorted-asc");
+    }
+  </script>
+
+</body>
+</html>

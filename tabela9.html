@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tabela de Produtos</title>
+  <style>
+    /* Estilos gerais */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    tr:hover {
+      background-color: #ddd;
+    }
+
+    /* Filtro e busca */
+    .filters {
+      margin: 20px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .filters select,
+    .filters input {
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+
+    .filters label {
+      font-size: 16px;
+      margin-right: 10px;
+    }
+
+    /* Botão de exportar */
+    .export-btn {
+      padding: 10px 15px;
+      font-size: 14px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .export-btn:hover {
+      background-color: #45a049;
+    }
+
+    /* Estilo para dark mode */
+    body.dark-mode {
+      background-color: #2e2e2e;
+      color: white;
+    }
+
+    table.dark-mode {
+      background-color: #333;
+      color: white;
+    }
+
+    th.dark-mode {
+      background-color: #555;
+      color: white;
+    }
+
+    tr.dark-mode:nth-child(even) {
+      background-color: #444;
+    }
+
+    tr.dark-mode:hover {
+      background-color: #666;
+    }
+
+    .filters.dark-mode {
+      background-color: #444;
+      color: white;
+    }
+
+    .filters.dark-mode select,
+    .filters.dark-mode input {
+      background-color: #666;
+      color: white;
+      border: 1px solid #777;
+    }
+
+    .dark-mode-btn {
+      padding: 10px;
+      font-size: 14px;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    .dark-mode-btn:hover {
+      background-color: #555;
+    }
+
+    /* Estilo para status de estoque */
+    .status-baixo {
+      color: white;
+      background-color: red;
+      padding: 5px 10px;
+      border-radius: 3px;
+    }
+
+    .status-suficiente {
+      color: white;
+      background-color: green;
+      padding: 5px 10px;
+      border-radius: 3px;
+    }
+
+    /* Paginação */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .pagination button {
+      padding: 10px 15px;
+      font-size: 14px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 0 5px;
+    }
+
+    .pagination button:hover {
+      background-color: #45a049;
+    }
+
+    .pagination button.disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="filters">
+    <label for="categoriaFiltro">Filtrar por categoria:</label>
+    <select id="categoriaFiltro">
+      <option value="all">Todas as Categorias</option>
+      <option value="Computador">Computador</option>
+      <option value="Periférico">Periférico</option>
+      <option value="Armazenamento">Armazenamento</option>
+      <option value="Acessório">Acessório</option>
+    </select>
+    <input type="text" id="searchInput" placeholder="Buscar produto..." />
+    <button class="export-btn" onclick="exportarCSV()">Exportar para CSV</button>
+    <button class="dark-mode-btn" onclick="toggleDarkMode()">Alternar Modo</button>
+  </div>
+
+  <table id="tabelaProdutos">
+    <caption>Tabela de Produtos</caption>
+    <thead>
+      <tr>
+        <th>Produto</th>
+        <th>Quantidade</th>
+        <th>Valor Total (R$)</th>
+        <th>Categoria</th>
+        <th>Estoque Mínimo</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Dados da tabela serão inseridos aqui via JS -->
+    </tbody>
+  </table>
+
+  <!-- Paginação -->
+  <div class="pagination" id="pagination">
+    <button class="disabled" id="prevBtn" onclick="mudarPagina(-1)">Anterior</button>
+    <button class="disabled" id="nextBtn" onclick="mudarPagina(1)">Próximo</button>
+  </div>
+
+  <script>
+    const dados = [
+      ["Notebook", 5, 15000, "Computador", 10],
+      ["Mouse", 10, 500, "Periférico", 3],
+      ["HD Externo", 4, 800, "Armazenamento", 5],
+      ["Teclado", 8, 400, "Periférico", 2],
+      ["Monitor", 3, 3000, "Computador", 5],
+      ["Pendrive", 12, 150, "Armazenamento", 3],
+      ["Fone de Ouvido", 15, 250, "Acessório", 5],
+      ["Webcam", 7, 600, "Periférico", 4],
+      ["Smartphone", 8, 4000, "Computador", 5],
+      ["Tablet", 10, 2000, "Computador", 6],
+      ["Roteador", 6, 300, "Periférico", 4],
+      ["SSD", 4, 900, "Armazenamento", 4],
+      ["Cabo HDMI", 20, 100, "Acessório", 5],
+      ["Mouse Sem Fio", 9, 350, "Periférico", 2],
+      ["Fone Bluetooth", 11, 500, "Acessório", 4],
+      ["Cadeira Gamer", 2, 1500, "Acessório", 3],
+      ["Impressora", 3, 1200, "Periférico", 6],
+      ["Placa de Vídeo", 5, 5000, "Computador", 2]
+    ];
+
+    const categoriaFiltro = document.getElementById('categoriaFiltro');
+    const searchInput = document.getElementById('searchInput');
+    const tabelaProdutos = document.getElementById('tabelaProdutos').getElementsByTagName('tbody')[0];
+    const pagination = document.getElementById('pagination');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const produtosPorPagina = 5; // Quantidade de produtos por página
+    let paginaAtual = 1;
+
+    function atualizarTabela() {
+      const categoriaSelecionada = categoriaFiltro.value;
+      const textoBusca = searchInput.value.toLowerCase();
+      tabelaProdutos.innerHTML = '';
+
+      const dadosFiltrados = dados.filter(linha => {
+        const nomeProduto = linha[0].toLowerCase();
+        const categoriaProduto = linha[3].toLowerCase();
+        return (
+          (categoriaSelecionada === 'all' || categoriaProduto === categoriaSelecionada.toLowerCase()) &&
+          nomeProduto.includes(textoBusca)
+        );
+      });
+
+      const totalPaginas = Math.ceil(dadosFiltrados.length / produtosPorPagina);
+      const dadosDaPagina = dadosFiltrados.slice((paginaAtual - 1) * produtosPorPagina, paginaAtual * produtosPorPagina);
+
+      dadosDaPagina.forEach(linha => {
+        const novaLinha = tabelaProdutos.insertRow();
+        linha.forEach((dado, index) => {
+          const novaCelula = novaLinha.insertCell();
+          novaCelula.textContent = dado;
+        });
+
+        // Adicionando a coluna de status
+        const statusCelula = novaLinha.insertCell();
+        const estoqueMinimo = linha[4];
+        const quantidade = linha[1];
+
+        const status = document.createElement('span');
+        status.className = quantidade < estoqueMinimo ? 'status-baixo' : 'status-suficiente';
+        status.textContent = quantidade < estoqueMinimo ? 'Estoque Baixo' : 'Estoque Suficiente';
+        statusCelula.appendChild(status);
+      });
+
+      atualizarPaginas(totalPaginas);
+    }
+
+    function atualizarPaginas(totalPaginas) {
+      prevBtn.classList.toggle('disabled', paginaAtual === 1);
+      nextBtn.classList.toggle('disabled', paginaAtual === totalPaginas);
+    }
+
+    function mudarPagina(direcao) {
+      paginaAtual += direcao;
+      atualizarTabela();
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      document.querySelector('table').classList.toggle('dark-mode');
+      document.querySelectorAll('th').forEach(th => th.classList.toggle('dark-mode'));
+      document.querySelectorAll('tr').forEach(tr => tr.classList.toggle('dark-mode'));
+      document.querySelectorAll('.filters').forEach(filter => filter.classList.toggle('dark-mode'));
+    }
+
+    function exportarCSV() {
+      const csv = dados.map(row => row.join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'produtos.csv';
+      link.click();
+    }
+
+    // Inicializar a tabela ao carregar a página
+    categoriaFiltro.addEventListener('change', atualizarTabela);
+    searchInput.addEventListener('input', atualizarTabela);
+
+    atualizarTabela();
+  </script>
+</body>
+</html>

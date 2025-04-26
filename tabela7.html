@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tabela de Produtos</title>
+  <style>
+    /* Estilos gerais */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    tr:hover {
+      background-color: #ddd;
+    }
+
+    /* Filtro e busca */
+    .filters {
+      margin: 20px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .filters select,
+    .filters input {
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+
+    .filters label {
+      font-size: 16px;
+      margin-right: 10px;
+    }
+
+    /* Botão de exportar */
+    .export-btn {
+      padding: 10px 15px;
+      font-size: 14px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .export-btn:hover {
+      background-color: #45a049;
+    }
+
+    /* Estilo para dark mode */
+    body.dark-mode {
+      background-color: #2e2e2e;
+      color: white;
+    }
+
+    table.dark-mode {
+      background-color: #333;
+      color: white;
+    }
+
+    th.dark-mode {
+      background-color: #555;
+      color: white;
+    }
+
+    tr.dark-mode:nth-child(even) {
+      background-color: #444;
+    }
+
+    tr.dark-mode:hover {
+      background-color: #666;
+    }
+
+    .filters.dark-mode {
+      background-color: #444;
+      color: white;
+    }
+
+    .filters.dark-mode select,
+    .filters.dark-mode input {
+      background-color: #666;
+      color: white;
+      border: 1px solid #777;
+    }
+
+    .dark-mode-btn {
+      padding: 10px;
+      font-size: 14px;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    .dark-mode-btn:hover {
+      background-color: #555;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="filters">
+    <label for="categoriaFiltro">Filtrar por categoria:</label>
+    <select id="categoriaFiltro">
+      <option value="all">Todas as Categorias</option>
+      <option value="Computador">Computador</option>
+      <option value="Periférico">Periférico</option>
+      <option value="Armazenamento">Armazenamento</option>
+      <option value="Acessório">Acessório</option>
+    </select>
+    <input type="text" id="searchInput" placeholder="Buscar produto..." />
+    <button class="export-btn" onclick="exportarCSV()">Exportar para CSV</button>
+    <button class="dark-mode-btn" onclick="toggleDarkMode()">Alternar Modo</button>
+  </div>
+
+  <table id="tabelaProdutos">
+    <caption>Tabela de Produtos</caption>
+    <thead>
+      <tr>
+        <th>Produto</th>
+        <th>Quantidade</th>
+        <th>Valor Total (R$)</th>
+        <th>Categoria</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Dados da tabela serão inseridos aqui via JS -->
+    </tbody>
+  </table>
+
+  <script>
+    const dados = [
+      ["Notebook", 5, 15000, "Computador"],
+      ["Mouse", 10, 500, "Periférico"],
+      ["HD Externo", 4, 800, "Armazenamento"],
+      ["Teclado", 8, 400, "Periférico"],
+      ["Monitor", 3, 3000, "Computador"],
+      ["Pendrive", 12, 150, "Armazenamento"],
+      ["Fone de Ouvido", 15, 250, "Acessório"],
+      ["Webcam", 7, 600, "Periférico"]
+    ];
+
+    const categoriaFiltro = document.getElementById('categoriaFiltro');
+    const searchInput = document.getElementById('searchInput');
+    const tabelaProdutos = document.getElementById('tabelaProdutos').getElementsByTagName('tbody')[0];
+
+    function atualizarTabela() {
+      const categoriaSelecionada = categoriaFiltro.value;
+      const textoBusca = searchInput.value.toLowerCase();
+      tabelaProdutos.innerHTML = '';
+
+      const dadosFiltrados = dados.filter(linha => {
+        const nomeProduto = linha[0].toLowerCase();
+        const categoriaProduto = linha[3].toLowerCase();
+        return (
+          (categoriaSelecionada === 'all' || categoriaProduto === categoriaSelecionada.toLowerCase()) &&
+          nomeProduto.includes(textoBusca)
+        );
+      });
+
+      dadosFiltrados.forEach(linha => {
+        const novaLinha = tabelaProdutos.insertRow();
+        linha.forEach((dado, index) => {
+          const novaCelula = novaLinha.insertCell();
+          novaCelula.textContent = dado;
+        });
+      });
+    }
+
+    function exportarCSV() {
+      let csv = "Produto,Quantidade,Valor Total (R$),Categoria\n";
+      dados.forEach(linha => {
+        csv += `${linha.join(",")}\n`;
+      });
+
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "produtos.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function toggleDarkMode() {
+      const body = document.body;
+      const tabela = document.getElementById('tabelaProdutos');
+      const ths = document.querySelectorAll('th');
+      const filtros = document.querySelector('.filters');
+      
+      body.classList.toggle('dark-mode');
+      tabela.classList.toggle('dark-mode');
+      filtros.classList.toggle('dark-mode');
+      ths.forEach(th => th.classList.toggle('dark-mode'));
+      tabela.querySelectorAll('tr').forEach(tr => tr.classList.toggle('dark-mode'));
+    }
+
+    categoriaFiltro.addEventListener("change", atualizarTabela);
+    searchInput.addEventListener("input", atualizarTabela);
+
+    atualizarTabela(); // Inicializa a tabela com todos os dados
+  </script>
+
+</body>
+</html>

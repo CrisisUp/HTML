@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Tabela Interativa Completa</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+
+    input[type="text"] {
+      margin-bottom: 15px;
+      padding: 8px;
+      width: 60%;
+      font-size: 1em;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    caption {
+      font-size: 1.5em;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+
+    thead {
+      background-color: #f9f9f9;
+      cursor: pointer;
+    }
+
+    tfoot {
+      background-color: #f0f0f0;
+      font-weight: bold;
+    }
+
+    th.sorted-asc::after {
+      content: " 🔼";
+    }
+
+    th.sorted-desc::after {
+      content: " 🔽";
+    }
+
+    .pagination {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .pagination button {
+      margin: 0 3px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    .pagination button.active {
+      font-weight: bold;
+      background-color: #ddd;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Tabela Interativa: Busca, Ordenação e Paginação</h2>
+  <input type="text" id="searchInput" placeholder="Buscar por produto ou valor...">
+
+  <table id="tabela">
+    <caption>Relatório de Vendas</caption>
+    <colgroup>
+      <col>
+      <col>
+      <col>
+    </colgroup>
+
+    <thead>
+      <tr>
+        <th onclick="sortTable(0)">Produto</th>
+        <th onclick="sortTable(1)">Quantidade</th>
+        <th onclick="sortTable(2)">Valor Total (R$)</th>
+      </tr>
+    </thead>
+
+    <tbody id="tabelaBody">
+      <!-- Linhas preenchidas dinamicamente -->
+    </tbody>
+
+    <tfoot>
+      <tr>
+        <td>Total</td>
+        <td id="totalQtd">0</td>
+        <td id="totalValor">0</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <div class="pagination" id="paginacao"></div>
+
+  <script>
+    const dados = [
+      ["Notebook", 5, 15000],
+      ["Mouse", 10, 500],
+      ["Teclado", 8, 1200],
+      ["Monitor", 3, 2100],
+      ["HD Externo", 4, 800],
+      ["Pen Drive", 20, 400],
+      ["Impressora", 2, 900],
+      ["Webcam", 6, 600],
+      ["Cabo HDMI", 15, 225],
+      ["Adaptador USB", 9, 180]
+    ];
+
+    const linhasPorPagina = 5;
+    let paginaAtual = 1;
+    let ordemAsc = true;
+    let colunaAtual = null;
+
+    const tbody = document.getElementById("tabelaBody");
+    const paginacao = document.getElementById("paginacao");
+    const searchInput = document.getElementById("searchInput");
+
+    function atualizarTabela() {
+      const filtro = searchInput.value.toLowerCase();
+      let dadosFiltrados = dados.filter(linha =>
+        linha.some(col =>
+          String(col).toLowerCase().includes(filtro)
+        )
+      );
+
+      // Paginação
+      const totalPaginas = Math.ceil(dadosFiltrados.length / linhasPorPagina);
+      if (paginaAtual > totalPaginas) paginaAtual = 1;
+
+      const inicio = (paginaAtual - 1) * linhasPorPagina;
+      const fim = inicio + linhasPorPagina;
+      const dadosPagina = dadosFiltrados.slice(inicio, fim);
+
+      // Preencher corpo da tabela
+      tbody.innerHTML = "";
+      let totalQtd = 0, totalValor = 0;
+      dadosPagina.forEach(linha => {
+        const tr = document.createElement("tr");
+        linha.forEach(col => {
+          const td = document.createElement("td");
+          td.textContent = col;
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+        totalQtd += linha[1];
+        totalValor += linha[2];
+      });
+
+      document.getElementById("totalQtd").textContent = totalQtd;
+      document.getElementById("totalValor").textContent = totalValor;
+
+      // Atualizar botões de página
+      paginacao.innerHTML = "";
+      for (let i = 1; i <= totalPaginas; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        if (i === paginaAtual) btn.classList.add("active");
+        btn.onclick = () => {
+          paginaAtual = i;
+          atualizarTabela();
+        };
+        paginacao.appendChild(btn);
+      }
+    }
+
+    function sortTable(colIndex) {
+      if (colunaAtual === colIndex) {
+        ordemAsc = !ordemAsc;
+      } else {
+        colunaAtual = colIndex;
+        ordemAsc = true;
+      }
+
+      dados.sort((a, b) => {
+        const aVal = typeof a[colIndex] === "string" ? a[colIndex].toLowerCase() : a[colIndex];
+        const bVal = typeof b[colIndex] === "string" ? b[colIndex].toLowerCase() : b[colIndex];
+        if (aVal < bVal) return ordemAsc ? -1 : 1;
+        if (aVal > bVal) return ordemAsc ? 1 : -1;
+        return 0;
+      });
+
+      // Atualiza ícones
+      document.querySelectorAll("th").forEach(th => th.classList.remove("sorted-asc", "sorted-desc"));
+      const th = document.querySelectorAll("th")[colIndex];
+      th.classList.add(ordemAsc ? "sorted-asc" : "sorted-desc");
+
+      atualizarTabela();
+    }
+
+    searchInput.addEventListener("input", () => {
+      paginaAtual = 1;
+      atualizarTabela();
+    });
+
+    atualizarTabela();
+  </script>
+
+</body>
+</html>
