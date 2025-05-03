@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loja Acessível</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header role="banner">
+    <nav aria-label="Navegação principal">
+      <h1>Loja Acessível</h1>
+      <ul>
+        <li><a href="#produtos">Produtos</a></li>
+        <li><a href="#sobre">Sobre</a></li>
+        <li><a href="#contato">Contato</a></li>
+      </ul>
+      <button id="abrir-carrinho" aria-label="Abrir carrinho">
+        🛒 <span id="contador-carrinho" aria-live="polite">0</span>
+      </button>
+    </nav>
+  </header>
+
+  <aside id="carrinho" role="complementary" aria-label="Carrinho de compras" hidden>
+    <h2>Carrinho</h2>
+    <ul id="lista-carrinho"></ul>
+    <p id="total-carrinho">Total: R$ 0,00</p>
+    <button id="limpar-carrinho">Esvaziar Carrinho</button>
+    <button id="fechar-carrinho">Fechar</button>
+  </aside>
+
+  <main id="produtos" role="main">
+    <section aria-labelledby="titulo-produtos">
+      <h2 id="titulo-produtos">Nossos Produtos</h2>
+
+      <div id="filtros-categorias" class="filtros-categorias" aria-label="Filtrar por categoria">
+        <button class="btn-filtro ativo" data-categoria="todos">Todos</button>
+        <button class="btn-filtro" data-categoria="Brinquedos Educativos">Brinquedos Educativos</button>
+        <button class="btn-filtro" data-categoria="Pelúcias">Pelúcias</button>
+        <button class="btn-filtro" data-categoria="Organização Infantil">Organização Infantil</button>
+      </div>
+
+      <div class="grid-produtos" id="lista-produtos">
+        <!-- Os produtos serão inseridos dinamicamente aqui via JS -->
+      </div>
+    </section>
+  </main>
+
+  <footer role="contentinfo">
+    <p>&copy; 2025 Loja Acessível</p>
+  </footer>
+
+  <audio id="audio-adicao" src="pop.mp3" preload="auto"></audio>
+  <audio id="audio-remocao" src="remover.mp3" preload="auto"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>

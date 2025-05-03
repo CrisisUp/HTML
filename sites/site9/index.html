@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 
-<body>
+<body class="claro">
   <header role="banner">
     <nav aria-label="Navegação principal">
       <h1>Loja Acessível</h1>
@@ -17,7 +17,12 @@
         <li><a href="#sobre">Sobre</a></li>
         <li><a href="#contato">Contato</a></li>
       </ul>
-      <button id="abrir-carrinho" aria-label="Abrir carrinho">🛒 <span id="contador-carrinho" aria-live="polite">0</span></button>
+      <div class="acoes-header">
+        <button id="alternar-tema" aria-label="Alternar tema claro/escuro">🌓</button>
+        <button id="ativar-filtro-voz" aria-label="Filtrar por voz">🎤</button>
+        <button id="abrir-carrinho" aria-label="Abrir carrinho">🛒<span id="contador-carrinho" aria-live="polite">0</span>
+        </button>
+      </div>
     </nav>
   </header>
 
@@ -33,6 +38,13 @@
   <main id="produtos" role="main">
     <section aria-labelledby="titulo-produtos">
       <h2 id="titulo-produtos">Nossos Produtos</h2>
+      <label for="filtro-categoria">Filtrar por categoria:</label>
+      <select id="filtro-categoria">
+        <option value="todos">Todos</option>
+        <option value="educativo">Educativo</option>
+        <option value="pelucia">Pelúcia</option>
+        <option value="organizacao">Organização</option>
+      </select>
       <div class="grid-produtos">
 
         <!-- Produto gerado como exemplo -->
