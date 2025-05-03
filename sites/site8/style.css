@@ -1,0 +1,110 @@
+/* Estilos gerais */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #333;
+  color: white;
+  padding: 1rem 0;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+}
+
+nav li {
+  margin: 0 1rem;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+main {
+  padding: 2rem;
+}
+
+h2 {
+  color: #333;
+}
+
+.grid-produtos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.produto, .slide {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.produto img, .slide img {
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+.produto h3, .slide h3 {
+  font-size: 1.2rem;
+  margin: 1rem 0;
+}
+
+.preco {
+  font-weight: bold;
+}
+
+.btn-comprar {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-comprar:hover {
+  background-color: #218838;
+}
+
+/* Estilos do carrossel */
+#carrossel {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.carrossel {
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+  justify-content: center;
+}
+
+.slides {
+  display: flex;
+  animation: slideAnim 12s infinite;
+}
+
+.slide {
+  min-width: 300px;
+  margin: 0 1rem;
+  transition: transform 1s;
+}
+
+@keyframes slideAnim {
+  0% { transform: translateX(0); }
+  33% { transform: translateX(-100%); }
+  66% { transform: translateX(-200%); }
+  100% { transform: translateX(0); }
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loja Acessível</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header role="banner">
+    <nav aria-label="Navegação principal">
+      <h1>Loja Acessível</h1>
+      <ul>
+        <li><a href="#produtos">Produtos</a></li>
+        <li><a href="#sobre">Sobre</a></li>
+        <li><a href="#contato">Contato</a></li>
+      </ul>
+      <button id="abrir-carrinho" aria-label="Abrir carrinho">
+        🛒 <span id="contador-carrinho" aria-live="polite">0</span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Carrinho -->
+  <aside id="carrinho" role="complementary" aria-label="Carrinho de compras" hidden>
+    <h2>Carrinho</h2>
+    <ul id="lista-carrinho"></ul>
+    <p id="total-carrinho">Total: R$ 0,00</p>
+    <button id="limpar-carrinho">Esvaziar Carrinho</button>
+    <button id="fechar-carrinho">Fechar</button>
+  </aside>
+
+  <main id="produtos" role="main">
+    <section aria-labelledby="titulo-produtos">
+      <h2 id="titulo-produtos">Nossos Produtos</h2>
+      <div class="grid-produtos">
+
+        <!-- Exemplo de 3 produtos -->
+        <article class="produto" tabindex="0" data-nome="Produto 1" data-preco="100.00">
+          <img src="https://via.placeholder.com/150?text=Produto+1" alt="Imagem do Produto 1" />
+          <h3>Produto 1</h3>
+          <p>Descrição do produto 1.</p>
+          <span class="preco">R$100,00</span>
+          <button class="btn-comprar">Comprar</button>
+        </article>
+
+        <article class="produto" tabindex="0" data-nome="Produto 2" data-preco="150.00">
+          <img src="https://via.placeholder.com/150?text=Produto+2" alt="Imagem do Produto 2" />
+          <h3>Produto 2</h3>
+          <p>Descrição do produto 2.</p>
+          <span class="preco">R$150,00</span>
+          <button class="btn-comprar">Comprar</button>
+        </article>
+
+        <article class="produto" tabindex="0" data-nome="Produto 3" data-preco="200.00">
+          <img src="https://via.placeholder.com/150?text=Produto+3" alt="Imagem do Produto 3" />
+          <h3>Produto 3</h3>
+          <p>Descrição do produto 3.</p>
+          <span class="preco">R$200,00</span>
+          <button class="btn-comprar">Comprar</button>
+        </article>
+
+      </div>
+    </section>
+  </main>
+
+  <footer role="contentinfo">
+    <p>&copy; 2025 Loja Acessível</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

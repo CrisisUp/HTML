@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loja Acessível</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header role="banner">
+    <nav aria-label="Navegação principal">
+      <h1>Loja Acessível</h1>
+      <ul>
+        <li><a href="#produtos">Produtos</a></li>
+        <li><a href="#sobre">Sobre</a></li>
+        <li><a href="#contato">Contato</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="carrossel" aria-label="Carrossel de produtos em destaque">
+    <button class="btn anterior" aria-label="Produto anterior">&#10094;</button>
+
+    <div class="carrossel-container">
+      <div class="slide ativo" aria-hidden="false">
+        <img src="https://via.placeholder.com/300x200" alt="Produto Destaque 1" />
+        <h3>Produto Destaque 1</h3>
+        <p>R$199,00</p>
+      </div>
+      <div class="slide" aria-hidden="true">
+        <img src="https://via.placeholder.com/300x200" alt="Produto Destaque 2" />
+        <h3>Produto Destaque 2</h3>
+        <p>R$249,00</p>
+      </div>
+      <div class="slide" aria-hidden="true">
+        <img src="https://via.placeholder.com/300x200" alt="Produto Destaque 3" />
+        <h3>Produto Destaque 3</h3>
+        <p>R$179,00</p>
+      </div>
+    </div>
+
+    <button class="btn proximo" aria-label="Próximo produto">&#10095;</button>
+
+    <div class="indicadores" aria-hidden="true">
+      <span class="indicador ativo"></span>
+      <span class="indicador"></span>
+      <span class="indicador"></span>
+    </div>
+  </section>
+
+  <main id="produtos" role="main">
+    <section aria-labelledby="titulo-produtos">
+      <h2 id="titulo-produtos">Nossos Produtos</h2>
+      <div class="grid-produtos">
+
+        <!-- 10 produtos diretamente no HTML -->
+        <article class="produto" tabindex="0">
+          <img src="https://via.placeholder.com/150?text=Produto+1" alt="Imagem do Produto 1" />
+          <h3>Produto 1</h3>
+          <p>Descrição do produto 1.</p>
+          <span class="preco">R$100,00</span>
+          <button onclick="comprar('Produto 1')">Comprar</button>
+        </article>
+
+        <article class="produto" tabindex="0">
+          <img src="https://via.placeholder.com/150?text=Produto+2" alt="Imagem do Produto 2" />
+          <h3>Produto 2</h3>
+          <p>Descrição do produto 2.</p>
+          <span class="preco">R$110,00</span>
+          <button onclick="comprar('Produto 2')">Comprar</button>
+        </article>
+
+        <article class="produto" tabindex="0">
+          <img src="https://via.placeholder.com/150?text=Produto+3" alt="Imagem do Produto 3" />
+          <h3>Produto 3</h3>
+          <p>Descrição do produto 3.</p>
+          <span class="preco">R$120,00</span>
+          <button onclick="comprar('Produto 3')">Comprar</button>
+        </article>
+
+        <article class="produto" tabindex="0">
+          <img src="https://via.placeholder.com/150?text=Produto+4" alt="Imagem do Produto 4" />
+          <h3>Produto 4</h3>
+          <p>Descrição do produto 4.</p>
+          <span class="preco">R$130,00</span>
+          <button onclick="comprar('Produto 4')">Comprar</button>
+        </article>
+
+        <article class="produto" tabindex="0">
+          <img src="https://via.placeholder.com/150?text=Produto+5" alt="Imagem do Produto 5" />
+          <h3>Produto 5</h3>
+          <p>Descrição do produto 5.</p>
+          <span class="preco">R$140,00</span>
+          <button onclick="comprar('Produto 5')">Comprar</button>
+        </article>
+
+        <article class="produto" tabindex="0">
+          <img src="https://via.placeholder.com/150?text=Produto+6" alt="Imagem do Produto 6" />
+          <h3>Produto 6</h3>
+          <p>Descrição do produto 6.</p>
+          <span class="preco">R$150,00</span>
+          <button onclick="comprar('Produto 6')">Comprar</button>
+        </article>
+
+        <article class="produto" tabindex="0">
+          <img src="https://via.placeholder.com/150?text=Produto+7" alt="Imagem do Produto 7" />
+          <h3>Produto 7</h3>
+          <p>Descrição do produto 7.</p>
+          <span class="preco">R$160,00</span>
+          <button onclick="comprar('Produto 7')">Comprar</button>
+        </article>
+
+        <article class="produto" tabindex="0">
+          <img src="https://via.placeholder.com/150?text=Produto+8" alt="Imagem do Produto 8" />
+          <h3>Produto 8</h3>
+          <p>Descrição do produto 8.</p>
+          <span class="preco">R$170,00</span>
+          <button onclick="comprar('Produto 8')">Comprar</button>
+        </article>
+
+        <article class="produto" tabindex="0">
+          <img src="https://via.placeholder.com/150?text=Produto+9" alt="Imagem do Produto 9" />
+          <h3>Produto 9</h3>
+          <p>Descrição do produto 9.</p>
+          <span class="preco">R$180,00</span>
+          <button onclick="comprar('Produto 9')">Comprar</button>
+        </article>
+
+        <article class="produto" tabindex="0">
+          <img src="https://via.placeholder.com/150?text=Produto+10" alt="Imagem do Produto 10" />
+          <h3>Produto 10</h3>
+          <p>Descrição do produto 10.</p>
+          <span class="preco">R$190,00</span>
+          <button onclick="comprar('Produto 10')">Comprar</button>
+        </article>
+
+      </div>
+    </section>
+
+    <section id="sobre" aria-labelledby="titulo-sobre">
+      <h2 id="titulo-sobre">Sobre Nós</h2>
+      <p>Somos uma loja comprometida com a acessibilidade e inclusão digital.</p>
+    </section>
+
+    <section id="contato" aria-labelledby="titulo-contato">
+      <h2 id="titulo-contato">Contato</h2>
+      <form>
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" aria-required="true" />
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" aria-required="true" />
+
+        <label for="mensagem">Mensagem:</label>
+        <textarea id="mensagem" name="mensagem" aria-required="true"></textarea>
+
+        <button type="submit">Enviar</button>
+      </form>
+    </section>
+  </main>
+
+  <footer role="contentinfo">
+    <p>&copy; 2025 Loja Acessível</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
