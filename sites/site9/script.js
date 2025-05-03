@@ -63,7 +63,6 @@ function alterarQtd(index, delta) {
 
   if (item.qtd <= 0) {
     carrinho.splice(index, 1);
-    audioRemocao.currentTime = 0;
     audioRemocao.play();
     somCliqueSimples();
     falar(`Você removeu ${item.nome} do carrinho.`);
@@ -77,11 +76,10 @@ function alterarQtd(index, delta) {
 }
 
 function removerItem(index) {
-  const itemRemovido = carrinho[index];
+  const item = carrinho[index];
   carrinho.splice(index, 1);
-  audioRemocao.currentTime = 0;
   audioRemocao.play();
-  falar(`Você removeu ${itemRemovido.nome} do carrinho.`);
+  falar(`Você removeu ${item.nome} do carrinho.`);
   atualizarCarrinho();
 }
 
@@ -93,12 +91,11 @@ document.querySelectorAll('.btn-comprar').forEach(botao => {
     const existente = carrinho.find(item => item.nome === nome);
 
     if (existente) {
-      existente.qtd += 1;
+      existente.qtd++;
     } else {
       carrinho.push({ nome, preco, qtd: 1 });
     }
 
-    audioAdicao.currentTime = 0;
     audioAdicao.play();
     falar(`Você adicionou ${nome} ao carrinho.`);
     produto.classList.add('animado');
@@ -106,19 +103,25 @@ document.querySelectorAll('.btn-comprar').forEach(botao => {
 
     atualizarCarrinho();
   });
+
+  botao.addEventListener('focus', e => {
+    const produto = e.target.closest('.produto');
+    const nome = produto.dataset.nome;
+    const descricao = produto.querySelector('.descricao-produto').textContent;
+    const preco = produto.querySelector('.preco').textContent;
+    falar(`${nome}, ${descricao}. Preço: ${preco}`);
+  });
 });
 
 document.getElementById('abrir-carrinho').onclick = () => {
   aside.hidden = false;
   aside.setAttribute('aria-hidden', 'false');
-  /*audioAbrir.currentTime = 0;*/
   audioAbrir.play();
   falar('Carrinho aberto.');
 };
 
 document.getElementById('fechar-carrinho').onclick = () => {
   aside.setAttribute('aria-hidden', 'true');
-  /*audioFechar.currentTime = 0;*/
   audioFechar.play();
   falar('Carrinho fechado.');
   setTimeout(() => aside.hidden = true, 300);
@@ -131,5 +134,3 @@ document.getElementById('limpar-carrinho').onclick = () => {
 };
 
 atualizarCarrinho();
-
-  

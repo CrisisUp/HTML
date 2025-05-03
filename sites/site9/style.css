@@ -7,7 +7,7 @@ body {
 }
 
 nav {
-  background: #333;
+  background: #222;
   color: white;
   padding: 1rem;
   display: flex;
@@ -36,7 +36,7 @@ nav a {
 
 .grid-produtos {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1rem;
   padding: 1rem;
 }
@@ -59,32 +59,18 @@ nav a {
 }
 
 .produto img {
-  transition: transform 0.3s ease;
   display: block;
   width: 80%;
-  height: auto;
+  margin: 0 auto;
   border-radius: 0.5rem;
-  margin: auto;
-}
-
-.produto:hover img,
-.produto:focus-within img {
-  transform: scale(1.15);
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
 
 .detalhes-produto {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  gap: 0.5rem;
 }
 
-.nome-produto,
-.descricao-produto {
-  margin: 0.5rem 0;
-}
-
-/* LINHA INFERIOR: preço à esquerda e botão à direita */
 .rodape-produto {
   display: flex;
   justify-content: space-between;
@@ -187,4 +173,3 @@ aside#carrinho[aria-hidden="false"] {
   white-space: nowrap;
   border: 0;
 }
-

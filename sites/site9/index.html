@@ -17,12 +17,11 @@
         <li><a href="#sobre">Sobre</a></li>
         <li><a href="#contato">Contato</a></li>
       </ul>
-      <button id="abrir-carrinho" aria-label="Abrir carrinho">🛒 <span id="contador-carrinho"
-          aria-live="polite">0</span></button>
+      <button id="abrir-carrinho" aria-label="Abrir carrinho">🛒 <span id="contador-carrinho" aria-live="polite">0</span></button>
     </nav>
   </header>
 
-  <!-- Carrinho -->
+   <!-- Carrinho -->
   <aside id="carrinho" role="complementary" aria-label="Carrinho de compras" hidden>
     <h2>Carrinho</h2>
     <ul id="lista-carrinho"></ul>
@@ -36,7 +35,7 @@
       <h2 id="titulo-produtos">Nossos Produtos</h2>
       <div class="grid-produtos">
 
-        <!-- Exemplo de 5 produtos -->
+        <!-- Produto gerado como exemplo -->
         <article class="produto" tabindex="0" data-nome="Telefone infantil" data-preco="100.00"
           aria-label="Produto: Telefone infantil">
           <figure>
@@ -121,6 +120,9 @@
             </div>
           </div>
         </article>
+
+        <!-- Adicione os outros produtos com a mesma estrutura... -->
+
       </div>
     </section>
   </main>
@@ -129,12 +131,10 @@
     <p>&copy; 2025 Loja Acessível</p>
   </footer>
 
-  <!-- Áudio para a notificação de adição ao carrinho -->
   <audio id="audio-adicao" src="pop.mp3" preload="auto"></audio>
   <audio id="audio-remocao" src="remover.mp3" preload="auto"></audio>
   <audio id="audio-abrir" src="abrir.mp3" preload="auto"></audio>
   <audio id="audio-fechar" src="fechar.mp3" preload="auto"></audio>
-
 
   <script src="script.js"></script>
 </body>
