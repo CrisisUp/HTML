@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mini Metal Slug</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #333;
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+
+    #game {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(#222, #555);
+      overflow: hidden;
+    }
+
+    .player, .enemy, .bullet {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+    }
+
+    .player {
+      background: url('https://i.imgur.com/n3Z9Z7F.png') center/cover no-repeat;
+      bottom: 10px;
+      left: 100px;
+    }
+
+    .enemy {
+      background: red;
+      top: 10px;
+      right: 0;
+    }
+
+    .bullet {
+      background: yellow;
+      width: 10px;
+      height: 5px;
+    }
+
+    #info {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-size: 18px;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <div id="game">
+    <div id="info">Use ← → para mover, espaço para atirar</div>
+    <div class="player" id="player"></div>
+  </div>
+
+  <script>
+    const player = document.getElementById('player');
+    const game = document.getElementById('game');
+
+    let playerX = 100;
+    const speed = 5;
+    const bullets = [];
+    const enemies = [];
+
+    // Movimento do jogador
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') {
+        playerX += speed;
+      } else if (e.key === 'ArrowLeft') {
+        playerX -= speed;
+      } else if (e.key === ' ') {
+        shoot();
+      }
+
+      // Limites da tela
+      playerX = Math.max(0, Math.min(window.innerWidth - 40, playerX));
+      player.style.left = playerX + 'px';
+    });
+
+    function shoot() {
+      const bullet = document.createElement('div');
+      bullet.className = 'bullet';
+      bullet.style.left = playerX + 30 + 'px';
+      bullet.style.bottom = '50px';
+      game.appendChild(bullet);
+      bullets.push(bullet);
+    }
+
+    function createEnemy() {
+      const enemy = document.createElement('div');
+      enemy.className = 'enemy';
+      enemy.style.top = '10px';
+      enemy.style.left = window.innerWidth + 'px';
+      game.appendChild(enemy);
+      enemies.push(enemy);
+    }
+
+    function updateGame() {
+      // Move balas
+      bullets.forEach((b, i) => {
+        const current = parseInt(b.style.left);
+        b.style.left = current + 10 + 'px';
+        if (current > window.innerWidth) {
+          b.remove();
+          bullets.splice(i, 1);
+        }
+      });
+
+      // Move inimigos
+      enemies.forEach((e, i) => {
+        const current = parseInt(e.style.left);
+        e.style.left = current - 3 + 'px';
+        if (current < -40) {
+          e.remove();
+          enemies.splice(i, 1);
+        }
+
+        // Colisão com balas
+        bullets.forEach((b, j) => {
+          const bRect = b.getBoundingClientRect();
+          const eRect = e.getBoundingClientRect();
+          if (
+            bRect.left < eRect.right &&
+            bRect.right > eRect.left &&
+            bRect.top < eRect.bottom &&
+            bRect.bottom > eRect.top
+          ) {
+            e.remove();
+            b.remove();
+            enemies.splice(i, 1);
+            bullets.splice(j, 1);
+          }
+        });
+      });
+
+      requestAnimationFrame(updateGame);
+    }
+
+    setInterval(createEnemy, 2000);
+    updateGame();
+  </script>
+</body>
+</html>

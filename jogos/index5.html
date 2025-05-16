@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mini Metal Slug</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: sans-serif;
+            background: black;
+            color: white;
+            overflow: hidden;
+        }
+
+        #menu,
+        #pause,
+        #credits,
+        #hud {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        #pause,
+        #credits,
+        #hud {
+            display: none;
+        }
+
+        #gameCanvas {
+            background: url('https://i.imgur.com/VYQ0KkN.png') repeat-x bottom;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .life-bar {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 200px;
+            height: 20px;
+            background: #444;
+            border: 2px solid white;
+        }
+
+        .life-bar-inner {
+            height: 100%;
+            background: lime;
+            width: 100%;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="menu">
+        <h1>Mini Metal Slug</h1>
+        <button onclick="startGame()">Jogar</button>
+    </div>
+
+    <div id="pause">
+        <h2>Jogo Pausado</h2>
+        <button onclick="resumeGame()">Continuar</button>
+    </div>
+
+    <div id="credits">
+        <h2>Créditos</h2>
+        <p>Desenvolvido por Você!</p>
+        <button onclick="location.reload()">Voltar ao Menu</button>
+    </div>
+
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+    <div id="hud">
+        <div class="life-bar">
+            <div class="life-bar-inner" id="lifeBar"></div>
+        </div>
+    </div>
+
+    <audio id="shootSound" src="https://www.fesliyanstudios.com/play-mp3/387" preload="auto"></audio>
+    <audio id="explosionSound" src="https://www.fesliyanstudios.com/play-mp3/6672" preload="auto"></audio>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        let player = { x: 50, y: 320, w: 50, h: 50, jumping: false, vy: 0, life: 100 };
+        let bullets = [], enemies = [], obstacles = [], boss = null, keys = {}, paused = false, defeatedEnemies = 0;
+        let shootSound = document.getElementById("shootSound");
+        let explosionSound = document.getElementById("explosionSound");
+
+        function startGame() {
+            document.getElementById("menu").style.display = "none";
+            document.getElementById("hud").style.display = "block";
+            spawnEnemy();
+            spawnObstacle();
+            requestAnimationFrame(update);
+        }
+
+        function resumeGame() {
+            document.getElementById("pause").style.display = "none";
+            paused = false;
+            requestAnimationFrame(update);
+        }
+
+        document.addEventListener("keydown", e => {
+            keys[e.key] = true;
+            if (e.key === "Escape") {
+                paused = !paused;
+                document.getElementById("pause").style.display = paused ? "flex" : "none";
+                if (!paused) requestAnimationFrame(update);
+            }
+        });
+
+        document.addEventListener("keyup", e => keys[e.key] = false);
+
+        function shoot() {
+            bullets.push({ x: player.x + player.w, y: player.y + 20 });
+            shootSound.play();
+        }
+
+        function spawnEnemy() {
+            setInterval(() => {
+                if (!paused && !boss) {
+                    enemies.push({ x: 800, y: 320, w: 50, h: 50, life: 1 });
+                }
+            }, 2000);
+        }
+
+        function spawnObstacle() {
+            obstacles.push({ x: 600, y: 350, w: 40, h: 50 });
+        }
+
+        function spawnBoss() {
+            boss = { x: 700, y: 300, w: 100, h: 100, life: 10 };
+        }
+
+        function update() {
+            if (paused) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Player
+            if (keys[" "]) shoot();
+            if (keys["ArrowUp"] && !player.jumping) {
+                player.vy = -10;
+                player.jumping = true;
+            }
+            player.vy += 0.5;
+            player.y += player.vy;
+            if (player.y >= 320) {
+                player.y = 320;
+                player.jumping = false;
+            }
+            ctx.fillStyle = "blue";
+            ctx.fillRect(player.x, player.y, player.w, player.h);
+
+            // Obstacles
+            ctx.fillStyle = "gray";
+            obstacles.forEach(obs => {
+                ctx.fillRect(obs.x, obs.y, obs.w, obs.h);
+                if (player.x + player.w > obs.x && player.x < obs.x + obs.w && player.y + player.h > obs.y) {
+                    player.x -= 5;
+                }
+            });
+
+            // Bullets
+            ctx.fillStyle = "yellow";
+            bullets.forEach((b, i) => {
+                b.x += 5;
+                ctx.fillRect(b.x, b.y, 10, 5);
+
+                enemies.forEach((en, j) => {
+                    if (b.x < en.x + en.w && b.x + 10 > en.x && b.y < en.y + en.h) {
+                        enemies.splice(j, 1);
+                        bullets.splice(i, 1);
+                        defeatedEnemies++;
+                        explosionSound.play();
+                        if (defeatedEnemies === 5) spawnBoss();
+                    }
+                });
+
+                if (boss && b.x < boss.x + boss.w && b.x + 10 > boss.x && b.y < boss.y + boss.h) {
+                    boss.life--;
+                    bullets.splice(i, 1);
+                    explosionSound.play();
+                    if (boss.life <= 0) {
+                        boss = null;
+                        document.getElementById("credits").style.display = "flex";
+                    }
+                }
+            });
+
+            // Enemies
+            ctx.fillStyle = "red";
+            enemies.forEach(en => {
+                en.x -= 2;
+                ctx.fillRect(en.x, en.y, en.w, en.h);
+            });
+
+            // Boss
+            if (boss) {
+                ctx.fillStyle = "purple";
+                ctx.fillRect(boss.x, boss.y, boss.w, boss.h);
+            }
+
+            // HUD
+            document.getElementById("lifeBar").style.width = player.life + "%";
+
+            requestAnimationFrame(update);
+        }
+    </script>
+</body>
+
+</html>

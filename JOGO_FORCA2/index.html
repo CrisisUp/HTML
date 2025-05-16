@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <title>Jogo da Forca com Tempo e Dicas</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <h1>Jogo da Forca</h1>
+    <div id="topo-jogo">
+        <div id="canvas-wrapper">
+            <canvas id="forcaCanvas" width="200" height="250"></canvas>
+        </div>
+        <div id="teclado"></div>
+    </div>
+
+    <div id="info-jogo" style="display: none;">
+        <div class="info-jogos">
+            <div id="nivel">Nível: Fácil</div>
+            <div id="cronometro">⏱ Tempo: <span id="tempo">60</span>s</div>
+            <div id="pontuacao">🏆 Pontuação: 0</div>
+        </div>
+        <div id="palavra-secreta">_ _ _</div>
+        <div id="dica"></div>
+        <div id="letras-erradas">Letras erradas: </div>
+        <div id="tentativas-restantes">Tentativas restantes: 6</div>
+        <div id="mensagem"></div>
+
+        <div id="entrada-palavra">
+            <input type="text" id="palavraManual" placeholder="Digite uma palavra" />
+            <button onclick="iniciarJogo(true)">Iniciar Multiplayer</button>
+        </div>
+
+        <button id="modo-multiplayer" onclick="ativarMultiplayer()">Modo Multiplayer</button>
+        <button id="reiniciar" onclick="iniciarJogo()">Jogar Novamente</button>
+    </div>
+
+    <button id="start-btn">▶️ Iniciar Jogo</button>
+
+    <script src="./script.js"></script>
+</body>
+</html>
