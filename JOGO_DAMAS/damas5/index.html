@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Jogo de Damas</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #eee;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #menu {
+      margin-top: 100px;
+      text-align: center;
+    }
+
+    #menu h1 {
+      font-size: 2em;
+    }
+
+    #menu button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #game {
+      display: none;
+      align-items: center;
+      flex-direction: column;
+      margin-top: 20px;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(8, 60px);
+      grid-template-rows: repeat(8, 60px);
+      border: 4px solid #333;
+      margin-bottom: 10px;
+    }
+
+    .cell {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .white { background-color: #eee; }
+    .black { background-color: #666; }
+
+    .piece {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .white-piece { background-color: #fff; border: 2px solid #ccc; }
+    .black-piece { background-color: #000; border: 2px solid #333; }
+
+    .king::after {
+      content: "♛";
+      font-size: 24px;
+      color: gold;
+      position: absolute;
+    }
+
+    #info {
+      display: flex;
+      justify-content: space-between;
+      width: 480px;
+      margin-bottom: 10px;
+    }
+
+    #info span {
+      font-weight: bold;
+    }
+
+    #info button {
+      padding: 5px 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="menu">
+    <h1>Jogo de Damas</h1>
+    <button onclick="startGame()">Jogar</button>
+  </div>
+
+  <div id="game">
+    <div id="info">
+      <span id="timer">Tempo: 0s</span>
+      <span id="score">Brancas: 0 | Pretas: 0</span>
+      <button onclick="resetGame()">Reiniciar</button>
+    </div>
+    <div class="board" id="board"></div>
+  </div>
+
+  <script>
+    let boardElement = document.getElementById('board');
+    let boardState = [];
+    let selected = null;
+    let currentPlayer = 'white';
+    let mustContinueCapture = false;
+    let captured = { white: 0, black: 0 };
+    let timer = 0;
+    let interval = null;
+
+    function startGame() {
+      document.getElementById('menu').style.display = 'none';
+      document.getElementById('game').style.display = 'flex';
+      resetGame();
+    }
+
+    function resetGame() {
+      boardElement.innerHTML = '';
+      boardState = [];
+      selected = null;
+      currentPlayer = 'white';
+      mustContinueCapture = false;
+      captured = { white: 0, black: 0 };
+      timer = 0;
+      clearInterval(interval);
+      interval = setInterval(() => {
+        timer++;
+        document.getElementById('timer').textContent = `Tempo: ${timer}s`;
+      }, 1000);
+      createBoard();
+    }
+
+    function createBoard() {
+      for (let row = 0; row < 8; row++) {
+        boardState[row] = [];
+        for (let col = 0; col < 8; col++) {
+          const cell = document.createElement('div');
+          cell.classList.add('cell', (row + col) % 2 === 0 ? 'white' : 'black');
+          cell.dataset.row = row;
+          cell.dataset.col = col;
+          boardElement.appendChild(cell);
+
+          if ((row + col) % 2 !== 0) {
+            if (row < 3) {
+              boardState[row][col] = { color: 'black', king: false };
+            } else if (row > 4) {
+              boardState[row][col] = { color: 'white', king: false };
+            } else {
+              boardState[row][col] = null;
+            }
+          } else {
+            boardState[row][col] = null;
+          }
+        }
+      }
+      renderBoard();
+    }
+
+    function renderBoard() {
+      const cells = document.querySelectorAll('.cell');
+      cells.forEach(cell => {
+        const row = parseInt(cell.dataset.row);
+        const col = parseInt(cell.dataset.col);
+        cell.innerHTML = '';
+        const piece = boardState[row][col];
+        if (piece) {
+          const div = document.createElement('div');
+          div.classList.add('piece', piece.color + '-piece');
+          if (piece.king) div.classList.add('king');
+          cell.appendChild(div);
+        }
+      });
+      document.getElementById('score').textContent = `Brancas: ${captured.black} | Pretas: ${captured.white}`;
+    }
+
+    function handleClick(e) {
+      const cell = e.target.closest('.cell');
+      if (!cell) return;
+
+      const row = parseInt(cell.dataset.row);
+      const col = parseInt(cell.dataset.col);
+      const piece = boardState[row][col];
+
+      if (selected) {
+        const [r, c] = selected;
+        if (tryMove(r, c, row, col)) {
+          selected = mustContinueCapture ? [row, col] : null;
+          if (!mustContinueCapture) currentPlayer = currentPlayer === 'white' ? 'black' : 'white';
+        }
+      } else if (piece && piece.color === currentPlayer) {
+        selected = [row, col];
+      }
+
+      renderBoard();
+    }
+
+    function tryMove(r1, c1, r2, c2) {
+      const piece = boardState[r1][c1];
+      if (!piece || boardState[r2][c2]) return false;
+
+      const dr = r2 - r1;
+      const dc = c2 - c1;
+      if (Math.abs(dr) !== Math.abs(dc)) return false;
+
+      const absDr = Math.abs(dr);
+      const dirR = dr / absDr;
+      const dirC = dc / absDr;
+
+      if (piece.king) {
+        let enemyCount = 0;
+        let enemyPos = null;
+        for (let i = 1; i < absDr; i++) {
+          const nr = r1 + dirR * i;
+          const nc = c1 + dirC * i;
+          const midPiece = boardState[nr][nc];
+          if (midPiece) {
+            if (midPiece.color === piece.color || enemyCount) return false;
+            enemyCount++;
+            enemyPos = [nr, nc];
+          }
+        }
+        if (enemyCount === 1) {
+          removePiece(...enemyPos);
+          movePiece(r1, c1, r2, c2);
+          captured[piece.color]++;
+          checkPromotion(r2, c2);
+          mustContinueCapture = canCaptureFrom(r2, c2);
+          if (!mustContinueCapture) checkEndGame();
+          return true;
+        } else if (enemyCount === 0 && !mustContinueCapture) {
+          movePiece(r1, c1, r2, c2);
+          return true;
+        }
+        return false;
+      } else {
+        const forward = piece.color === 'white' ? -1 : 1;
+        if (absDr === 1 && dr === forward && !mustContinueCapture) {
+          movePiece(r1, c1, r2, c2);
+          checkPromotion(r2, c2);
+          checkEndGame();
+          return true;
+        } else if (absDr === 2) {
+          const midRow = r1 + dr / 2;
+          const midCol = c1 + dc / 2;
+          const midPiece = boardState[midRow][midCol];
+          if (midPiece && midPiece.color !== piece.color) {
+            removePiece(midRow, midCol);
+            movePiece(r1, c1, r2, c2);
+            captured[piece.color]++;
+            checkPromotion(r2, c2);
+            mustContinueCapture = canCaptureFrom(r2, c2);
+            if (!mustContinueCapture) checkEndGame();
+            return true;
+          }
+        }
+        return false;
+      }
+    }
+
+    function movePiece(r1, c1, r2, c2) {
+      boardState[r2][c2] = boardState[r1][c1];
+      boardState[r1][c1] = null;
+    }
+
+    function removePiece(r, c) {
+      boardState[r][c] = null;
+    }
+
+    function checkPromotion(row, col) {
+      const piece = boardState[row][col];
+      if (piece.color === 'white' && row === 0) piece.king = true;
+      if (piece.color === 'black' && row === 7) piece.king = true;
+    }
+
+    function canCaptureFrom(row, col) {
+      const piece = boardState[row][col];
+      if (!piece) return false;
+
+      const directions = [[1,1],[1,-1],[-1,1],[-1,-1]];
+      for (let [dr, dc] of directions) {
+        if (piece.king) {
+          let r = row + dr, c = col + dc;
+          let enemyFound = false;
+          while (r >= 0 && r < 8 && c >= 0 && c < 8) {
+            const cell = boardState[r][c];
+            if (!cell) {
+              if (enemyFound) return true;
+            } else {
+              if (cell.color === piece.color || enemyFound) break;
+              enemyFound = true;
+            }
+            r += dr;
+            c += dc;
+          }
+        } else {
+          const midRow = row + dr;
+          const midCol = col + dc;
+          const endRow = row + dr * 2;
+          const endCol = col + dc * 2;
+          if (endRow >= 0 && endRow < 8 && endCol >= 0 && endCol < 8 &&
+              !boardState[endRow][endCol]) {
+            const midPiece = boardState[midRow][midCol];
+            if (midPiece && midPiece.color !== piece.color) return true;
+          }
+        }
+      }
+      return false;
+    }
+
+    function checkEndGame() {
+      for (let color of ['white', 'black']) {
+        let hasPiece = false, canMove = false;
+        for (let r = 0; r < 8; r++) {
+          for (let c = 0; c < 8; c++) {
+            const piece = boardState[r][c];
+            if (piece && piece.color === color) {
+              hasPiece = true;
+              if (canMoveFrom(r, c)) {
+                canMove = true;
+                break;
+              }
+            }
+          }
+          if (canMove) break;
+        }
+        if (!hasPiece || !canMove) {
+          const winner = color === 'white' ? 'Pretas' : 'Brancas';
+          clearInterval(interval);
+          setTimeout(() => alert(`Fim de jogo! As peças ${winner} venceram!`), 100);
+          document.removeEventListener('click', handleClick);
+        }
+      }
+    }
+
+    function canMoveFrom(row, col) {
+      const piece = boardState[row][col];
+      if (!piece) return false;
+
+      if (canCaptureFrom(row, col)) return true;
+
+      const directions = piece.king
+        ? [[1,1],[1,-1],[-1,1],[-1,-1]]
+        : [[piece.color === 'white' ? -1 : 1, 1], [piece.color === 'white' ? -1 : 1, -1]];
+
+      for (let [dr, dc] of directions) {
+        const nr = row + dr;
+        const nc = col + dc;
+        if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8 && !boardState[nr][nc]) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    document.addEventListener('click', handleClick);
+  </script>
+</body>
+</html>

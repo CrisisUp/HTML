@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jogo de Damas</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #menu {
+      margin: 20px;
+      text-align: center;
+    }
+    #board {
+      display: grid;
+      grid-template-columns: repeat(8, 60px);
+      grid-template-rows: repeat(8, 60px);
+      gap: 0;
+      border: 4px solid #333;
+    }
+    .cell {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .black { background-color: #769656; }
+    .white { background-color: #eeeed2; }
+    .piece {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+    .white-piece { background: white; }
+    .black-piece { background: black; }
+    .king::after {
+      content: "👑";
+      font-size: 18px;
+      position: absolute;
+      margin-top: -30px;
+    }
+    #info {
+      margin-top: 15px;
+    }
+    button {
+      margin: 5px;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="menu">
+    <h1>Damas</h1>
+    <button onclick="startGame()">Começar</button>
+    <button onclick="resetGame()">Reiniciar</button>
+    <div id="info">Tempo: <span id="timer">0</span>s</div>
+  </div>
+  <div id="board"></div>
+
+  <script>
+    const board = document.getElementById("board");
+    const timerSpan = document.getElementById("timer");
+    let boardState = [];
+    let selected = null;
+    let turn = "white";
+    let timer = 0;
+    let interval;
+
+    function startGame() {
+      board.innerHTML = "";
+      boardState = [];
+      selected = null;
+      turn = "white";
+      timer = 0;
+      clearInterval(interval);
+      interval = setInterval(() => {
+        timer++;
+        timerSpan.textContent = timer;
+      }, 1000);
+      for (let row = 0; row < 8; row++) {
+        boardState[row] = [];
+        for (let col = 0; col < 8; col++) {
+          const cell = document.createElement("div");
+          cell.classList.add("cell");
+          const isBlack = (row + col) % 2 !== 0;
+          cell.classList.add(isBlack ? "black" : "white");
+          cell.dataset.row = row;
+          cell.dataset.col = col;
+          board.appendChild(cell);
+          boardState[row][col] = null;
+
+          if (isBlack && row < 3) {
+            addPiece(cell, "black");
+          } else if (isBlack && row > 4) {
+            addPiece(cell, "white");
+          }
+
+          cell.addEventListener("click", () => handleClick(row, col));
+        }
+      }
+    }
+
+    function resetGame() {
+      startGame();
+    }
+
+    function addPiece(cell, color, isKing = false) {
+      const piece = document.createElement("div");
+      piece.classList.add("piece", `${color}-piece`);
+      if (isKing) piece.classList.add("king");
+      cell.appendChild(piece);
+      boardState[cell.dataset.row][cell.dataset.col] = {
+        color,
+        king: isKing
+      };
+    }
+
+    function handleClick(row, col) {
+      const cell = board.children[row * 8 + col];
+      const piece = boardState[row][col];
+
+      if (selected && isValidMove(selected, { row, col })) {
+        movePiece(selected, { row, col });
+        selected = null;
+        checkVictory();
+        if (turn === "black") aiMove();
+      } else if (piece && piece.color === turn) {
+        selected = { row, col };
+      }
+    }
+
+    function isValidMove(from, to) {
+      const piece = boardState[from.row][from.col];
+      const target = boardState[to.row][to.col];
+      if (target) return false;
+      const dx = to.col - from.col;
+      const dy = to.row - from.row;
+
+      const absDx = Math.abs(dx);
+      const absDy = Math.abs(dy);
+      const dir = piece.color === "white" ? -1 : 1;
+
+      if (piece.king || dy === dir || dy === 2 * dir) {
+        // Captura
+        if (absDx === 2 && absDy === 2) {
+          const midRow = (from.row + to.row) / 2;
+          const midCol = (from.col + to.col) / 2;
+          const midPiece = boardState[midRow][midCol];
+          return midPiece && midPiece.color !== piece.color;
+        }
+        // Movimento simples
+        if (absDx === 1 && dy === dir) return true;
+      }
+
+      // Dama se movendo em longas diagonais com captura
+      if (piece.king && absDx === absDy) {
+        let stepX = dx / absDx;
+        let stepY = dy / absDy;
+        let cx = from.col + stepX;
+        let cy = from.row + stepY;
+        let found = null;
+        while (cx !== to.col && cy !== to.row) {
+          const p = boardState[cy][cx];
+          if (p) {
+            if (p.color === piece.color || found) return false;
+            found = { row: cy, col: cx };
+          }
+          cx += stepX;
+          cy += stepY;
+        }
+        return true;
+      }
+
+      return false;
+    }
+
+    function movePiece(from, to) {
+      const piece = boardState[from.row][from.col];
+      boardState[to.row][to.col] = piece;
+      boardState[from.row][from.col] = null;
+
+      const fromCell = board.children[from.row * 8 + from.col];
+      const toCell = board.children[to.row * 8 + to.col];
+
+      toCell.innerHTML = "";
+      fromCell.innerHTML = "";
+      addPiece(toCell, piece.color, piece.king);
+
+      const dx = to.col - from.col;
+      const dy = to.row - from.row;
+
+      // Remover peça capturada
+      if (Math.abs(dx) === 2 && Math.abs(dy) === 2) {
+        const midRow = (from.row + to.row) / 2;
+        const midCol = (from.col + to.col) / 2;
+        const midCell = board.children[midRow * 8 + midCol];
+        midCell.innerHTML = "";
+        boardState[midRow][midCol] = null;
+      }
+
+      // Promover para dama
+      if ((piece.color === "white" && to.row === 0) || (piece.color === "black" && to.row === 7)) {
+        piece.king = true;
+        toCell.firstChild.classList.add("king");
+      }
+
+      turn = turn === "white" ? "black" : "white";
+    }
+
+    function checkVictory() {
+      const flat = boardState.flat();
+      const white = flat.filter(p => p && p.color === "white").length;
+      const black = flat.filter(p => p && p.color === "black").length;
+      if (white === 0) alert("Pretas venceram!");
+      if (black === 0) alert("Brancas venceram!");
+    }
+
+    function aiMove() {
+      setTimeout(() => {
+        const moves = [];
+        for (let r = 0; r < 8; r++) {
+          for (let c = 0; c < 8; c++) {
+            const piece = boardState[r][c];
+            if (piece && piece.color === "black") {
+              for (let dr = -2; dr <= 2; dr++) {
+                for (let dc = -2; dc <= 2; dc++) {
+                  const toR = r + dr;
+                  const toC = c + dc;
+                  if (toR >= 0 && toR < 8 && toC >= 0 && toC < 8) {
+                    if (isValidMove({ row: r, col: c }, { row: toR, col: toC })) {
+                      moves.push({ from: { row: r, col: c }, to: { row: toR, col: toC } });
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        if (moves.length > 0) {
+          const best = moves.find(m => Math.abs(m.from.row - m.to.row) === 2) || moves[0];
+          movePiece(best.from, best.to);
+          checkVictory();
+        }
+      }, 600);
+    }
+
+    startGame();
+  </script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jogo de Damas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .tabuleiro {
+      display: grid;
+      grid-template-columns: repeat(8, 60px);
+      grid-template-rows: repeat(8, 60px);
+      gap: 0;
+      display: none;
+    }
+    .casa {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .casa.preta {
+      background-color: #769656;
+    }
+    .casa.branca {
+      background-color: #eeeed2;
+    }
+    .peca {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+    .peca.branca {
+      background-color: white;
+    }
+    .peca.preta {
+      background-color: black;
+    }
+    .dama {
+      border: 2px solid gold;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+    .placar {
+      margin-top: 10px;
+      display: none;
+    }
+    #menu {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    body.dark {
+      background-color: #121212;
+      color: #f1f1f1;
+    }
+    .dark .tabuleiro {
+      background-color: #222;
+    }
+    .dark .casa.branca {
+      background-color: #999;
+    }
+    .dark .casa.preta {
+      background-color: #444;
+    }
+  </style>
+</head>
+<body>
+  <h1>Jogo de Damas</h1>
+
+  <div id="menu">
+    <button onclick="iniciarJogo()">Começar Jogo</button>
+    <button onclick="alternarTema()" id="botao-tema">Alternar tema</button>
+  </div>
+
+  <div class="placar" id="placar">Capturas - ⚪ Brancas: <span id="capturasBrancas">0</span> | ⚫ Pretas: <span id="capturasPretas">0</span></div>
+
+  <div class="tabuleiro" id="tabuleiro"></div>
+
+  <audio id="som-movimento" src="movimento.mp3" preload="auto"></audio>
+  <audio id="som-captura" src="captura.mp3" preload="auto"></audio>
+
+  <script>
+    const tabuleiro = document.getElementById('tabuleiro');
+    const somMovimento = document.getElementById('som-movimento');
+    const somCaptura = document.getElementById('som-captura');
+    const placar = document.getElementById('placar');
+    let capturas = { branca: 0, preta: 0 };
+    let pecaSelecionada = null;
+
+    function iniciarJogo() {
+      document.getElementById('menu').style.display = 'none';
+      tabuleiro.style.display = 'grid';
+      placar.style.display = 'block';
+      criarTabuleiro();
+    }
+
+    function criarTabuleiro() {
+      tabuleiro.innerHTML = '';
+      for (let linha = 0; linha < 8; linha++) {
+        for (let coluna = 0; coluna < 8; coluna++) {
+          const casa = document.createElement('div');
+          casa.classList.add('casa');
+          casa.classList.add((linha + coluna) % 2 === 0 ? 'branca' : 'preta');
+          casa.dataset.linha = linha;
+          casa.dataset.coluna = coluna;
+
+          if ((linha + coluna) % 2 !== 0 && linha < 3) {
+            const peca = criarPeca('preta');
+            casa.appendChild(peca);
+          } else if ((linha + coluna) % 2 !== 0 && linha > 4) {
+            const peca = criarPeca('branca');
+            casa.appendChild(peca);
+          }
+
+          casa.addEventListener('click', () => selecionarOuMover(casa));
+          tabuleiro.appendChild(casa);
+        }
+      }
+    }
+
+    function criarPeca(cor) {
+      const peca = document.createElement('div');
+      peca.classList.add('peca', cor);
+      return peca;
+    }
+
+    function selecionarOuMover(casa) {
+      const peca = casa.querySelector('.peca');
+      if (peca && !pecaSelecionada) {
+        pecaSelecionada = peca;
+        pecaSelecionada.style.outline = '2px solid red';
+      } else if (!peca && pecaSelecionada) {
+        const origem = pecaSelecionada.parentElement;
+        const linhaOrigem = parseInt(origem.dataset.linha);
+        const colunaOrigem = parseInt(origem.dataset.coluna);
+        const linhaDestino = parseInt(casa.dataset.linha);
+        const colunaDestino = parseInt(casa.dataset.coluna);
+        const deltaLinha = linhaDestino - linhaOrigem;
+        const deltaColuna = colunaDestino - colunaOrigem;
+
+        if (Math.abs(deltaLinha) === 1 && Math.abs(deltaColuna) === 1) {
+          casa.appendChild(pecaSelecionada);
+          somMovimento.play();
+          verificarPromocao(pecaSelecionada, linhaDestino);
+          verificarVitoria();
+        } else if (Math.abs(deltaLinha) === 2 && Math.abs(deltaColuna) === 2) {
+          const linhaMeio = (linhaOrigem + linhaDestino) / 2;
+          const colunaMeio = (colunaOrigem + colunaDestino) / 2;
+          const casaMeio = document.querySelector(`.casa[data-linha='${linhaMeio}'][data-coluna='${colunaMeio}']`);
+          const pecaMeio = casaMeio.querySelector('.peca');
+          if (pecaMeio && pecaMeio.classList.contains(pecaSelecionada.classList.contains('branca') ? 'preta' : 'branca')) {
+            casaMeio.innerHTML = '';
+            casa.appendChild(pecaSelecionada);
+            somCaptura.play();
+            capturas[pecaSelecionada.classList.contains('branca') ? 'branca' : 'preta']++;
+            atualizarPlacar();
+            verificarPromocao(pecaSelecionada, linhaDestino);
+            verificarVitoria();
+          }
+        }
+
+        pecaSelecionada.style.outline = '';
+        pecaSelecionada = null;
+      } else if (pecaSelecionada) {
+        pecaSelecionada.style.outline = '';
+        pecaSelecionada = null;
+      }
+    }
+
+    function atualizarPlacar() {
+      document.getElementById('capturasBrancas').textContent = capturas.branca;
+      document.getElementById('capturasPretas').textContent = capturas.preta;
+    }
+
+    function verificarPromocao(peca, linha) {
+      if (peca.classList.contains('branca') && linha === 0) {
+        peca.classList.add('dama');
+      } else if (peca.classList.contains('preta') && linha === 7) {
+        peca.classList.add('dama');
+      }
+    }
+
+    function verificarVitoria() {
+      const brancas = document.querySelectorAll('.peca.branca');
+      const pretas = document.querySelectorAll('.peca.preta');
+      if (brancas.length === 0) {
+        setTimeout(() => alert('Pretas venceram!'), 100);
+      } else if (pretas.length === 0) {
+        setTimeout(() => alert('Brancas venceram!'), 100);
+      }
+    }
+
+    function alternarTema() {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('tema', document.body.classList.contains('dark') ? 'escuro' : 'claro');
+    }
+
+    window.onload = () => {
+      const temaSalvo = localStorage.getItem('tema');
+      if (temaSalvo === 'escuro') {
+        document.body.classList.add('dark');
+      }
+    };
+  </script>
+</body>
+</html>

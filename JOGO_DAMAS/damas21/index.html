@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jogo de Damas</title>
+  <link rel="stylesheet" href="damas.css">
+</head>
+
+<body>
+  <h1>Damas</h1>
+  <div id="info">
+    <div id="timer">⏱️ Tempo: <span id="time">0</span>s</div>
+    <div id="score">⚪: <span id="whiteCaptures">0</span> 🔴: <span id="blackCaptures">0</span></div>
+  </div>
+  <div id="board"></div>
+  <div id="menu">
+    <select id="game-mode">
+      <option value="1player">1 Jogador vs IA</option>
+      <option value="2players">2 Jogadores</option>
+    </select>
+    <select id="theme-selector">
+      <option value="classic">Clássico</option>
+      <option value="modern">Moderno</option>
+      <option value="nature">Natureza</option>
+      <option value="dark">Escuro</option>
+      <option value="ocean">Oceano</option>
+    </select>
+    <div id="menu">
+      <button onclick="startGame()">Começar Jogo</button>
+      <button onclick="resetGame()">Reiniciar</button>
+    </div>
+  </div>
+
+  <div id="moves-history"></div>
+  <div id="win-screen" style="display:none">
+    <h2 id="win-message"></h2>
+    <button onclick="startGame()">Jogar Novamente</button>
+  </div>
+
+  <script src="damas.js"></script>
+</body>
+
+</html>

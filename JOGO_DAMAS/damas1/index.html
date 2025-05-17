@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Jogo de Damas Simples</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+  }
+  h1 {
+    margin-bottom: 10px;
+  }
+  #board {
+    display: grid;
+    grid-template-columns: repeat(8, 50px);
+    grid-template-rows: repeat(8, 50px);
+    border: 2px solid #333;
+  }
+  .cell {
+    width: 50px;
+    height: 50px;
+  }
+  .dark {
+    background-color: #769656;
+  }
+  .light {
+    background-color: #eeeed2;
+  }
+  .piece {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin: 5px auto;
+    cursor: pointer;
+    box-sizing: border-box;
+    border: 2px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .white {
+    background-color: #fff;
+  }
+  .black {
+    background-color: #000;
+  }
+  .selected {
+    border-color: red !important;
+  }
+  #info {
+    margin-top: 15px;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+  <h1>Jogo de Damas</h1>
+  <div id="board"></div>
+  <div id="info">Turno: Jogador Branco</div>
+
+<script>
+  const board = document.getElementById('board');
+  const info = document.getElementById('info');
+  const size = 8;
+
+  // Representa o estado do tabuleiro: null, 'white', 'black'
+  let boardState = [];
+
+  // Jogador atual
+  let currentPlayer = 'white';
+
+  // Seleção da peça que vai mover
+  let selected = null;
+
+  // Inicializa o tabuleiro
+  function initBoard() {
+    board.innerHTML = '';
+    boardState = [];
+    for(let row = 0; row < size; row++) {
+      boardState[row] = [];
+      for(let col = 0; col < size; col++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        // Define cores das casas
+        if ((row + col) % 2 === 0) {
+          cell.classList.add('light');
+        } else {
+          cell.classList.add('dark');
+          // Colocar peças nas primeiras 3 linhas pretas (para pretas)
+          if (row < 3) {
+            cell.appendChild(createPiece('black'));
+            boardState[row][col] = 'black';
+          }
+          // Colocar peças nas últimas 3 linhas pretas (para brancas)
+          else if (row > 4) {
+            cell.appendChild(createPiece('white'));
+            boardState[row][col] = 'white';
+          } else {
+            boardState[row][col] = null;
+          }
+          // Adiciona evento para clique nas casas escuras
+          cell.addEventListener('click', () => onCellClick(row, col));
+        }
+        board.appendChild(cell);
+      }
+    }
+    selected = null;
+    updateInfo();
+  }
+
+  // Cria um elemento peça
+  function createPiece(color) {
+    const piece = document.createElement('div');
+    piece.classList.add('piece', color);
+    return piece;
+  }
+
+  // Atualiza texto de info (turno)
+  function updateInfo() {
+    info.textContent = `Turno: Jogador ${currentPlayer === 'white' ? 'Branco' : 'Preto'}`;
+  }
+
+  // Trata clique na casa
+  function onCellClick(row, col) {
+    const pieceColor = boardState[row][col];
+
+    if (selected) {
+      // Se clicar em casa escura sem peça, tenta mover
+      if (!pieceColor) {
+        if (tryMove(selected.row, selected.col, row, col)) {
+          selected = null;
+          currentPlayer = currentPlayer === 'white' ? 'black' : 'white';
+          updateInfo();
+        }
+      } else if (pieceColor === currentPlayer) {
+        // Trocar seleção para outra peça do jogador
+        selected = {row, col};
+        highlightSelected();
+      } else {
+        // Clicou em peça adversária -> ignora
+      }
+    } else {
+      // Seleciona peça se for do jogador atual
+      if (pieceColor === currentPlayer) {
+        selected = {row, col};
+        highlightSelected();
+      }
+    }
+  }
+
+  // Realça a peça selecionada
+  function highlightSelected() {
+    // Remove destaque anterior
+    document.querySelectorAll('.selected').forEach(e => e.classList.remove('selected'));
+
+    if (!selected) return;
+
+    // Seleciona a célula correspondente e adiciona classe selected na peça
+    const index = selected.row * size + selected.col;
+    const cell = board.children[index];
+    const piece = cell.querySelector('.piece');
+    if (piece) {
+      piece.classList.add('selected');
+    }
+  }
+
+  // Tenta mover a peça; retorna true se moveu
+  function tryMove(r1, c1, r2, c2) {
+    // Verifica movimento diagonal
+    const dr = r2 - r1;
+    const dc = c2 - c1;
+
+    if (Math.abs(dc) !== Math.abs(dr)) return false; // movimento não diagonal
+
+    const pieceColor = boardState[r1][c1];
+
+    // Peças se movem para frente (linha aumenta para preto, diminui para branco)
+    const forward = pieceColor === 'white' ? -1 : 1;
+
+    // Movimento simples: 1 passo diagonal
+    if (Math.abs(dr) === 1 && dr === forward && boardState[r2][c2] === null) {
+      movePiece(r1, c1, r2, c2);
+      return true;
+    }
+
+    // Captura: pular uma peça adversária (2 passos diagonal)
+    if (Math.abs(dr) === 2 && dr === 2*forward) {
+      const midRow = r1 + dr/2;
+      const midCol = c1 + dc/2;
+      const midPiece = boardState[midRow][midCol];
+      if (midPiece && midPiece !== pieceColor && boardState[r2][c2] === null) {
+        // Remove peça capturada
+        removePiece(midRow, midCol);
+        movePiece(r1, c1, r2, c2);
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  // Move peça no estado e na interface
+  function movePiece(r1, c1, r2, c2) {
+    const fromIndex = r1 * size + c1;
+    const toIndex = r2 * size + c2;
+    const fromCell = board.children[fromIndex];
+    const toCell = board.children[toIndex];
+
+    const piece = fromCell.querySelector('.piece');
+    fromCell.removeChild(piece);
+    toCell.appendChild(piece);
+
+    boardState[r2][c2] = boardState[r1][c1];
+    boardState[r1][c1] = null;
+  }
+
+  // Remove peça capturada
+  function removePiece(r, c) {
+    const index = r * size + c;
+    const cell = board.children[index];
+    const piece = cell.querySelector('.piece');
+    if (piece) {
+      cell.removeChild(piece);
+    }
+    boardState[r][c] = null;
+  }
+
+  // Inicializa o jogo
+  initBoard();
+</script>
+</body>
+</html>

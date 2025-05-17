@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Jogo de Damas Avançado</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+  }
+  h1 {
+    margin-bottom: 10px;
+  }
+  #board {
+    display: grid;
+    grid-template-columns: repeat(8, 50px);
+    grid-template-rows: repeat(8, 50px);
+    border: 2px solid #333;
+  }
+  .cell {
+    width: 50px;
+    height: 50px;
+  }
+  .dark {
+    background-color: #769656;
+  }
+  .light {
+    background-color: #eeeed2;
+  }
+  .piece {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin: 5px auto;
+    cursor: pointer;
+    box-sizing: border-box;
+    border: 2px solid transparent;
+    transition: border-color 0.2s;
+    position: relative;
+  }
+  .white {
+    background-color: #fff;
+  }
+  .black {
+    background-color: #000;
+  }
+  .selected {
+    border-color: red !important;
+  }
+  /* Dama tem um círculo menor e borda dourada */
+  .king::after {
+    content: '';
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 3px solid gold;
+    box-sizing: border-box;
+  }
+  #info {
+    margin-top: 15px;
+    font-weight: bold;
+  }
+  #restartBtn {
+    margin-top: 15px;
+    padding: 6px 12px;
+    font-size: 16px;
+  }
+</style>
+</head>
+<body>
+  <h1>Jogo de Damas Avançado</h1>
+  <div id="board"></div>
+  <div id="info">Turno: Jogador Branco</div>
+  <button id="restartBtn">Reiniciar Jogo</button>
+
+<script>
+  const board = document.getElementById('board');
+  const info = document.getElementById('info');
+  const restartBtn = document.getElementById('restartBtn');
+  const size = 8;
+
+  // Estado do tabuleiro: null ou objeto {color: 'white'|'black', king: true|false}
+  let boardState = [];
+
+  // Jogador atual
+  let currentPlayer = 'white';
+
+  // Seleção da peça que vai mover
+  let selected = null;
+
+  // Estado para captura múltipla
+  let mustContinueCapture = false;
+
+  // Inicializa o tabuleiro
+  function initBoard() {
+    board.innerHTML = '';
+    boardState = [];
+    mustContinueCapture = false;
+    currentPlayer = 'white';
+    selected = null;
+
+    for(let row = 0; row < size; row++) {
+      boardState[row] = [];
+      for(let col = 0; col < size; col++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        if ((row + col) % 2 === 0) {
+          cell.classList.add('light');
+          boardState[row][col] = null;
+        } else {
+          cell.classList.add('dark');
+          if (row < 3) {
+            boardState[row][col] = {color:'black', king:false};
+            cell.appendChild(createPieceElement(boardState[row][col]));
+          } else if (row > 4) {
+            boardState[row][col] = {color:'white', king:false};
+            cell.appendChild(createPieceElement(boardState[row][col]));
+          } else {
+            boardState[row][col] = null;
+          }
+          cell.addEventListener('click', () => onCellClick(row, col));
+        }
+        board.appendChild(cell);
+      }
+    }
+    updateInfo();
+  }
+
+  // Cria elemento visual da peça
+  function createPieceElement(piece) {
+    const div = document.createElement('div');
+    div.classList.add('piece', piece.color);
+    if (piece.king) div.classList.add('king');
+    return div;
+  }
+
+  // Atualiza texto do turno
+  function updateInfo(text) {
+    if(text) {
+      info.textContent = text;
+    } else {
+      info.textContent = `Turno: Jogador ${currentPlayer === 'white' ? 'Branco' : 'Preto'}`;
+    }
+  }
+
+  // Clique em casa escura
+  function onCellClick(row, col) {
+    if (mustContinueCapture && (!selected || !canCaptureFrom(selected.row, selected.col))) {
+      updateInfo(`Você deve continuar capturando com a peça selecionada!`);
+      return;
+    }
+
+    const piece = boardState[row][col];
+    if (selected) {
+      if (row === selected.row && col === selected.col) {
+        // Deseleciona peça
+        selected = null;
+        clearHighlights();
+        return;
+      }
+      if (tryMove(selected.row, selected.col, row, col)) {
+        if (mustContinueCapture) {
+          // Continue com a mesma peça se houver outra captura possível
+          if (canCaptureFrom(row, col)) {
+            selected = {row, col};
+            highlightSelected();
+            updateInfo('Você deve continuar capturando com a mesma peça!');
+            return;
+          }
+        }
+        // Trocar turno
+        mustContinueCapture = false;
+        selected = null;
+        currentPlayer = currentPlayer === 'white' ? 'black' : 'white';
+        updateInfo();
+      } else if (piece && piece.color === currentPlayer) {
+        selected = {row, col};
+        highlightSelected();
+      }
+    } else {
+      if (piece && piece.color === currentPlayer) {
+        selected = {row, col};
+        highlightSelected();
+      }
+    }
+  }
+
+  // Remove destaque de todas as peças
+  function clearHighlights() {
+    document.querySelectorAll('.selected').forEach(e => e.classList.remove('selected'));
+  }
+
+  // Destaca peça selecionada
+  function highlightSelected() {
+    clearHighlights();
+    if (!selected) return;
+    const index = selected.row * size + selected.col;
+    const cell = board.children[index];
+    const pieceDiv = cell.querySelector('.piece');
+    if (pieceDiv) pieceDiv.classList.add('selected');
+  }
+
+  // Verifica se um movimento é válido e faz a jogada
+  function tryMove(r1, c1, r2, c2) {
+    const piece = boardState[r1][c1];
+    if (!piece) return false;
+    if (boardState[r2][c2]) return false; // destino ocupado
+
+    const dr = r2 - r1;
+    const dc = c2 - c1;
+    if (Math.abs(dr) !== Math.abs(dc)) return false; // deve ser diagonal
+
+    const absDr = Math.abs(dr);
+    if (absDr !== 1 && absDr !== 2) return false; // só 1 passo ou 2 passos (captura)
+
+    // Definir direções permitidas
+    let forward = piece.color === 'white' ? -1 : 1;
+
+    // Damas podem ir para frente e para trás
+    if (piece.king) {
+      forward = [1, -1];
+    } else {
+      forward = [forward];
+    }
+
+    // Verifica movimento simples (1 passo diagonal)
+    if (absDr === 1) {
+      if (!forward.includes(dr)) return false;
+      if (mustContinueCapture) return false; // não pode fazer movimento simples se deve capturar
+      movePiece(r1, c1, r2, c2);
+      checkPromotion(r2, c2);
+      return true;
+    }
+
+    // Movimento de captura (2 passos)
+    if (absDr === 2) {
+      const midRow = r1 + dr / 2;
+      const midCol = c1 + dc / 2;
+      const midPiece = boardState[midRow][midCol];
+      if (!midPiece) return false;
+      if (midPiece.color === piece.color) return false; // não pode capturar peça própria
+      if (!forward.includes(dr) && !piece.king) return false; // peões normais só capturam para frente
+      // captura válida
+      removePiece(midRow, midCol);
+      movePiece(r1, c1, r2, c2);
+      checkPromotion(r2, c2);
+      // Verifica se pode continuar capturando
+      if (canCaptureFrom(r2, c2)) {
+        mustContinueCapture = true;
+      } else {
+        mustContinueCapture = false;
+      }
+      return true;
+    }
+    return false;
+  }
+
+  // Move a peça no tabuleiro e atualiza a interface
+  function movePiece(r1, c1, r2, c2) {
+    const fromIndex = r1 * size + c1;
+    const toIndex = r2 * size + c2;
+    const fromCell = board.children[fromIndex];
+    const toCell = board.children[toIndex];
+
+    const pieceDiv = fromCell.querySelector('.piece');
+    fromCell.removeChild(pieceDiv);
+    toCell.appendChild(pieceDiv);
+
+    boardState[r2][c2] = boardState[r1][c1];
+    boardState[r1][c1] = null;
+  }
+
+  // Remove peça capturada
+  function removePiece(r, c) {
+    const index = r * size + c;
+    const cell = board.children[index];
+    const pieceDiv = cell.querySelector('.piece');
+    if (pieceDiv) cell.removeChild(pieceDiv);
+    boardState[r][c] = null;
+  }
+
+  // Verifica promoção a dama
+  function checkPromotion(r, c) {
+    const piece = boardState[r][c];
+    if (!piece) return;
+    if (!piece.king) {
+      if ((piece.color === 'white' && r === 0) || (piece.color === 'black' && r === size - 1)) {
+        piece.king = true;
+        // Atualiza visual para dama
+        const index = r * size + c;
+        const cell = board.children[index];
+        const pieceDiv = cell.querySelector('.piece');
+        if (pieceDiv) pieceDiv.classList.add('king');
+        updateInfo(`Peça promovida a Dama!`);
+      }
+    }
+  }
+
+  // Verifica se a peça na posição pode capturar outra peça
+  function canCaptureFrom(r, c) {
+    const piece = boardState[r][c];
+    if (!piece) return false;
+    const directions = piece.king ? [1, -1] : [piece.color === 'white' ? -1 : 1];
+    for (let dr of directions) {
+      for (let dc of [-1, 1]) {
+        const midRow = r + dr;
+        const midCol = c + dc;
+        const destRow = r + 2*dr;
+        const destCol = c + 2*dc;
+        if (
+          destRow >= 0 && destRow < size &&
+          destCol >= 0 && destCol < size &&
+          boardState[destRow][destCol] === null
+        ) {
+          const midPiece = boardState[midRow] && boardState[midRow][midCol];
+          if (midPiece && midPiece.color !== piece.color) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  restartBtn.onclick = () => initBoard();
+
+  initBoard();
+</script>
+</body>
+</html>

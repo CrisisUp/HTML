@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jogo de Damas</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    h1 { margin-top: 1rem; }
+    #menu, #victoryScreen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    #menu button, #victoryScreen button, #resetBtn {
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+      border: none;
+      background-color: #333;
+      color: #fff;
+    }
+    #board {
+      display: grid;
+      grid-template-columns: repeat(8, 60px);
+      grid-template-rows: repeat(8, 60px);
+      gap: 0;
+      margin: 20px 0;
+    }
+    .cell {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .black { background-color: #444; }
+    .white { background-color: #eee; }
+    .piece {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .white-piece { background-color: #ccc; color: #000; }
+    .black-piece { background-color: #000; }
+    #info { margin: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Jogo de Damas</h1>
+  <div id="menu">
+    <button onclick="startGame('2p')">2 Jogadores</button>
+    <button onclick="startGame('ai')">Contra IA</button>
+  </div>
+  <div id="info">
+    <div id="turn"></div>
+    <div id="score"></div>
+    <div id="timer"></div>
+    <button id="resetBtn" onclick="resetGame()">Reiniciar</button>
+  </div>
+  <div id="board"></div>
+  <div id="victoryScreen">
+    <h2 id="winnerText"></h2>
+    <button onclick="resetGame()">Jogar Novamente</button>
+  </div>
+
+  <script>
+    const board = document.getElementById('board');
+    const turnText = document.getElementById('turn');
+    const timerText = document.getElementById('timer');
+    const scoreText = document.getElementById('score');
+    const victoryScreen = document.getElementById('victoryScreen');
+    const winnerText = document.getElementById('winnerText');
+    const menu = document.getElementById('menu');
+
+    let boardState = [], currentPlayer = 'white', selected = null, multiCapture = false, mode = '2p';
+    let timer = 0, interval, score = { white: 0, black: 0 };
+
+    function initBoard() {
+      board.innerHTML = '';
+      boardState = [];
+      for (let row = 0; row < 8; row++) {
+        const rowArr = [];
+        for (let col = 0; col < 8; col++) {
+          const cell = document.createElement('div');
+          cell.className = 'cell ' + ((row + col) % 2 ? 'black' : 'white');
+          cell.dataset.row = row;
+          cell.dataset.col = col;
+          cell.addEventListener('click', handleClick);
+          board.appendChild(cell);
+
+          if ((row + col) % 2 && (row < 3 || row > 4)) {
+            const piece = document.createElement('div');
+            piece.className = 'piece ' + (row < 3 ? 'black-piece' : 'white-piece');
+            piece.textContent = '';
+            cell.appendChild(piece);
+            rowArr.push({ color: row < 3 ? 'black' : 'white', king: false });
+          } else rowArr.push(null);
+        }
+        boardState.push(rowArr);
+      }
+      updateUI();
+    }
+
+    function updateUI() {
+      turnText.textContent = `Turno: ${currentPlayer}`;
+      scoreText.textContent = `Capturas - Branco: ${score.white} | Preto: ${score.black}`;
+      const cells = board.querySelectorAll('.cell');
+      cells.forEach(cell => {
+        const r = +cell.dataset.row, c = +cell.dataset.col;
+        cell.innerHTML = '';
+        const piece = boardState[r][c];
+        if (piece) {
+          const el = document.createElement('div');
+          el.className = `piece ${piece.color}-piece`;
+          el.textContent = piece.king ? '👑' : '';
+          cell.appendChild(el);
+        }
+      });
+    }
+
+    function handleClick(e) {
+      const row = +e.currentTarget.dataset.row;
+      const col = +e.currentTarget.dataset.col;
+      const piece = boardState[row][col];
+
+      if (selected && isValidMove(selected.row, selected.col, row, col)) {
+        movePiece(selected.row, selected.col, row, col);
+        selected = null;
+        updateUI();
+        checkVictory();
+        if (mode === 'ai' && currentPlayer === 'black') setTimeout(aiMove, 500);
+      } else if (piece && piece.color === currentPlayer) {
+        selected = { row, col };
+      }
+    }
+
+    function isValidMove(r1, c1, r2, c2) {
+      const piece = boardState[r1][c1];
+      const dr = r2 - r1, dc = c2 - c1;
+      if (!boardState[r2] || boardState[r2][c2]) return false;
+      if (!piece.king && Math.abs(dr) === 1 && Math.abs(dc) === 1 && (piece.color === 'white' ? dr === -1 : dr === 1)) return true;
+      if (!piece.king && Math.abs(dr) === 2 && Math.abs(dc) === 2) {
+        const mid = boardState[(r1 + r2)/2][(c1 + c2)/2];
+        return mid && mid.color !== piece.color;
+      }
+      if (piece.king && Math.abs(dr) === Math.abs(dc)) {
+        let stepR = dr > 0 ? 1 : -1, stepC = dc > 0 ? 1 : -1;
+        let r = r1 + stepR, c = c1 + stepC, captured = false;
+        while (r !== r2 && c !== c2) {
+          if (boardState[r][c]) {
+            if (boardState[r][c].color === piece.color || captured) return false;
+            captured = { r, c };
+          }
+          r += stepR; c += stepC;
+        }
+        return true;
+      }
+      return false;
+    }
+
+    function movePiece(r1, c1, r2, c2) {
+      const piece = boardState[r1][c1];
+      const dr = r2 - r1, dc = c2 - c1;
+      boardState[r2][c2] = piece;
+      boardState[r1][c1] = null;
+      if (!piece.king && (r2 === 0 || r2 === 7)) piece.king = true;
+      if (Math.abs(dr) === 2 && Math.abs(dc) === 2) {
+        const mr = (r1 + r2) / 2, mc = (c1 + c2) / 2;
+        boardState[mr][mc] = null;
+        score[piece.color]++;
+        if (canCapture(r2, c2)) {
+          selected = { row: r2, col: c2 };
+          updateUI();
+          return;
+        }
+      }
+      if (piece.king && Math.abs(dr) > 1) {
+        let stepR = dr > 0 ? 1 : -1, stepC = dc > 0 ? 1 : -1;
+        let r = r1 + stepR, c = c1 + stepC;
+        while (r !== r2 && c !== c2) {
+          if (boardState[r][c]) {
+            boardState[r][c] = null;
+            score[piece.color]++;
+            break;
+          }
+          r += stepR; c += stepC;
+        }
+        if (canCapture(r2, c2)) {
+          selected = { row: r2, col: c2 };
+          updateUI();
+          return;
+        }
+      }
+      currentPlayer = currentPlayer === 'white' ? 'black' : 'white';
+    }
+
+    function canCapture(r, c) {
+      const dirs = [[-2,-2],[2,2],[-2,2],[2,-2]];
+      for (let [dr, dc] of dirs) {
+        const nr = r + dr, nc = c + dc;
+        if (isValidMove(r, c, nr, nc)) return true;
+      }
+      return false;
+    }
+
+    function checkVictory() {
+      const hasWhite = boardState.flat().some(p => p?.color === 'white');
+      const hasBlack = boardState.flat().some(p => p?.color === 'black');
+      if (!hasWhite || !hasBlack) {
+        winnerText.textContent = hasWhite ? 'Vitória das Brancas!' : 'Vitória dos Pretos!';
+        victoryScreen.style.display = 'flex';
+        clearInterval(interval);
+        updateHighScore(hasWhite ? 'white' : 'black');
+      }
+    }
+
+    function updateHighScore(winner) {
+      let placar = JSON.parse(localStorage.getItem('placarDamas') || '{}');
+      placar[winner] = (placar[winner] || 0) + 1;
+      localStorage.setItem('placarDamas', JSON.stringify(placar));
+      alert(`Placar salvo! Branco: ${placar.white || 0}, Preto: ${placar.black || 0}`);
+    }
+
+    function startGame(selectedMode) {
+      mode = selectedMode;
+      menu.style.display = 'none';
+      victoryScreen.style.display = 'none';
+      initBoard();
+      timer = 0;
+      clearInterval(interval);
+      interval = setInterval(() => {
+        timer++;
+        timerText.textContent = `Tempo: ${timer}s`;
+      }, 1000);
+    }
+
+    function resetGame() {
+      menu.style.display = 'flex';
+      board.innerHTML = '';
+      clearInterval(interval);
+      timerText.textContent = '';
+    }
+
+    function aiMove() {
+      let moves = [];
+      for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
+          const piece = boardState[r][c];
+          if (piece?.color === 'black') {
+            for (let dr of [-1, 1]) {
+              for (let dc of [-1, 1]) {
+                let nr = r + dr, nc = c + dc;
+                if (isValidMove(r, c, nr, nc)) moves.push({ r, c, nr, nc });
+              }
+            }
+          }
+        }
+      }
+      if (moves.length) {
+        const m = moves[Math.floor(Math.random() * moves.length)];
+        movePiece(m.r, m.c, m.nr, m.nc);
+        updateUI();
+        checkVictory();
+      }
+    }
+
+    window.onload = () => {
+      menu.style.display = 'flex';
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jogo de Damas</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    :root {
+      --light-bg: #fff;
+      --light-text: #000;
+      --dark-bg: #121212;
+      --dark-text: #f1f1f1;
+      --bg: var(--light-bg);
+      --text: var(--light-text);
+    }
+    .dark {
+      --bg: var(--dark-bg);
+      --text: var(--dark-text);
+    }
+    h1 { margin: 10px; }
+    #menu, #victoryScreen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-top: 50px;
+    }
+    #game {
+      display: grid;
+      grid-template-columns: repeat(8, 60px);
+      grid-template-rows: repeat(8, 60px);
+      border: 2px solid #333;
+    }
+    .cell {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .black { background: #769656; }
+    .white { background: #eeeed2; }
+    .piece {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .white-piece { background: white; border: 2px solid #000; }
+    .black-piece { background: black; }
+    .king::after {
+      content: '👑';
+      font-size: 18px;
+      position: absolute;
+    }
+    button {
+      margin: 10px;
+      padding: 5px 15px;
+    }
+    #hud { display: flex; gap: 20px; margin: 10px; align-items: center; }
+  </style>
+</head>
+<body>
+  <h1>Jogo de Damas</h1>
+  <div id="hud">
+    <span id="turn">Vez das brancas</span>
+    <span id="timer">⏱️ 0s</span>
+    <span id="score">Capturas - ⚪: 0 | ⚫: 0</span>
+    <button onclick="resetGame()">🔁 Resetar</button>
+    <button onclick="toggleTheme()">🌙 Alternar tema</button>
+  </div>
+  <div id="menu">
+    <button onclick="startGame()">Começar Jogo</button>
+  </div>
+  <div id="victoryScreen">
+    <h2 id="winner"></h2>
+    <button onclick="resetGame()">Jogar Novamente</button>
+  </div>
+  <div id="game"></div>
+  <audio id="moveSound" src="movimento.mp3"></audio>
+  <audio id="captureSound" src="captura.mp3"></audio>
+  <script>
+    const game = document.getElementById('game');
+    const turnSpan = document.getElementById('turn');
+    const timerSpan = document.getElementById('timer');
+    const scoreSpan = document.getElementById('score');
+    const winnerText = document.getElementById('winner');
+    const menu = document.getElementById('menu');
+    const victoryScreen = document.getElementById('victoryScreen');
+    const moveSound = document.getElementById('moveSound');
+    const captureSound = document.getElementById('captureSound');
+
+    let board = [], selected = null, turn = 'white', timer = 0;
+    let whiteCaptures = 0, blackCaptures = 0, interval;
+
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    }
+
+    function startGame() {
+      menu.style.display = 'none';
+      game.style.display = 'grid';
+      victoryScreen.style.display = 'none';
+      resetGame();
+    }
+
+    function resetGame() {
+      board = [];
+      selected = null;
+      turn = 'white';
+      whiteCaptures = 0;
+      blackCaptures = 0;
+      scoreSpan.textContent = `Capturas - ⚪: 0 | ⚫: 0`;
+      clearInterval(interval);
+      timer = 0;
+      timerSpan.textContent = '⏱️ 0s';
+      interval = setInterval(() => timerSpan.textContent = `⏱️ ${++timer}s`, 1000);
+      victoryScreen.style.display = 'none';
+      renderBoard();
+    }
+
+    function renderBoard() {
+      game.innerHTML = '';
+      for (let r = 0; r < 8; r++) {
+        board[r] = [];
+        for (let c = 0; c < 8; c++) {
+          const cell = document.createElement('div');
+          cell.className = 'cell ' + ((r + c) % 2 ? 'black' : 'white');
+          cell.dataset.row = r;
+          cell.dataset.col = c;
+          board[r][c] = null;
+          if ((r + c) % 2 === 1 && r < 3) addPiece(cell, 'black');
+          if ((r + c) % 2 === 1 && r > 4) addPiece(cell, 'white');
+          game.appendChild(cell);
+        }
+      }
+      addListeners();
+    }
+
+    function addPiece(cell, color) {
+      const piece = document.createElement('div');
+      piece.className = `piece ${color}-piece`;
+      cell.appendChild(piece);
+      board[cell.dataset.row][cell.dataset.col] = piece;
+    }
+
+    function addListeners() {
+      document.querySelectorAll('.cell').forEach(cell => {
+        cell.onclick = () => handleClick(cell);
+      });
+    }
+
+    function handleClick(cell) {
+      const r = +cell.dataset.row;
+      const c = +cell.dataset.col;
+      const piece = board[r][c];
+
+      if (selected && !piece && cell.classList.contains('black')) {
+        const [sr, sc] = selected;
+        const sPiece = board[sr][sc];
+        const captures = getAvailableCaptures(sr, sc, sPiece);
+        const valid = isValidMove(sr, sc, r, c, sPiece, captures.length);
+
+        if (valid.valid) {
+          board[r][c] = sPiece;
+          board[sr][sc] = null;
+          document.querySelector(`.cell[data-row="${sr}"][data-col="${sc}"]`).innerHTML = '';
+          cell.appendChild(sPiece);
+          moveSound.play();
+
+          if (valid.capture) {
+            const [cr, cc] = valid.capture;
+            const captured = board[cr][cc];
+            board[cr][cc] = null;
+            document.querySelector(`.cell[data-row="${cr}"][data-col="${cc}"]`).innerHTML = '';
+            captureSound.play();
+            if (turn === 'white') whiteCaptures++; else blackCaptures++;
+            scoreSpan.textContent = `Capturas - ⚪: ${whiteCaptures} | ⚫: ${blackCaptures}`;
+
+            if (getAvailableCaptures(r, c, sPiece).length > 0) {
+              selected = [r, c];
+              return;
+            }
+          }
+
+          promoteIfNeeded(r, sPiece);
+          selected = null;
+          turn = turn === 'white' ? 'black' : 'white';
+          turnSpan.textContent = `Vez das ${turn === 'white' ? 'brancas' : 'pretas'}`;
+          checkVictory();
+        }
+      } else if (piece && piece.classList.contains(`${turn}-piece`)) {
+        selected = [r, c];
+      }
+    }
+
+    function promoteIfNeeded(r, piece) {
+      if ((turn === 'white' && r === 0) || (turn === 'black' && r === 7)) {
+        piece.classList.add('king');
+      }
+    }
+
+    function isValidMove(sr, sc, r, c, piece, mustCapture) {
+      const dr = r - sr, dc = c - sc;
+      const absDr = Math.abs(dr), absDc = Math.abs(dc);
+      const dir = turn === 'white' ? -1 : 1;
+
+      if (mustCapture && absDr < 2) return { valid: false };
+
+      if (piece.classList.contains('king')) {
+        if (absDr !== absDc) return { valid: false };
+        const stepR = dr / absDr;
+        const stepC = dc / absDc;
+        let found = null;
+        for (let i = 1; i < absDr; i++) {
+          const cell = board[sr + i * stepR][sc + i * stepC];
+          if (cell) {
+            if (found || cell.classList.contains(`${turn}-piece`)) return { valid: false };
+            found = [sr + i * stepR, sc + i * stepC];
+          }
+        }
+        return { valid: true, capture: found };
+      } else {
+        if (absDr === 2 && absDc === 2) {
+          const midR = (sr + r) / 2;
+          const midC = (sc + c) / 2;
+          const midPiece = board[midR][midC];
+          if (midPiece && !midPiece.classList.contains(`${turn}-piece`)) {
+            return { valid: true, capture: [midR, midC] };
+          }
+        } else if (absDr === 1 && absDc === 1 && dr === dir && !mustCapture) {
+          return { valid: true };
+        }
+      }
+      return { valid: false };
+    }
+
+    function getAvailableCaptures(r, c, piece) {
+      const captures = [];
+      const directions = [[1, 1], [1, -1], [-1, 1], [-1, -1]];
+
+      directions.forEach(([dr, dc]) => {
+        for (let i = 1; i < 8; i++) {
+          const nr = r + dr * i;
+          const nc = c + dc * i;
+          const br = r + dr * (i - 1);
+          const bc = c + dc * (i - 1);
+          if (nr < 0 || nc < 0 || nr > 7 || nc > 7) break;
+          const target = board[nr][nc];
+          const between = board[br]?.[bc];
+
+          if (!target && between && between !== piece && !between.classList.contains(`${turn}-piece`)) {
+            captures.push([nr, nc]);
+            break;
+          }
+        }
+      });
+      return captures;
+    }
+
+    function checkVictory() {
+      const pieces = [].concat(...board);
+      const white = pieces.filter(p => p?.classList.contains('white-piece')).length;
+      const black = pieces.filter(p => p?.classList.contains('black-piece')).length;
+      if (white === 0 || black === 0) {
+        clearInterval(interval);
+        winnerText.textContent = `🎉 Vitória das ${white === 0 ? 'pretas' : 'brancas'}!`;
+        game.style.display = 'none';
+        victoryScreen.style.display = 'flex';
+      }
+    }
+
+    // Carregar tema salvo
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark');
+    }
+
+    // Exibir menu
+    game.style.display = 'none';
+    menu.style.display = 'flex';
+  </script>
+</body>
+</html>

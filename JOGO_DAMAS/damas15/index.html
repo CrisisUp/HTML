@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jogo de Damas</title>
+  <style>
+    :root {
+      --cor-tabuleiro-claro: #f0d9b5;
+      --cor-tabuleiro-escuro: #b58863;
+      --cor-selecao: yellow;
+      --cor-peca-branca: white;
+      --cor-peca-preta: black;
+      --cor-dama: gold;
+    }
+
+    body.tema-escuro {
+      --cor-tabuleiro-claro: #666;
+      --cor-tabuleiro-escuro: #333;
+      --cor-selecao: #ff0;
+      background: #111;
+      color: #eee;
+    }
+
+    body.tema-azul {
+      --cor-tabuleiro-claro: #d0e7f9;
+      --cor-tabuleiro-escuro: #6ca0dc;
+      background: #cce;
+    }
+
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background: #fafafa;
+    }
+
+    #menu {
+      margin: 20px;
+    }
+
+    #tabuleiro {
+      display: grid;
+      grid-template-columns: repeat(8, 60px);
+      grid-template-rows: repeat(8, 60px);
+      margin: auto;
+      border: 2px solid #000;
+    }
+
+    .casa {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .clara {
+      background-color: var(--cor-tabuleiro-claro);
+    }
+
+    .escura {
+      background-color: var(--cor-tabuleiro-escuro);
+    }
+
+    .peca {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+
+    .branca {
+      background-color: var(--cor-peca-branca);
+    }
+
+    .preta {
+      background-color: var(--cor-peca-preta);
+    }
+
+    .dama::after {
+      content: "👑";
+      font-size: 20px;
+    }
+
+    #painel {
+      margin: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="menu">
+    <button onclick="resetarJogo()">🔁 Reiniciar</button>
+    <button onclick="alternarTema()">🎨 Trocar Tema</button>
+    <span id="cronometro">⏱️ 00:00</span>
+    <div>
+      <label for="modoIA">Modo IA:</label>
+      <input type="checkbox" id="modoIA" checked />
+    </div>
+  </div>
+
+  <div id="tabuleiro"></div>
+  <div id="painel">
+    <h3>Capturas</h3>
+    <p>Brancas: <span id="capturasBrancas">0</span> | Pretas: <span id="capturasPretas">0</span></p>
+    <div id="mensagem"></div>
+  </div>
+
+  <script>
+    const tabuleiro = document.getElementById("tabuleiro");
+    const cronometro = document.getElementById("cronometro");
+    const capturasBrancas = document.getElementById("capturasBrancas");
+    const capturasPretas = document.getElementById("capturasPretas");
+    const mensagem = document.getElementById("mensagem");
+    const modoIA = document.getElementById("modoIA");
+
+    let tempo = 0;
+    setInterval(() => {
+      tempo++;
+      const min = String(Math.floor(tempo / 60)).padStart(2, '0');
+      const seg = String(tempo % 60).padStart(2, '0');
+      cronometro.textContent = `⏱️ ${min}:${seg}`;
+    }, 1000);
+
+    let estado = [];
+    let turno = "branca";
+    let selecionada = null;
+    let capturas = { branca: 0, preta: 0 };
+    let temas = ["", "tema-escuro", "tema-azul"];
+    let indiceTema = 0;
+
+    function alternarTema() {
+      document.body.className = "";
+      indiceTema = (indiceTema + 1) % temas.length;
+      if (temas[indiceTema]) document.body.classList.add(temas[indiceTema]);
+    }
+
+    function criarTabuleiro() {
+      estado = [];
+      tabuleiro.innerHTML = "";
+      for (let i = 0; i < 8; i++) {
+        estado[i] = [];
+        for (let j = 0; j < 8; j++) {
+          const casa = document.createElement("div");
+          casa.classList.add("casa", (i + j) % 2 === 0 ? "clara" : "escura");
+          casa.dataset.linha = i;
+          casa.dataset.coluna = j;
+          casa.addEventListener("click", () => selecionarOuMover(i, j));
+          tabuleiro.appendChild(casa);
+
+          if (i < 3 && (i + j) % 2 === 1) {
+            estado[i][j] = { cor: "preta", dama: false };
+          } else if (i > 4 && (i + j) % 2 === 1) {
+            estado[i][j] = { cor: "branca", dama: false };
+          } else {
+            estado[i][j] = null;
+          }
+        }
+      }
+      desenhar();
+    }
+
+    function desenhar() {
+      for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+          const casa = tabuleiro.children[i * 8 + j];
+          casa.innerHTML = "";
+          if (estado[i][j]) {
+            const p = document.createElement("div");
+            p.classList.add("peca", estado[i][j].cor);
+            if (estado[i][j].dama) p.classList.add("dama");
+            casa.appendChild(p);
+          }
+        }
+      }
+      capturasBrancas.textContent = capturas.branca;
+      capturasPretas.textContent = capturas.preta;
+    }
+
+    function selecionarOuMover(l, c) {
+      const peca = estado[l][c];
+      if (selecionada) {
+        if (mover(selecionada.linha, selecionada.coluna, l, c)) {
+          falar(`Peça ${turno === 'branca' ? 'preta' : 'branca'} capturada ou movida.`);
+          turno = turno === "branca" ? "preta" : "branca";
+          if (modoIA.checked && turno === "preta") setTimeout(jogadaIA, 500);
+        }
+        selecionada = null;
+      } else if (peca && peca.cor === turno) {
+        selecionada = { linha: l, coluna: c };
+      }
+    }
+
+    function mover(deL, deC, paraL, paraC) {
+      const peca = estado[deL][deC];
+      const destino = estado[paraL][paraC];
+      if (!peca || destino) return false;
+      const dL = paraL - deL;
+      const dC = paraC - deC;
+      const adL = Math.abs(dL);
+      const adC = Math.abs(dC);
+
+      if (!peca.dama && adL === 2 && adC === 2) {
+        const meioL = deL + dL / 2;
+        const meioC = deC + dC / 2;
+        const meio = estado[meioL][meioC];
+        if (meio && meio.cor !== peca.cor) {
+          estado[paraL][paraC] = peca;
+          estado[deL][deC] = null;
+          estado[meioL][meioC] = null;
+          capturas[peca.cor]++;
+          verificarVitoria();
+          return true;
+        }
+      }
+
+      if (peca.dama && adL === adC) {
+        const passoL = dL / adL;
+        const passoC = dC / adC;
+        let i = 1;
+        let capturada = null;
+        while (i < adL) {
+          const meio = estado[deL + i * passoL][deC + i * passoC];
+          if (meio) {
+            if (meio.cor === peca.cor || capturada) return false;
+            capturada = { l: deL + i * passoL, c: deC + i * passoC };
+          }
+          i++;
+        }
+        estado[paraL][paraC] = peca;
+        estado[deL][deC] = null;
+        if (capturada) {
+          estado[capturada.l][capturada.c] = null;
+          capturas[peca.cor]++;
+          verificarVitoria();
+        }
+        return true;
+      }
+
+      if (!peca.dama && adL === 1 && adC === 1) {
+        const direcao = peca.cor === "branca" ? -1 : 1;
+        if (dL === direcao) {
+          estado[paraL][paraC] = peca;
+          estado[deL][deC] = null;
+          if ((peca.cor === "branca" && paraL === 0) || (peca.cor === "preta" && paraL === 7)) {
+            peca.dama = true;
+            falar("Peça promovida a dama");
+          }
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    function verificarVitoria() {
+      const brancasRestantes = estado.flat().filter(p => p?.cor === "branca").length;
+      const pretasRestantes = estado.flat().filter(p => p?.cor === "preta").length;
+      if (brancasRestantes === 0) fimDeJogo("Pretas venceram!");
+      if (pretasRestantes === 0) fimDeJogo("Brancas venceram!");
+    }
+
+    function fimDeJogo(msg) {
+      mensagem.innerHTML = `<h2>${msg}</h2>`;
+      falar(msg);
+    }
+
+    function resetarJogo() {
+      tempo = 0;
+      capturas = { branca: 0, preta: 0 };
+      mensagem.textContent = "";
+      turno = "branca";
+      criarTabuleiro();
+    }
+
+    function jogadaIA() {
+      const possibilidades = [];
+      for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+          const p = estado[i][j];
+          if (p && p.cor === "preta") {
+            for (let di = -2; di <= 2; di++) {
+              for (let dj = -2; dj <= 2; dj++) {
+                if (di && dj && i + di >= 0 && i + di < 8 && j + dj >= 0 && j + dj < 8) {
+                  if (mover(i, j, i + di, j + dj)) {
+                    desenhar();
+                    turno = "branca";
+                    return;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    function falar(texto) {
+      if ('speechSynthesis' in window) {
+        const msg = new SpeechSynthesisUtterance(texto);
+        window.speechSynthesis.speak(msg);
+      }
+    }
+
+    criarTabuleiro();
+  </script>
+</body>
+</html>

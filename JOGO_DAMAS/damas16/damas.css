@@ -1,0 +1,99 @@
+body {
+  font-family: sans-serif;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fafafa;
+  color: #333;
+}
+
+h1 { 
+  margin: 1rem; 
+}
+
+#board {
+  display: grid;
+  grid-template-columns: repeat(8, 60px);
+  grid-template-rows: repeat(8, 60px);
+  gap: 0;
+  border: 4px solid #333;
+  margin: 1rem 0;
+}
+
+.cell {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.white { background: #eee; }
+.black { background: #444; }
+
+.piece {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: red;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+
+.piece:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.black-piece { 
+  background-color: black; 
+}
+
+.king::after {
+  content: '👑';
+  position: absolute;
+  font-size: 20px;
+  color: gold;
+}
+
+.highlight {
+  outline: 3px solid yellow;
+}
+
+#menu, #win-screen {
+  margin: 1rem;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+#menu button, #win-screen button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#timer, #score {
+  margin: 0.5rem;
+  font-size: 1.1rem;
+}
+
+#moves-history {
+  max-height: 150px;
+  overflow-y: auto;
+  width: 300px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 10px;
+  background-color: #f9f9f9;
+}
+
+#win-screen {
+  text-align: center;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+}

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jogo de Damas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding: 0;
+    }
+    :root {
+      --bg-color: #fff;
+      --text-color: #000;
+      --board-color1: #eee;
+      --board-color2: #666;
+    }
+    .dark-mode {
+      --bg-color: #111;
+      --text-color: #fff;
+      --board-color1: #444;
+      --board-color2: #999;
+    }
+    h1 {
+      margin-top: 20px;
+    }
+    #menu {
+      margin: 20px;
+    }
+    #tabuleiro {
+      display: grid;
+      grid-template-columns: repeat(8, 60px);
+      grid-template-rows: repeat(8, 60px);
+      gap: 0;
+      border: 4px solid #333;
+    }
+    .casa {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .clara { background-color: var(--board-color1); }
+    .escura { background-color: var(--board-color2); }
+    .peca {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: red;
+      cursor: pointer;
+    }
+    .branca { background-color: #fff; border: 2px solid #000; }
+    .preta { background-color: #000; border: 2px solid #fff; }
+    .dama::after {
+      content: "👑";
+      font-size: 20px;
+      position: absolute;
+    }
+    .highlight {
+      outline: 3px solid yellow;
+    }
+    #cronometro, #placar, #vitoria {
+      margin-top: 10px;
+    }
+    #vitoria {
+      font-size: 24px;
+      font-weight: bold;
+      color: green;
+      animation: piscar 1s infinite;
+    }
+    @keyframes piscar {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Jogo de Damas</h1>
+  <div id="menu">
+    <button onclick="iniciarJogo()">🎮 Começar/Reiniciar</button>
+    <button onclick="alternarTema()">🌓 Tema</button>
+  </div>
+  <div id="cronometro">⏱️ Tempo: <span id="tempo">0</span>s</div>
+  <div id="placar">⚪ Brancas: <span id="pBrancas">0</span> | ⚫ Pretas: <span id="pPretas">0</span></div>
+  <div id="tabuleiro"></div>
+  <div id="vitoria"></div>
+
+  <script>
+    const tabuleiro = document.getElementById("tabuleiro");
+    const tempoEl = document.getElementById("tempo");
+    const placarBrancas = document.getElementById("pBrancas");
+    const placarPretas = document.getElementById("pPretas");
+    const vitoriaEl = document.getElementById("vitoria");
+    let tempo = 0;
+    let intervalo;
+    let vez = "branca";
+    let pecas = [];
+    let selecionada = null;
+    let capturas = 0;
+    let deveCapturar = false;
+
+    function iniciarJogo() {
+      tabuleiro.innerHTML = "";
+      pecas = [];
+      vitoriaEl.textContent = "";
+      capturas = 0;
+      vez = "branca";
+      for (let linha = 0; linha < 8; linha++) {
+        for (let col = 0; col < 8; col++) {
+          const casa = document.createElement("div");
+          casa.className = `casa ${(linha + col) % 2 === 0 ? "clara" : "escura"}`;
+          casa.dataset.linha = linha;
+          casa.dataset.col = col;
+          casa.addEventListener("click", () => clicouCasa(casa));
+          tabuleiro.appendChild(casa);
+          if (linha < 3 && (linha + col) % 2 !== 0) adicionarPeca(casa, "preta");
+          if (linha > 4 && (linha + col) % 2 !== 0) adicionarPeca(casa, "branca");
+        }
+      }
+      atualizarPlacar();
+      tempo = 0;
+      clearInterval(intervalo);
+      intervalo = setInterval(() => {
+        tempo++;
+        tempoEl.textContent = tempo;
+      }, 1000);
+    }
+
+    function adicionarPeca(casa, cor) {
+      const peca = document.createElement("div");
+      peca.className = `peca ${cor}`;
+      peca.dataset.cor = cor;
+      peca.dataset.dama = "false";
+      peca.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (cor !== vez) return;
+        selecionarPeca(peca);
+      });
+      casa.appendChild(peca);
+      pecas.push(peca);
+    }
+
+    function selecionarPeca(peca) {
+      limparDestaques();
+      selecionada = peca;
+      peca.classList.add("highlight");
+      mostrarMovimentos(peca);
+    }
+
+    function mostrarMovimentos(peca) {
+      const casaOrigem = peca.parentElement;
+      const linha = parseInt(casaOrigem.dataset.linha);
+      const col = parseInt(casaOrigem.dataset.col);
+      const direcoes = [[1, 1], [1, -1], [-1, 1], [-1, -1]];
+      const isDama = peca.dataset.dama === "true";
+
+      for (const [dl, dc] of direcoes) {
+        let l = linha + dl;
+        let c = col + dc;
+        let pulou = false;
+
+        while (l >= 0 && l < 8 && c >= 0 && c < 8) {
+          const alvo = document.querySelector(`.casa[data-linha='${l}'][data-col='${c}']`);
+          if (!alvo) break;
+          if (alvo.children.length === 0) {
+            if (!pulou || isDama) alvo.classList.add("highlight");
+            if (!isDama) break;
+            l += dl;
+            c += dc;
+          } else {
+            const pecaAlvo = alvo.children[0];
+            if (pecaAlvo.dataset.cor !== peca.dataset.cor && !pulou) {
+              pulou = true;
+              l += dl;
+              c += dc;
+            } else break;
+          }
+        }
+      }
+    }
+
+    function clicouCasa(casa) {
+      if (!selecionada || !casa.classList.contains("highlight")) return;
+      const origem = selecionada.parentElement;
+      const destino = casa;
+      const linhaOrigem = parseInt(origem.dataset.linha);
+      const colOrigem = parseInt(origem.dataset.col);
+      const linhaDestino = parseInt(destino.dataset.linha);
+      const colDestino = parseInt(destino.dataset.col);
+
+      const dl = linhaDestino - linhaOrigem;
+      const dc = colDestino - colOrigem;
+
+      const capturada = document.querySelector(
+        `.casa[data-linha='${linhaOrigem + dl / 2}'][data-col='${colOrigem + dc / 2}'] .peca`
+      );
+
+      destino.appendChild(selecionada);
+
+      if (capturada) {
+        capturada.remove();
+        capturas++;
+        atualizarPlacar();
+        mostrarMovimentos(selecionada);
+        if (!document.querySelectorAll(".highlight").length) trocarVez();
+        return;
+      }
+
+      if ((vez === "branca" && linhaDestino === 0) || (vez === "preta" && linhaDestino === 7)) {
+        selecionada.dataset.dama = "true";
+        selecionada.classList.add("dama");
+      }
+
+      trocarVez();
+    }
+
+    function trocarVez() {
+      limparDestaques();
+      selecionada = null;
+      vez = vez === "branca" ? "preta" : "branca";
+      checarVitoria();
+    }
+
+    function limparDestaques() {
+      document.querySelectorAll(".highlight").forEach(e => e.classList.remove("highlight"));
+      pecas.forEach(p => p.classList.remove("highlight"));
+    }
+
+    function atualizarPlacar() {
+      const brancas = document.querySelectorAll(".peca.branca").length;
+      const pretas = document.querySelectorAll(".peca.preta").length;
+      placarBrancas.textContent = brancas;
+      placarPretas.textContent = pretas;
+    }
+
+    function checarVitoria() {
+      const brancas = document.querySelectorAll(".peca.branca").length;
+      const pretas = document.querySelectorAll(".peca.preta").length;
+      if (brancas === 0) vitoriaEl.textContent = "🏆 Pretas Venceram!";
+      else if (pretas === 0) vitoriaEl.textContent = "🏆 Brancas Venceram!";
+    }
+
+    function alternarTema() {
+      document.body.classList.toggle("dark-mode");
+    }
+
+    iniciarJogo();
+  </script>
+</body>
+</html>

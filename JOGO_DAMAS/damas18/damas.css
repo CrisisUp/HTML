@@ -1,0 +1,243 @@
+/* Estilos Gerais */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  color: #2c3e50;
+  min-height: 100vh;
+}
+
+h1 {
+  margin: 1.5rem 0;
+  font-size: 2.5rem;
+  color: #2c3e50;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Tabuleiro Estilizado */
+#board {
+  display: grid;
+  grid-template-columns: repeat(8, 65px);
+  grid-template-rows: repeat(8, 65px);
+  gap: 0;
+  border: 6px solid #3a4a5d;
+  border-radius: 4px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  margin: 1.5rem 0;
+  background-color: #3a4a5d;
+}
+
+.cell {
+  width: 65px;
+  height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.white { 
+  background: #f0d9b5;
+  background: linear-gradient(145deg, #f0d9b5 0%, #e8c887 100%);
+}
+
+.black { 
+  background: #b58863;
+  background: linear-gradient(145deg, #b58863 0%, #9c6e4a 100%);
+}
+
+/* Peças Estilizadas */
+.piece {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.piece::before {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.piece:hover {
+  transform: scale(1.1);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.black-piece { 
+  background: #2c3e50;
+  background: linear-gradient(145deg, #2c3e50 0%, #1a2634 100%);
+}
+
+.piece:not(.black-piece) {
+  background: #e74c3c;
+  background: linear-gradient(145deg, #e74c3c 0%, #c0392b 100%);
+}
+
+.king::after {
+  content: '👑';
+  position: absolute;
+  font-size: 24px;
+  color: gold;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.highlight {
+  outline: 4px solid #f1c40f;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { outline-color: #f1c40f; }
+  50% { outline-color: #f39c12; }
+  100% { outline-color: #f1c40f; }
+}
+
+/* Botões Estilizados */
+#menu, #win-screen {
+  margin: 1.5rem;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+button, select {
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+button {
+  background: linear-gradient(145deg, #3498db 0%, #2980b9 100%);
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(145deg, #3cb0fd 0%, #3498db 100%);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+select {
+  padding: 0.7rem 1rem;
+  background-color: white;
+  border: 2px solid #3498db;
+  min-width: 180px;
+}
+
+#win-screen button {
+  background: linear-gradient(145deg, #2ecc71 0%, #27ae60 100%);
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+}
+
+#win-screen button:hover {
+  background: linear-gradient(145deg, #3be381 0%, #2ecc71 100%);
+}
+
+/* Painel de Informações */
+#info {
+  display: flex;
+  gap: 2rem;
+  margin: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #3a4a5d;
+}
+
+#timer, #score {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Histórico de Movimentos */
+#moves-history {
+  max-height: 150px;
+  overflow-y: auto;
+  width: 320px;
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin: 15px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+#moves-history div {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 0.9rem;
+}
+
+#moves-history div:last-child {
+  border-bottom: none;
+}
+
+/* Tela de Vitória */
+#win-screen {
+  text-align: center;
+  padding: 30px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  max-width: 500px;
+  width: 90%;
+  display: none;
+  position: relative;
+  z-index: 10;
+}
+
+#win-screen h2 {
+  color: #2c3e50;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Barra de rolagem personalizada */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3498db;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2980b9;
+}
