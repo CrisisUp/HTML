@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "ESNext",
+    "strict": false, // Inicie com strict:false para evitar erros iniciais
+    "allowJs": true, // Permite arquivos .js e .ts coexistirem
+    "checkJs": true, // Verifica erros em arquivos .js
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "src/**/*",
+    "*.ts",
+    "*.js"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
