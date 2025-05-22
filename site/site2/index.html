@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tafner - Outsourcing de TI</title>
+    <!-- Substitua pelo caminho correto do seu arquivo Tailwind -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script>
+        // Verifica se Tailwind está carregado
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof tailwind === 'undefined') {
+                console.log('Tailwind não carregado - carregando via CDN');
+                var link = document.createElement('link');
+                link.href = 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css';
+                link.rel = 'stylesheet';
+                document.head.appendChild(link);
+            }
+        });
+    </script>
+</head>
+
+<body class="font-sans text-gray-800 leading-normal m-0 p-0 box-border">
+    <!-- Header/Navbar -->
+    <header id="header" class="fixed top-0 left-0 w-full bg-white shadow-md z-50 transition-all duration-300">
+        <div class="container mx-auto px-4">
+            <nav class="flex justify-between items-center py-4 bg-orange-500">
+                <a href="index.html" class="text-4xl font-bold text-gray-800">Infohard</a>
+
+                <div class="md:hidden flex flex-col justify-between w-6 h-5 cursor-pointer bg-gray-400" id="mobile-menu">
+                    <span class="block w-full h-0.5 bg-gray-800 transition-all duration-300"></span>
+                    <span class="block w-full h-0.5 bg-gray-800 transition-all duration-300"></span>
+                    <span class="block w-full h-0.5 bg-gray-800 transition-all duration-300"></span>
+                </div>
+
+                <ul class="hidden md:flex items-center space-x-6 bg-gray-200 px-6 py-3 rounded-lg" id="nav-list">
+                    <li><a href="index.html" class="hover:text-blue-400 transition-colors text-lg font-semibold">Home</a></li>
+                    <li><a href="sobre.html" class="hover:text-blue-400 transition-colors text-lg font-semibold">Sobre</a></li>
+                    <li><a href="cases.html" class="hover:text-blue-400 transition-colors text-lg font-semibold">Cases</a></li>
+                    <li class="relative group">
+                        <a href="#" class="hover:text-blue-400 transition-colors text-lg font-semibold flex items-center">
+                            Serviços <span class="ml-1 text-xs">▼</span>
+                        </a>
+                        <ul class="absolute left-0 mt-2 w-56 bg-gray-700 shadow-xl rounded-md py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                            <li><a href="votacao.html" class="block px-4 py-2 hover:bg-gray-100">Sistema de Votação</a></li>
+                            <li><a href="software.html" class="block px-4 py-2 hover:bg-gray-100">Software House</a></li>
+                            <li><a href="outsourcing.html" class="block px-4 py-2 hover:bg-gray-100">Terceirização de TI</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="contato.html" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition-colors text-lg font-semibold">Eu tenho uma ideia</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="pt-16">
+        <!-- Seção Hero/Banner -->
+        <section class="py-24 bg-gray-50 text-center">
+            <div class="container mx-auto">
+                <h1 class="text-4xl font-bold mb-4">Serviços de Terceirização</h1>
+                <nav class="flex justify-center items-center space-x-2 text-sm">
+                    <a href="index.html" class="text-blue-600 hover:underline">Home</a>
+                    <span>/</span>
+                    <span>Serviços de Terceirização</span>
+                </nav>
+            </div>
+        </section>
+
+        <!-- Seção Introdução -->
+        <section class="py-16">
+            <div class="container mx-auto px-4">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div class="bg-blue-100/30 p-6 rounded-lg">
+                        <h2 class="text-4xl font-bold mb-8">Terceirização de TI</h2>
+                        <p class="mb-6 text-xl text-justify">
+                            Na Tafner Outsourcing, a terceirização de TI é mais que uma parceria de manutenção; é uma
+                            abordagem estratégica que traz inúmeros benefícios para sua empresa,
+                            permitindo que sua empresa foque no core de seu negócio enquanto nossa equipe especializada
+                            cuida de sua infraestrutura de tecnologia.
+                        </p>
+                        <p class="text-xl text-justify">
+                            Nossa equipe dedicada oferece agilidade, proximidade e flexibilidade, liberando seus
+                            recursos internos para o que realmente importa, seu negócio!
+                            Vamos além das atividades diárias, tornando-nos uma parte essencial da sua equipe.
+                            Nossos profissionais são exclusivamente treinados e qualificados para atender às suas
+                            necessidades, com foco total no desempenho e na excelência
+                            do serviço, atuando rapidamente nas demandas que surgem, reduzindo interrupções e permitindo
+                            a continuidade dos negócios.
+                        </p>
+                    </div>
+                    <div class="flex justify-center">
+                        <img alt="outsourcing" class="rounded-lg shadow-md w-full max-w-md scale-170" src="./outsourcing.webp">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Serviços -->
+        <section class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <p class="text-blue-600 font-medium mb-2">Serviços</p>
+                    <h2 class="text-3xl font-bold">Nós entendemos do assunto</h2>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Serviço 1 -->
+                    <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow hover:-translate-y-1">
+                        <div class="w-12 h-12 bg-gray-200 rounded-full mb-4"></div>
+                        <h3 class="text-xl font-bold mb-2">Backup</h3>
+                        <p class="text-gray-600">Garantimos a segurança dos seus dados com soluções de backup confiáveis e eficazes.</p>
+                    </div>
+
+                    <!-- Serviço 2 -->
+                    <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow hover:-translate-y-1">
+                        <div class="w-12 h-12 bg-gray-200 rounded-full mb-4"></div>
+                        <h3 class="text-xl font-bold mb-2">Inventário de TI</h3>
+                        <p class="text-gray-600">Gerencie e controle seus ativos de TI com nosso inventário completo e detalhado.</p>
+                    </div>
+
+                    <!-- Adicione mais serviços conforme necessário -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Cases -->
+        <section class="py-16">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <p class="text-blue-600 font-medium mb-2">Experiência</p>
+                    <h2 class="text-3xl font-bold">+25 anos fazendo da sua ideia realidade</h2>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <!-- Case 1 -->
+                    <div class="rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow hover:-translate-y-1">
+                        <div class="h-48 bg-gray-200"></div>
+                        <div class="p-4 bg-white">
+                            <p class="text-blue-600 text-sm mb-1">Outsourcing</p>
+                            <h3 class="text-xl font-bold">Rocha e Barcellos</h3>
+                        </div>
+                    </div>
+
+                    <!-- Adicione mais cases conforme necessário -->
+                </div>
+
+                <div class="text-center">
+                    <a href="cases.html" class="inline-block bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition-colors">Ver Todos</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Final -->
+        <section class="py-16 bg-blue-600 text-white text-center">
+            <div class="container mx-auto px-4">
+                <p class="text-blue-200 mb-2">O sistema é importante para seu negócio?</p>
+                <h2 class="text-3xl font-bold mb-6">Deixa a Tafner cuidar dele para você.</h2>
+                <a href="contato.html" class="inline-block bg-white text-blue-600 px-6 py-3 rounded font-medium hover:bg-gray-100 transition-colors">Entrar em contato</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white pt-16">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Tafner</h3>
+                    <address class="not-italic">
+                        Av. Paulo Emanuel de Almeida, 358<br>
+                        Sorocaba/SP - Brasil<br>
+                        Tel: (15) 3217-8933
+                    </address>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Links úteis</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="hover:text-blue-400 transition-colors">Home</a></li>
+                        <li><a href="sobre.html" class="hover:text-blue-400 transition-colors">Sobre</a></li>
+                        <li><a href="cases.html" class="hover:text-blue-400 transition-colors">Cases</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Serviços</h4>
+                    <ul class="space-y-2">
+                        <li><a href="votacao.html" class="hover:text-blue-400 transition-colors">Votação Online</a></li>
+                        <li><a href="software.html" class="hover:text-blue-400 transition-colors">Software House</a></li>
+                        <li><a href="outsourcing.html" class="hover:text-blue-400 transition-colors">Outsourcing</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-700 pt-6 pb-8 flex flex-col md:flex-row justify-between items-center">
+                <p>&copy; 2023 Tafner. Todos os direitos reservados.</p>
+                <div class="flex space-x-4 mt-4 md:mt-0">
+                    <a href="#" class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors">FB</a>
+                    <a href="#" class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors">IG</a>
+                    <a href="#" class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors">IN</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // JavaScript para funcionalidades essenciais
+        document.addEventListener('DOMContentLoaded', function () {
+            // Menu mobile
+            const menuToggle = document.getElementById('mobile-menu');
+            const navList = document.getElementById('nav-list');
+
+            menuToggle.addEventListener('click', function () {
+                navList.classList.toggle('hidden');
+                navList.classList.toggle('flex');
+                navList.classList.toggle('flex-col');
+                navList.classList.toggle('absolute');
+                navList.classList.toggle('top-full');
+                navList.classList.toggle('left-0');
+                navList.classList.toggle('w-full');
+                navList.classList.toggle('bg-white');
+                navList.classList.toggle('py-4');
+                navList.classList.toggle('px-4');
+                navList.classList.toggle('space-y-4');
+                navList.classList.toggle('space-x-0');
+                navList.classList.toggle('shadow-md');
+                
+                // Anima os ícones do menu hamburguer
+                menuToggle.children[0].classList.toggle('transform');
+                menuToggle.children[0].classList.toggle('rotate-45');
+                menuToggle.children[0].classList.toggle('translate-y-2');
+                menuToggle.children[1].classList.toggle('opacity-0');
+                menuToggle.children[2].classList.toggle('transform');
+                menuToggle.children[2].classList.toggle('-rotate-45');
+                menuToggle.children[2].classList.toggle('-translate-y-2');
+            });
+
+            // Fecha o menu ao clicar em um link (para mobile)
+            document.querySelectorAll('#nav-list a').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth < 768) {
+                        navList.classList.add('hidden');
+                        navList.classList.remove('flex', 'flex-col', 'absolute', 'top-full', 'left-0', 'w-full', 'bg-white', 'py-4', 'px-4', 'space-y-4', 'space-x-0', 'shadow-md');
+                        
+                        // Reseta o menu hamburguer
+                        menuToggle.children[0].classList.remove('transform', 'rotate-45', 'translate-y-2');
+                        menuToggle.children[1].classList.remove('opacity-0');
+                        menuToggle.children[2].classList.remove('transform', '-rotate-45', '-translate-y-2');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

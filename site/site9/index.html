@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrossel com Navegação Avançada</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .carrossel-slide {
+            transition: opacity 0.5s ease-in-out;
+        }
+        .carrossel-slide.hidden {
+            opacity: 0;
+            display: none;
+        }
+        .carrossel-slide.active {
+            opacity: 1;
+            display: block;
+        }
+        /* Animação para menu mobile */
+        .nav-menu {
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+        .nav-menu-hidden {
+            transform: translateY(-20px);
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <!-- Componente Navegação -->
+    <nav class="bg-white shadow-lg" aria-label="Navegação principal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <span class="text-xl font-bold text-blue-600">Meu Curso Tailwind</span>
+                </div>
+
+                <!-- Menu Desktop -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="text-gray-700 hover:text-blue-600 px-3 py-2 font-medium" aria-current="page">Início</a>
+                    <a href="#" class="text-gray-700 hover:text-blue-600 px-3 py-2 font-medium">Cursos</a>
+                    <a href="#" class="text-gray-700 hover:text-blue-600 px-3 py-2 font-medium">Componentes</a>
+                    <a href="#" class="text-gray-700 hover:text-blue-600 px-3 py-2 font-medium">Contato</a>
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition">
+                        Login
+                    </button>
+                </div>
+
+                <!-- Botão Mobile -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="text-gray-700 hover:text-blue-600 focus:outline-none" aria-label="Abrir menu">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Mobile -->
+        <div id="mobile-menu" class="nav-menu nav-menu-hidden md:hidden bg-white shadow-lg">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#" class="block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium" aria-current="page">Início</a>
+                <a href="#" class="block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium">Cursos</a>
+                <a href="#" class="block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium">Componentes</a>
+                <a href="#" class="block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium">Contato</a>
+                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium mt-2 transition">
+                    Login
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <main class="flex-grow flex items-center justify-center p-4">
+        <!-- Componente Carrossel Container -->
+        <div id="meu-carrossel" class="max-w-3xl w-full mx-auto">
+            <!-- Componente será renderizado aqui via JavaScript -->
+        </div>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="md:flex md:items-center md:justify-between">
+                <div class="flex justify-center md:order-2 space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white" aria-label="Facebook">
+                        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white" aria-label="GitHub">
+                        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                </div>
+                <div class="mt-8 md:mt-0 md:order-1">
+                    <p class="text-center text-base text-gray-400">
+                        &copy; 2025 Meu Curso Tailwind. Todos os direitos reservados.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        // ==============================================
+        // Controle do Menu Mobile
+        // ==============================================
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        let isMenuOpen = false;
+
+        mobileMenuButton.addEventListener('click', () => {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileMenu.classList.remove('nav-menu-hidden');
+                mobileMenuButton.innerHTML = `
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                `;
+            } else {
+                mobileMenu.classList.add('nav-menu-hidden');
+                mobileMenuButton.innerHTML = `
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                `;
+            }
+        });
+
+        // Fechar menu ao clicar em um item ou fora
+        document.addEventListener('click', (e) => {
+            if (isMenuOpen && !mobileMenu.contains(e.target)) {
+                if (e.target !== mobileMenuButton && !mobileMenuButton.contains(e.target)) {
+                    mobileMenu.classList.add('nav-menu-hidden');
+                    mobileMenuButton.innerHTML = `
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    `;
+                    isMenuOpen = false;
+                }
+            }
+        });
+
+        // ==============================================
+        // Módulo: CarrosselState (Gerenciamento de Estado)
+        // ==============================================
+        class CarrosselState {
+            constructor(slides, options = {}) {
+                this.slides = slides;
+                this.currentIndex = 0;
+                this.interval = options.initialInterval || 5000;
+                this.isPlaying = options.autoPlay !== false;
+                this.observers = [];
+            }
+
+            subscribe(observer) {
+                this.observers.push(observer);
+            }
+
+            notify() {
+                this.observers.forEach(observer => observer.update(this));
+            }
+
+            setCurrentIndex(index) {
+                this.currentIndex = index;
+                this.notify();
+            }
+
+            setInterval(interval) {
+                this.interval = interval;
+                this.notify();
+            }
+
+            togglePlay() {
+                this.isPlaying = !this.isPlaying;
+                this.notify();
+            }
+        }
+
+        // ==============================================
+        // Módulo: ComponentFactory (Factory Pattern)
+        // ==============================================
+        class ComponentFactory {
+            static createSlide(slideData, index, isActive) {
+                return {
+                    render: () => `
+                        <div class="carrossel-slide ${isActive ? 'active' : 'hidden'} absolute inset-0 w-full h-full" 
+                             aria-hidden="${!isActive}" 
+                             aria-current="${isActive}" 
+                             data-index="${index}">
+                            <img src="${slideData.imageSrc}" 
+                                 alt="${slideData.altText}" 
+                                 class="w-full h-full object-cover aspect-[16/9]"
+                                 loading="lazy"
+                                 width="800"
+                                 height="500">
+                            <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
+                                <h2 class="text-white text-2xl font-bold">${slideData.title}</h2>
+                                <p class="text-white/90">${slideData.description}</p>
+                            </div>
+                        </div>
+                    `
+                };
+            }
+
+            static createControls() {
+                return {
+                    render: () => `
+                        <button class="carrossel-prev absolute left-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/50 text-white rounded-full p-2 backdrop-blur-sm" aria-label="Slide anterior">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <button class="carrossel-next absolute right-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/50 text-white rounded-full p-2 backdrop-blur-sm" aria-label="Próximo slide">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    `
+                };
+            }
+
+            static createIndicators(count, activeIndex) {
+                return {
+                    render: () => {
+                        let indicators = '';
+                        for (let i = 0; i < count; i++) {
+                            indicators += `
+                                <button class="carrossel-indicator w-3 h-3 rounded-full ${i === activeIndex ? 'bg-white' : 'bg-white/50'} hover:bg-white/80 transition" 
+                                        data-index="${i}" 
+                                        aria-label="Ir para slide ${i + 1}"
+                                        ${i === activeIndex ? 'aria-current="true"' : ''}>
+                                </button>
+                            `;
+                        }
+                        return `
+                            <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+                                ${indicators}
+                            </div>
+                        `;
+                    }
+                };
+            }
+
+            static createTimerControls(initialTime) {
+                return {
+                    render: () => `
+                        <div class="bg-white p-4 rounded-xl shadow-lg mt-4">
+                            <div class="flex items-center justify-between">
+                                <label class="text-gray-700 font-medium">Tempo por slide: <span class="carrossel-time-display">${initialTime/1000}</span>s</label>
+                                <input type="range" min="2" max="10" value="${initialTime/1000}" 
+                                       class="carrossel-time-range w-32 h-2 bg-blue-100 rounded-lg appearance-none cursor-pointer"
+                                       aria-label="Ajustar tempo de exibição dos slides">
+                            </div>
+                        </div>
+                    `
+                };
+            }
+        }
+
+        // ==============================================
+        // Módulo: CarrosselView (Observer)
+        // ==============================================
+        class CarrosselView {
+            constructor(containerId, state) {
+                this.container = document.getElementById(containerId);
+                this.state = state;
+                this.autoPlayInterval = null;
+                this.render();
+                this.setupEventListeners();
+                this.state.subscribe(this);
+            }
+
+            update(state) {
+                this.updateSlides(state);
+                this.updateIndicators(state);
+                this.updateAutoPlay(state);
+            }
+
+            render() {
+                const slidesHTML = this.state.slides.map((slide, index) => 
+                    ComponentFactory.createSlide(slide, index, index === this.state.currentIndex).render()
+                ).join('');
+
+                const controls = ComponentFactory.createControls().render();
+                const indicators = ComponentFactory.createIndicators(
+                    this.state.slides.length, 
+                    this.state.currentIndex
+                ).render();
+                const timerControls = ComponentFactory.createTimerControls(
+                    this.state.interval
+                ).render();
+
+                this.container.innerHTML = `
+                    <div class="carrossel-container relative overflow-hidden rounded-xl shadow-lg bg-white mb-6" role="region" aria-label="Carrossel de imagens">
+                        <div class="carrossel-slides relative h-96">
+                            ${slidesHTML}
+                        </div>
+                        ${controls}
+                        ${indicators}
+                    </div>
+                    ${timerControls}
+                `;
+            }
+
+            updateSlides(state) {
+                document.querySelectorAll('.carrossel-slide').forEach((slide, index) => {
+                    const isActive = index === state.currentIndex;
+                    slide.classList.toggle('active', isActive);
+                    slide.classList.toggle('hidden', !isActive);
+                    slide.setAttribute('aria-hidden', !isActive);
+                    slide.setAttribute('aria-current', isActive ? 'true' : 'false');
+                });
+            }
+
+            updateIndicators(state) {
+                document.querySelectorAll('.carrossel-indicator').forEach((indicator, index) => {
+                    const isActive = index === state.currentIndex;
+                    indicator.classList.toggle('bg-white', isActive);
+                    indicator.classList.toggle('bg-white/50', !isActive);
+                    indicator.setAttribute('aria-current', isActive ? 'true' : 'false');
+                });
+            }
+
+            updateAutoPlay(state) {
+                clearInterval(this.autoPlayInterval);
+                if (state.isPlaying) {
+                    this.autoPlayInterval = setInterval(() => {
+                        const nextIndex = (this.state.currentIndex + 1) % this.state.slides.length;
+                        this.state.setCurrentIndex(nextIndex);
+                    }, state.interval);
+                }
+            }
+
+            setupEventListeners() {
+                // Navegação
+                this.container.addEventListener('click', (e) => {
+                    if (e.target.closest('.carrossel-next')) {
+                        const nextIndex = (this.state.currentIndex + 1) % this.state.slides.length;
+                        this.state.setCurrentIndex(nextIndex);
+                    } else if (e.target.closest('.carrossel-prev')) {
+                        const prevIndex = (this.state.currentIndex - 1 + this.state.slides.length) % this.state.slides.length;
+                        this.state.setCurrentIndex(prevIndex);
+                    } else if (e.target.closest('.carrossel-indicator')) {
+                        const index = parseInt(e.target.closest('.carrossel-indicator').getAttribute('data-index'));
+                        this.state.setCurrentIndex(index);
+                    }
+                });
+
+                // Controle de tempo
+                this.container.addEventListener('input', (e) => {
+                    if (e.target.classList.contains('carrossel-time-range')) {
+                        const newTime = parseInt(e.target.value) * 1000;
+                        this.state.setInterval(newTime);
+                        document.querySelector('.carrossel-time-display').textContent = newTime/1000;
+                    }
+                });
+
+                // Teclado e mouse
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowRight') {
+                        const nextIndex = (this.state.currentIndex + 1) % this.state.slides.length;
+                        this.state.setCurrentIndex(nextIndex);
+                    } else if (e.key === 'ArrowLeft') {
+                        const prevIndex = (this.state.currentIndex - 1 + this.state.slides.length) % this.state.slides.length;
+                        this.state.setCurrentIndex(prevIndex);
+                    } else if (e.key === ' ') {
+                        this.state.togglePlay();
+                    }
+                });
+
+                this.container.querySelector('.carrossel-container')?.addEventListener('mouseenter', () => {
+                    this.state.togglePlay();
+                });
+
+                this.container.querySelector('.carrossel-container')?.addEventListener('mouseleave', () => {
+                    this.state.togglePlay();
+                });
+            }
+        }
+
+        // ==============================================
+        // Inicialização do Carrossel
+        // ==============================================
+        const slidesData = [
+            {
+                imageSrc: '../james-unsplash.jpg',
+                altText: 'Paisagem natural com montanhas e rio',
+                title: 'Belezas Naturais',
+                description: 'Explore paisagens deslumbrantes ao redor do mundo'
+            },
+            {
+                imageSrc: '../jimmy-unsplash.jpg',
+                altText: 'Vista aérea de uma cidade movimentada',
+                title: 'Vida Urbana',
+                description: 'Descubra a energia das grandes cidades'
+            },
+            {
+                imageSrc: '../karl-unsplash.jpg',
+                altText: 'Tecnologia moderna e dispositivos eletrônicos',
+                title: 'Inovação Tecnológica',
+                description: 'As últimas tendências em tecnologia'
+            }
+        ];
+
+        const carrosselState = new CarrosselState(slidesData, {
+            autoPlay: true,
+            initialInterval: 5000
+        });
+
+        const carrosselView = new CarrosselView('meu-carrossel', carrosselState);
+    </script>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrossel com Melhores Práticas de UX</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .carrossel-item {
+            transition: opacity 0.5s ease-in-out;
+        }
+        .carrossel-item.hidden {
+            opacity: 0;
+            display: none;
+        }
+        .carrossel-item.active {
+            opacity: 1;
+            display: block;
+        }
+        
+        /* Suaviza transições */
+        .carrossel-item, button, .indicador {
+            transition: all 0.3s ease;
+        }
+        
+        /* Evita hover em dispositivos touch */
+        @media (hover: hover) {
+            .indicador:hover {
+                transform: scale(1.2);
+            }
+        }
+        
+        /* Foco acessível */
+        button:focus, .indicador:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        }
+        
+        /* Placeholder de carregamento */
+        .loading-placeholder {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 0.2;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-3xl w-full mx-auto">
+        <!-- Container do Carrossel -->
+        <div class="relative overflow-hidden rounded-xl shadow-lg bg-white mb-6" role="region" aria-label="Carrossel de imagens">
+            <!-- Slides -->
+            <div id="carrossel" class="relative h-96">
+                <!-- Slide 1 -->
+                <div class="carrossel-item active absolute inset-0 w-full h-full" aria-hidden="false" aria-current="true">
+                    <div class="loading-placeholder absolute inset-0 bg-gray-200"></div>
+                    <img src="../james-unsplash.jpg" 
+                         alt="Paisagem natural com montanhas e rio" 
+                         class="w-full h-full object-cover aspect-[16/9]"
+                         loading="lazy"
+                         width="800"
+                         height="500"
+                         onload="this.previousElementSibling.remove()">
+                    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
+                        <h2 class="text-white text-2xl font-bold">Belezas Naturais</h2>
+                        <p class="text-white/90">Explore paisagens deslumbrantes ao redor do mundo.</p>
+                    </div>
+                </div>
+                <!-- Slide 2 -->
+                <div class="carrossel-item hidden absolute inset-0 w-full h-full" aria-hidden="true">
+                    <div class="loading-placeholder absolute inset-0 bg-gray-200"></div>
+                    <img src="../jimmy-unsplash.jpg" 
+                         alt="Vista aérea de uma cidade movimentada" 
+                         class="w-full h-full object-cover aspect-[16/9]"
+                         loading="lazy"
+                         width="800"
+                         height="500"
+                         onload="this.previousElementSibling.remove()">
+                    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
+                        <h2 class="text-white text-2xl font-bold">Vida Urbana</h2>
+                        <p class="text-white/90">Descubra a energia das grandes cidades.</p>
+                    </div>
+                </div>
+                <!-- Slide 3 -->
+                <div class="carrossel-item hidden absolute inset-0 w-full h-full" aria-hidden="true">
+                    <div class="loading-placeholder absolute inset-0 bg-gray-200"></div>
+                    <img src="../karl-unsplash.jpg" 
+                         alt="Tecnologia moderna e dispositivos eletrônicos" 
+                         class="w-full h-full object-cover aspect-[16/9]"
+                         loading="lazy"
+                         width="800"
+                         height="500"
+                         onload="this.previousElementSibling.remove()">
+                    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
+                        <h2 class="text-white text-2xl font-bold">Inovação Tecnológica</h2>
+                        <p class="text-white/90">As últimas tendências em tecnologia.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botões de navegação -->
+            <button id="prev" class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/50 text-white rounded-full p-2 backdrop-blur-sm" aria-label="Slide anterior">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+            <button id="next" class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/50 text-white rounded-full p-2 backdrop-blur-sm" aria-label="Próximo slide">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+
+            <!-- Indicadores de slide -->
+            <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+                <button class="indicador w-3 h-3 rounded-full bg-white/50 hover:bg-white/80 transition" data-index="0" aria-label="Ir para slide 1"></button>
+                <button class="indicador w-3 h-3 rounded-full bg-white/50 hover:bg-white/80 transition" data-index="1" aria-label="Ir para slide 2"></button>
+                <button class="indicador w-3 h-3 rounded-full bg-white/50 hover:bg-white/80 transition" data-index="2" aria-label="Ir para slide 3"></button>
+            </div>
+        </div>
+
+        <!-- Controles de tempo -->
+        <div class="bg-white p-4 rounded-xl shadow-lg">
+            <div class="flex items-center justify-between">
+                <label for="time-range" class="text-gray-700 font-medium">Tempo por slide: <span id="time-display">5</span>s</label>
+                <input 
+                    id="time-range" 
+                    type="range" 
+                    min="2" 
+                    max="10" 
+                    value="5" 
+                    class="w-32 h-2 bg-blue-100 rounded-lg appearance-none cursor-pointer"
+                    aria-label="Ajustar tempo de exibição dos slides"
+                >
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.carrossel-item');
+            const prevBtn = document.getElementById('prev');
+            const nextBtn = document.getElementById('next');
+            const indicadores = document.querySelectorAll('.indicador');
+            const timeRange = document.getElementById('time-range');
+            const timeDisplay = document.getElementById('time-display');
+            
+            let currentIndex = 0;
+            let slideInterval = 5000; // 5 segundos inicialmente
+            let autoPlayInterval;
+            let isPaused = false;
+
+            // Atualiza o slide ativo
+            function updateSlide() {
+                slides.forEach((slide, index) => {
+                    const isActive = index === currentIndex;
+                    slide.classList.toggle('active', isActive);
+                    slide.classList.toggle('hidden', !isActive);
+                    slide.setAttribute('aria-hidden', !isActive);
+                    if (isActive) {
+                        slide.setAttribute('aria-current', 'true');
+                    } else {
+                        slide.removeAttribute('aria-current');
+                    }
+                });
+
+                indicadores.forEach((ind, index) => {
+                    ind.classList.toggle('bg-white', index === currentIndex);
+                    ind.classList.toggle('bg-white/50', index !== currentIndex);
+                    ind.setAttribute('aria-current', index === currentIndex ? 'true' : 'false');
+                });
+            }
+
+            // Inicia/reinicia o autoplay
+            function startAutoPlay() {
+                clearInterval(autoPlayInterval);
+                if (!isPaused) {
+                    autoPlayInterval = setInterval(() => {
+                        currentIndex = (currentIndex + 1) % slides.length;
+                        updateSlide();
+                    }, slideInterval);
+                }
+            }
+
+            // Navegação
+            function goToNextSlide() {
+                currentIndex = (currentIndex + 1) % slides.length;
+                updateSlide();
+                startAutoPlay();
+            }
+
+            function goToPrevSlide() {
+                currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+                updateSlide();
+                startAutoPlay();
+            }
+
+            // Event listeners
+            nextBtn.addEventListener('click', goToNextSlide);
+            prevBtn.addEventListener('click', goToPrevSlide);
+
+            // Navegação por teclado
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') {
+                    goToNextSlide();
+                } else if (e.key === 'ArrowLeft') {
+                    goToPrevSlide();
+                } else if (e.key === ' ') {
+                    isPaused = !isPaused;
+                    if (isPaused) {
+                        clearInterval(autoPlayInterval);
+                    } else {
+                        startAutoPlay();
+                    }
+                }
+            });
+
+            // Controle por range
+            timeRange.addEventListener('input', (e) => {
+                slideInterval = e.target.value * 1000;
+                timeDisplay.textContent = e.target.value;
+                startAutoPlay();
+                
+                // Feedback visual
+                timeRange.classList.add('ring-2', 'ring-blue-500');
+                setTimeout(() => {
+                    timeRange.classList.remove('ring-2', 'ring-blue-500');
+                }, 300);
+            });
+
+            // Navegação por indicadores
+            indicadores.forEach((ind) => {
+                ind.addEventListener('click', () => {
+                    currentIndex = parseInt(ind.getAttribute('data-index'));
+                    updateSlide();
+                    startAutoPlay();
+                    
+                    // Feedback tátil
+                    ind.classList.add('scale-150');
+                    setTimeout(() => {
+                        ind.classList.remove('scale-150');
+                    }, 300);
+                });
+            });
+
+            // Pausa ao passar o mouse
+            document.getElementById('carrossel').addEventListener('mouseenter', () => {
+                isPaused = true;
+                clearInterval(autoPlayInterval);
+            });
+
+            document.getElementById('carrossel').addEventListener('mouseleave', () => {
+                isPaused = false;
+                startAutoPlay();
+            });
+
+            // Inicialização
+            updateSlide();
+            startAutoPlay();
+        });
+    </script>
+</body>
+</html>

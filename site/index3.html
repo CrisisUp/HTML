@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tafner - Outsourcing de TI</title>
+
+    <style>
+        /* Reset e Estilos Base */
+        :root {
+            --primary-color: #007bff;
+            --primary-hover: #0069d9;
+            --secondary-color: #6c757d;
+            --dark-color: #343a40;
+            --light-color: #f8f9fa;
+            --border-radius: 4px;
+            --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            color: #212529;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header */
+        #header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+
+        .nav-list {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-list li {
+            position: relative;
+        }
+
+        .cta-button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .cta-button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* Dropdown */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 200px;
+            box-shadow: var(--box-shadow);
+            border-radius: var(--border-radius);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 100;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .dropdown-menu li {
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* Menu Mobile */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 24px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: var(--dark-color);
+            transition: var(--transition);
+        }
+
+        /* Seções */
+        .page-header {
+            padding: 6rem 0 2rem;
+            background-color: var(--light-color);
+            text-align: center;
+        }
+
+        .breadcrumb {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .breadcrumb a {
+            color: var(--primary-color);
+        }
+
+        .grid-2-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .media-box {
+            height: 300px;
+            background-color: #eee;
+            border-radius: var(--border-radius);
+        }
+
+        /* Serviços */
+        .services-section {
+            padding: 4rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .subtitle {
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .service-icon {
+            width: 50px;
+            height: 50px;
+            background-color: #eee;
+            margin-bottom: 1rem;
+            border-radius: 50%;
+        }
+
+        /* Cases */
+        .cases-section {
+            padding: 4rem 0;
+            background-color: var(--light-color);
+        }
+
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .case-card {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .case-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .case-image-placeholder {
+            height: 200px;
+            background-color: #ddd;
+        }
+
+        .case-info {
+            padding: 1rem;
+            background: white;
+        }
+
+        .case-category {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* CTA */
+        .cta-section {
+            padding: 4rem 0;
+            text-align: center;
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .cta-section .subtitle {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+
+        .btn-primary {
+            background-color: white;
+            color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Footer */
+        .main-footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 4rem 0 0;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-col h3,
+        .footer-col h4 {
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-col a:hover {
+            color: var(--primary-color);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-icon {
+            width: 32px;
+            height: 32px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .social-icon:hover {
+            background-color: var(--primary-color);
+        }
+
+        /* Responsividade */
+        @media (max-width: 992px) {
+            .nav-list {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background: white;
+                flex-direction: column;
+                align-items: center;
+                padding: 2rem 0;
+                transition: var(--transition);
+            }
+
+            .nav-list.active {
+                left: 0;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .grid-2-col {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header/Navbar -->
+    <header id="header" class="fixed-top">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">Tafner</a>
+
+                <div class="menu-toggle" id="mobile-menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+
+                <ul class="nav-list">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="sobre.html">Sobre</a></li>
+                    <li><a href="cases.html">Cases</a></li>
+                    <li class="dropdown">
+                        <a href="#">Serviços <i class="dropdown-icon">▼</i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="votacao.html">Sistema de Votação</a></li>
+                            <li><a href="software.html">Software House</a></li>
+                            <li><a href="outsourcing.html">Terceirização de TI</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="contato.html" class="cta-button">Eu tenho uma ideia</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main>
+        <!-- Seção Hero/Banner -->
+        <section class="page-header">
+            <div class="container">
+                <h1>Serviços de Terceirização</h1>
+                <nav class="breadcrumb">
+                    <a href="index.html">Home</a>
+                    <span>Serviços de Terceirização</span>
+                </nav>
+            </div>
+        </section>
+
+        <!-- Seção Introdução -->
+        <section class="intro-section">
+            <div class="container">
+                <div class="grid-2-col">
+                    <div class="content">
+                        <h2>Terceirização de TI</h2>
+                        <p>Na Tafner Outsourcing, a terceirização de TI é mais que uma parceria de manutenção; é uma
+                            abordagem estratégica que traz inúmeros benefícios para sua empresa.</p>
+                        <p>Nossa equipe dedicada oferece agilidade, proximidade e flexibilidade, liberando seus recursos
+                            internos para o que realmente importa, seu negócio!</p>
+                    </div>
+                    <div class="media-placeholder">
+                        <!-- Espaço reservado para imagem/vídeo -->
+                        <div class="media-box"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Serviços -->
+        <section class="services-section">
+            <div class="container">
+                <div class="section-header">
+                    <p class="subtitle">Serviços</p>
+                    <h2>Nós entendemos do assunto</h2>
+                </div>
+
+                <div class="services-grid">
+                    <!-- Serviço 1 -->
+                    <div class="service-card">
+                        <div class="service-icon"></div>
+                        <h3>Backup</h3>
+                        <p>Garantimos a segurança dos seus dados com soluções de backup confiáveis e eficazes.</p>
+                    </div>
+
+                    <!-- Serviço 2 -->
+                    <div class="service-card">
+                        <div class="service-icon"></div>
+                        <h3>Inventário de TI</h3>
+                        <p>Gerencie e controle seus ativos de TI com nosso inventário completo e detalhado.</p>
+                    </div>
+
+                    <!-- Adicione mais serviços conforme necessário -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Cases -->
+        <section class="cases-section">
+            <div class="container">
+                <div class="section-header">
+                    <p class="subtitle">Experiência</p>
+                    <h2>+25 anos fazendo da sua ideia realidade</h2>
+                </div>
+
+                <div class="cases-grid">
+                    <!-- Case 1 -->
+                    <div class="case-card">
+                        <div class="case-image-placeholder"></div>
+                        <div class="case-info">
+                            <p class="case-category">Outsourcing</p>
+                            <h3>Rocha e Barcellos</h3>
+                        </div>
+                    </div>
+
+                    <!-- Adicione mais cases conforme necessário -->
+                </div>
+
+                <div class="text-center">
+                    <a href="cases.html" class="btn">Ver Todos</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Final -->
+        <section class="cta-section">
+            <div class="container">
+                <p class="subtitle">O sistema é importante para seu negócio?</p>
+                <h2>Deixa a Tafner cuidar dele para você.</h2>
+                <a href="contato.html" class="btn btn-primary">Entrar em contato</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Tafner</h3>
+                    <address>
+                        Av. Paulo Emanuel de Almeida, 358<br>
+                        Sorocaba/SP - Brasil<br>
+                        Tel: (15) 3217-8933
+                    </address>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Links úteis</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="sobre.html">Sobre</a></li>
+                        <li><a href="cases.html">Cases</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Serviços</h4>
+                    <ul>
+                        <li><a href="votacao.html">Votação Online</a></li>
+                        <li><a href="software.html">Software House</a></li>
+                        <li><a href="outsourcing.html">Outsourcing</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2023 Tafner. Todos os direitos reservados.</p>
+                <div class="social-links">
+                    <a href="#" class="social-icon">FB</a>
+                    <a href="#" class="social-icon">IG</a>
+                    <a href="#" class="social-icon">IN</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // JavaScript básico para funcionalidades essenciais
+        document.addEventListener('DOMContentLoaded', function () {
+            // Menu mobile
+            const menuToggle = document.getElementById('mobile-menu');
+            const navList = document.querySelector('.nav-list');
+
+            menuToggle.addEventListener('click', function () {
+                navList.classList.toggle('active');
+                menuToggle.classList.toggle('active');
+            });
+
+            // Dropdown
+            const dropdowns = document.querySelectorAll('.dropdown');
+            dropdowns.forEach(dropdown => {
+                dropdown.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    this.querySelector('.dropdown-menu').classList.toggle('show');
+                });
+            });
+
+            // Scroll suave
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

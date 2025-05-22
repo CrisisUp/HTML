@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrossel com Controle de Tempo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .carrossel-item {
+            transition: opacity 0.5s ease-in-out;
+        }
+        .carrossel-item.hidden {
+            opacity: 0;
+            display: none;
+        }
+        .carrossel-item.active {
+            opacity: 1;
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-3xl w-full mx-auto">
+        <!-- Container do Carrossel -->
+        <div class="relative overflow-hidden rounded-xl shadow-lg bg-white mb-6">
+            <!-- Slides -->
+            <div id="carrossel" class="relative h-96">
+                <!-- Slide 1 -->
+                <div class="carrossel-item active absolute inset-0 w-full h-full">
+                    <img src="../karsten-unsplash.jpg" 
+                         alt="Natureza" 
+                         class="w-full h-full object-cover">
+                    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
+                        <h2 class="text-white text-2xl font-bold">Slide 1</h2>
+                        <p class="text-white/90">Imagem de pets.</p>
+                    </div>
+                </div>
+                <!-- Slide 2 -->
+                <div class="carrossel-item hidden absolute inset-0 w-full h-full">
+                    <img src="../kelly-unsplash.jpg" 
+                         alt="Cidade" 
+                         class="w-full h-full object-cover">
+                    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
+                        <h2 class="text-white text-2xl font-bold">Slide 2</h2>
+                        <p class="text-white/90">Imagem urbana.</p>
+                    </div>
+                </div>
+                <!-- Slide 3 -->
+                <div class="carrossel-item hidden absolute inset-0 w-full h-full">
+                    <img src="../lucas-unsplash.jpg" 
+                         alt="Tecnologia" 
+                         class="w-full h-full object-cover">
+                    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
+                        <h2 class="text-white text-2xl font-bold">Slide 3</h2>
+                        <p class="text-white/90">Imagem de natureza.</p>
+                    </div>
+                </div>
+                <!-- Slide 4 -->
+                <div class="carrossel-item active absolute inset-0 w-full h-full">
+                    <img src="../karl-unsplash.jpg" 
+                         alt="Natureza" 
+                         class="w-full h-full object-cover">
+                    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
+                        <h2 class="text-white text-2xl font-bold">Slide 4</h2>
+                        <p class="text-white/90">Imagem urbana.</p>
+                    </div>
+                </div>
+                <!-- Slide 5 -->
+                <div class="carrossel-item hidden absolute inset-0 w-full h-full">
+                    <img src="../james-unsplash.jpg" 
+                         alt="Cidade" 
+                         class="w-full h-full object-cover">
+                    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
+                        <h2 class="text-white text-2xl font-bold">Slide 5</h2>
+                        <p class="text-white/90">Imagem de natureza.</p>
+                    </div>
+                </div>
+                <!-- Slide 6 -->
+                <div class="carrossel-item hidden absolute inset-0 w-full h-full">
+                    <img src="../jimmy-unsplash.jpg" 
+                         alt="Tecnologia" 
+                         class="w-full h-full object-cover">
+                    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
+                        <h2 class="text-white text-2xl font-bold">Slide 6</h2>
+                        <p class="text-white/90">Imagem de tecnologia.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botões de navegação -->
+            <button id="prev" class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/50 text-white rounded-full p-2 backdrop-blur-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+            <button id="next" class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/50 text-white rounded-full p-2 backdrop-blur-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+
+            <!-- Indicadores de slide -->
+            <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+                <button class="indicador w-3 h-3 rounded-full bg-white/50 hover:bg-white/80 transition" data-index="0"></button>
+                <button class="indicador w-3 h-3 rounded-full bg-white/50 hover:bg-white/80 transition" data-index="1"></button>
+                <button class="indicador w-3 h-3 rounded-full bg-white/50 hover:bg-white/80 transition" data-index="2"></button>
+            </div>
+        </div>
+
+        <!-- Controles de tempo (novo) -->
+        <div class="bg-white p-4 rounded-xl shadow-lg flex items-center justify-between">
+            <span class="text-gray-700 font-medium">Tempo por slide:</span>
+            <div class="flex items-center gap-4">
+                <button id="decrease-time" class="bg-blue-600 hover:bg-blue-700 text-white rounded-full w-10 h-10 flex items-center justify-center transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                    </svg>
+                </button>
+                <span id="time-display" class="text-xl font-bold w-12 text-center">5s</span>
+                <button id="increase-time" class="bg-blue-600 hover:bg-blue-700 text-white rounded-full w-10 h-10 flex items-center justify-center transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.carrossel-item');
+            const prevBtn = document.getElementById('prev');
+            const nextBtn = document.getElementById('next');
+            const indicadores = document.querySelectorAll('.indicador');
+            const decreaseTimeBtn = document.getElementById('decrease-time');
+            const increaseTimeBtn = document.getElementById('increase-time');
+            const timeDisplay = document.getElementById('time-display');
+            
+            let currentIndex = 0;
+            let slideInterval = 5000; // 5 segundos inicialmente
+            let autoPlayInterval;
+
+            // Atualiza o slide ativo
+            function updateSlide() {
+                slides.forEach((slide, index) => {
+                    slide.classList.toggle('active', index === currentIndex);
+                    slide.classList.toggle('hidden', index !== currentIndex);
+                });
+
+                indicadores.forEach((ind, index) => {
+                    ind.classList.toggle('bg-white', index === currentIndex);
+                    ind.classList.toggle('bg-white/50', index !== currentIndex);
+                });
+            }
+
+            // Inicia/reinicia o autoplay
+            function startAutoPlay() {
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = setInterval(() => {
+                    currentIndex = (currentIndex + 1) % slides.length;
+                    updateSlide();
+                }, slideInterval);
+            }
+
+            // Atualiza o tempo exibido
+            function updateTimeDisplay() {
+                timeDisplay.textContent = `${slideInterval / 1000}s`;
+            }
+
+            // Controles de tempo
+            decreaseTimeBtn.addEventListener('click', () => {
+                if (slideInterval > 2000) { // Mínimo de 2 segundos
+                    slideInterval -= 1000;
+                    updateTimeDisplay();
+                    startAutoPlay();
+                }
+            });
+
+            increaseTimeBtn.addEventListener('click', () => {
+                if (slideInterval < 10000) { // Máximo de 10 segundos
+                    slideInterval += 1000;
+                    updateTimeDisplay();
+                    startAutoPlay();
+                }
+            });
+
+            // Navegação
+            nextBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % slides.length;
+                updateSlide();
+                startAutoPlay(); // Reinicia o timer após interação manual
+            });
+
+            prevBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+                updateSlide();
+                startAutoPlay();
+            });
+
+            indicadores.forEach((ind) => {
+                ind.addEventListener('click', () => {
+                    currentIndex = parseInt(ind.getAttribute('data-index'));
+                    updateSlide();
+                    startAutoPlay();
+                });
+            });
+
+            // Inicialização
+            updateTimeDisplay();
+            startAutoPlay();
+        });
+    </script>
+</body>
+</html>
