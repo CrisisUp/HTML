@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidatura à Vaga</title>
+    <style>
+        /* Reset e Estilos Globais */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        /* Container do Formulário */
+        .form-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Cabeçalho */
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        .form-header h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .form-header p {
+            color: #7f8c8d;
+        }
+
+        /* Grupos de Campos */
+        fieldset {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        legend {
+            padding: 0 15px;
+            color: #2c3e50;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        /* Layout de Colunas */
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 15px;
+        }
+
+        /* Labels e Inputs */
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="number"],
+        input[type="url"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        }
+
+        /* Validação */
+        input:invalid,
+        textarea:invalid {
+            border-color: #e74c3c;
+        }
+
+        input:valid,
+        textarea:valid {
+            border-color: #2ecc71;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* Upload de Arquivo */
+        .file-upload {
+            border: 2px dashed #ddd;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-upload:hover {
+            border-color: #3498db;
+            background-color: #f8f9fa;
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .file-name {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        /* Botão */
+        .submit-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 16px 20px;
+            width: 100%;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .submit-btn:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        /* Loader */
+        .loader {
+            display: none;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 20px;
+            }
+
+            fieldset {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            <h1>Candidatura à Vaga</h1>
+            <p>Preencha o formulário abaixo para se candidatar à vaga desejada</p>
+        </div>
+
+        <form id="jobApplicationForm" action="/processar-candidatura" method="POST" enctype="multipart/form-data">
+            <!-- Dados Pessoais -->
+            <fieldset>
+                <legend>Dados Pessoais</legend>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nome">Nome Completo*</label>
+                        <input type="text" id="nome" name="nome" required minlength="3" 
+                               pattern="[A-Za-zÀ-ú\s]+" title="Apenas letras e espaços">
+                        <div class="error-message" id="nome-error">Por favor, insira seu nome completo</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="data_nascimento">Data de Nascimento*</label>
+                        <input type="date" id="data_nascimento" name="data_nascimento" required>
+                        <div class="error-message" id="data_nascimento-error">Data inválida</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">E-mail*</label>
+                        <input type="email" id="email" name="email" required 
+                               placeholder="seu@email.com">
+                        <div class="error-message" id="email-error">Por favor, insira um e-mail válido</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="telefone">Telefone*</label>
+                        <input type="tel" id="telefone" name="telefone" required 
+                               pattern="\(?\d{2}\)?[\s-]?\d{4,5}[\s-]?\d{4}" 
+                               placeholder="(00) 00000-0000">
+                        <div class="error-message" id="telefone-error">Formato: (00) 00000-0000</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="endereco">Endereço Completo*</label>
+                    <input type="text" id="endereco" name="endereco" required>
+                    <div class="error-message" id="endereco-error">Por favor, insira seu endereço</div>
+                </div>
+            </fieldset>
+
+            <!-- Experiência Profissional -->
+            <fieldset>
+                <legend>Experiência Profissional</legend>
+                
+                <div class="form-group">
+                    <label for="cargo_atual">Cargo Atual/Último Cargo*</label>
+                    <input type="text" id="cargo_atual" name="cargo_atual" required>
+                    <div class="error-message" id="cargo_atual-error">Por favor, informe seu cargo</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="empresa_atual">Empresa Atual/Última Empresa*</label>
+                    <input type="text" id="empresa_atual" name="empresa_atual" required>
+                    <div class="error-message" id="empresa_atual-error">Por favor, informe o nome da empresa</div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="data_inicio">Data de Início*</label>
+                        <input type="date" id="data_inicio" name="data_inicio" required>
+                        <div class="error-message" id="data_inicio-error">Data inválida</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="data_saida">Data de Saída (ou atual)</label>
+                        <input type="date" id="data_saida" name="data_saida">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="descricao_atividades">Principais Atividades*</label>
+                    <textarea id="descricao_atividades" name="descricao_atividades" required></textarea>
+                    <div class="error-message" id="descricao_atividades-error">Descreva suas atividades</div>
+                </div>
+            </fieldset>
+
+            <!-- Formação Acadêmica -->
+            <fieldset>
+                <legend>Formação Acadêmica</legend>
+                
+                <div class="form-group">
+                    <label for="nivel_formacao">Nível de Formação*</label>
+                    <select id="nivel_formacao" name="nivel_formacao" required>
+                        <option value="">Selecione...</option>
+                        <option value="ensino_medio">Ensino Médio</option>
+                        <option value="tecnologo">Tecnólogo</option>
+                        <option value="graduacao">Graduação</option>
+                        <option value="pos_graduacao">Pós-Graduação</option>
+                        <option value="mestrado">Mestrado</option>
+                        <option value="doutorado">Doutorado</option>
+                    </select>
+                    <div class="error-message" id="nivel_formacao-error">Selecione uma opção</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="curso">Curso*</label>
+                    <input type="text" id="curso" name="curso" required>
+                    <div class="error-message" id="curso-error">Informe o curso</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="instituicao">Instituição de Ensino*</label>
+                    <input type="text" id="instituicao" name="instituicao" required>
+                    <div class="error-message" id="instituicao-error">Informe a instituição</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ano_conclusao">Ano de Conclusão*</label>
+                    <input type="number" id="ano_conclusao" name="ano_conclusao" min="1900" max="2099" required>
+                    <div class="error-message" id="ano_conclusao-error">Ano inválido</div>
+                </div>
+            </fieldset>
+
+            <!-- Documentos -->
+            <fieldset>
+                <legend>Documentos</legend>
+                
+                <div class="form-group">
+                    <label for="curriculo">Currículo (PDF ou DOCX)*</label>
+                    <div class="file-upload" id="curriculo-upload">
+                        <span>Clique para enviar seu currículo</span>
+                        <input type="file" id="curriculo" name="curriculo" accept=".pdf,.doc,.docx" required>
+                        <div class="file-name" id="curriculo-name">Nenhum arquivo selecionado</div>
+                    </div>
+                    <div class="error-message" id="curriculo-error">Envie seu currículo</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="carta_apresentacao">Carta de Apresentação (Opcional)</label>
+                    <div class="file-upload" id="carta_apresentacao-upload">
+                        <span>Clique para enviar carta de apresentação</span>
+                        <input type="file" id="carta_apresentacao" name="carta_apresentacao" accept=".pdf,.doc,.docx">
+                        <div class="file-name" id="carta_apresentacao-name">Nenhum arquivo selecionado</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="portfolio">Link para Portfólio (Opcional)</label>
+                    <input type="url" id="portfolio" name="portfolio" placeholder="https://">
+                </div>
+            </fieldset>
+
+            <!-- Termos -->
+            <div class="form-group">
+                <input type="checkbox" id="lgpd" name="lgpd" required>
+                <label for="lgpd">Autorizo o tratamento dos meus dados pessoais conforme a <a href="/politica-privacidade" target="_blank">Lei Geral de Proteção de Dados (LGPD)</a>*</label>
+                <div class="error-message" id="lgpd-error">Você deve concordar com os termos</div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <span id="btnText">Enviar Candidatura</span>
+                <div class="loader" id="loader"></div>
+            </button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('jobApplicationForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const loader = document.getElementById('loader');
+
+            // Configuração do upload de arquivos
+            setupFileUpload('curriculo');
+            setupFileUpload('carta_apresentacao');
+
+            // Máscara para telefone
+            const telefone = document.getElementById('telefone');
+            telefone.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 2) {
+                    value = `(${value.substring(0,2)}) ${value.substring(2)}`;
+                }
+                if (value.length > 10) {
+                    value = `${value.substring(0,10)}-${value.substring(10,14)}`;
+                }
+                e.target.value = value;
+            });
+
+            // Validação em tempo real
+            form.addEventListener('input', function(e) {
+                validateField(e.target);
+            });
+
+            // Validação ao enviar
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                let isValid = true;
+                const fields = form.querySelectorAll('input, select, textarea');
+                
+                fields.forEach(field => {
+                    if (!validateField(field)) {
+                        isValid = false;
+                    }
+                });
+
+                // Validação adicional para arquivos
+                const curriculo = document.getElementById('curriculo');
+                if (curriculo.files.length === 0) {
+                    document.getElementById('curriculo-error').style.display = 'block';
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    // Simular envio (substitua por AJAX/API real)
+                    submitBtn.disabled = true;
+                    btnText.textContent = 'Enviando...';
+                    loader.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        alert('Candidatura enviada com sucesso! (Simulação)');
+                        form.reset();
+                        document.getElementById('curriculo-name').textContent = 'Nenhum arquivo selecionado';
+                        document.getElementById('carta_apresentacao-name').textContent = 'Nenhum arquivo selecionado';
+                        submitBtn.disabled = false;
+                        btnText.textContent = 'Enviar Candidatura';
+                        loader.style.display = 'none';
+                    }, 3000);
+                }
+            });
+
+            // Funções auxiliares
+            function setupFileUpload(fieldId) {
+                const uploadArea = document.getElementById(`${fieldId}-upload`);
+                const fileInput = document.getElementById(fieldId);
+                const fileNameDisplay = document.getElementById(`${fieldId}-name`);
+
+                uploadArea.addEventListener('click', function() {
+                    fileInput.click();
+                });
+
+                fileInput.addEventListener('change', function() {
+                    if (fileInput.files.length > 0) {
+                        fileNameDisplay.textContent = fileInput.files[0].name;
+                        validateField(fileInput);
+                    }
+                });
+            }
+
+            function validateField(field) {
+                const errorElement = document.getElementById(`${field.id}-error`);
+                
+                if (!errorElement) return true;
+
+                if (field.required && !field.value.trim() && 
+                   (field.type !== 'file' || field.files.length === 0)) {
+                    showError(field, errorElement, 'Este campo é obrigatório');
+                    return false;
+                }
+
+                if (field.type === 'email' && !isValidEmail(field.value)) {
+                    showError(field, errorElement, 'E-mail inválido');
+                    return false;
+                }
+
+                if (field.pattern && !new RegExp(field.pattern).test(field.value)) {
+                    showError(field, errorElement, field.title || 'Valor inválido');
+                    return false;
+                }
+
+                hideError(field, errorElement);
+                return true;
+            }
+
+            function showError(field, errorElement, message) {
+                if (field.type !== 'file') {
+                    field.style.borderColor = '#e74c3c';
+                }
+                if (errorElement) {
+                    errorElement.textContent = message;
+                    errorElement.style.display = 'block';
+                }
+                return false;
+            }
+
+            function hideError(field, errorElement) {
+                if (field.type !== 'file') {
+                    field.style.borderColor = '#2ecc71';
+                }
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                }
+                return true;
+            }
+
+            function isValidEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+        });
+    </script>
+</body>
+</html>

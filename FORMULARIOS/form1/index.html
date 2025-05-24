@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário Profissional</title>
+    <style>
+        /* Reset e Estilos Globais */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        /* Container do Formulário */
+        .form-container {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 25px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Cabeçalho */
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-header h1 {
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        /* Grupos de Campos */
+        fieldset {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        legend {
+            padding: 0 10px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        /* Labels e Inputs */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="password"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        }
+
+        /* Validação */
+        input:invalid {
+            border-color: #e74c3c;
+        }
+
+        input:valid {
+            border-color: #2ecc71;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* Botão */
+        .submit-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            width: 100%;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .submit-btn:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        /* Loader */
+        .loader {
+            display: none;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        .form-footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        .form-footer a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        /* Responsividade */
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 15px;
+            }
+
+            fieldset {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            <h1>Cadastro Profissional</h1>
+            <p>Preencha os campos abaixo para criar sua conta</p>
+        </div>
+
+        <form id="professionalForm" action="/processar-cadastro" method="POST">
+            <!-- Dados Pessoais -->
+            <fieldset>
+                <legend>Dados Pessoais</legend>
+                
+                <div class="form-group">
+                    <label for="nome">Nome Completo*</label>
+                    <input type="text" id="nome" name="nome" required minlength="3" 
+                           pattern="[A-Za-zÀ-ú\s]+" title="Apenas letras e espaços">
+                    <div class="error-message" id="nome-error">Por favor, insira um nome válido (mínimo 3 caracteres)</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">E-mail*</label>
+                    <input type="email" id="email" name="email" required 
+                           placeholder="exemplo@dominio.com">
+                    <div class="error-message" id="email-error">Por favor, insira um e-mail válido</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="telefone">Telefone*</label>
+                    <input type="tel" id="telefone" name="telefone" required 
+                           pattern="\(?\d{2}\)?[\s-]?\d{4,5}[\s-]?\d{4}" 
+                           placeholder="(00) 00000-0000">
+                    <div class="error-message" id="telefone-error">Formato: (00) 00000-0000</div>
+                </div>
+            </fieldset>
+
+            <!-- Segurança -->
+            <fieldset>
+                <legend>Segurança</legend>
+                
+                <div class="form-group">
+                    <label for="senha">Senha*</label>
+                    <input type="password" id="senha" name="senha" required 
+                           minlength="8" pattern="^(?=.*[A-Za-z])(?=.*\d).{8,}$" 
+                           aria-describedby="senha-help">
+                    <small id="senha-help">A senha deve ter pelo menos 8 caracteres, incluindo letras e números</small>
+                    <div class="error-message" id="senha-error">A senha não atende aos requisitos</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmar-senha">Confirmar Senha*</label>
+                    <input type="password" id="confirmar-senha" name="confirmar-senha" required>
+                    <div class="error-message" id="confirmar-senha-error">As senhas não coincidem</div>
+                </div>
+            </fieldset>
+
+            <!-- Termos -->
+            <div class="form-group">
+                <input type="checkbox" id="termos" name="termos" required>
+                <label for="termos">Li e aceito os <a href="/termos" target="_blank">Termos de Uso</a> e <a href="/privacidade" target="_blank">Política de Privacidade</a>*</label>
+                <div class="error-message" id="termos-error">Você deve aceitar os termos</div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <span id="btnText">Cadastrar</span>
+                <div class="loader" id="loader"></div>
+            </button>
+        </form>
+
+        <div class="form-footer">
+            <p>Já tem uma conta? <a href="/login">Faça login</a></p>
+            <p>* Campos obrigatórios</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('professionalForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const loader = document.getElementById('loader');
+
+            // Validação em tempo real
+            form.addEventListener('input', function(e) {
+                validateField(e.target);
+            });
+
+            // Validação ao enviar
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validar todos os campos
+                let isValid = true;
+                const fields = form.querySelectorAll('input, select, textarea');
+                
+                fields.forEach(field => {
+                    if (!validateField(field)) {
+                        isValid = false;
+                    }
+                });
+
+                // Verificar se as senhas coincidem
+                const senha = document.getElementById('senha').value;
+                const confirmarSenha = document.getElementById('confirmar-senha').value;
+                
+                if (senha !== confirmarSenha) {
+                    document.getElementById('confirmar-senha-error').style.display = 'block';
+                    isValid = false;
+                } else {
+                    document.getElementById('confirmar-senha-error').style.display = 'none';
+                }
+
+                if (isValid) {
+                    // Simular envio (substitua por AJAX/API real)
+                    submitBtn.disabled = true;
+                    btnText.textContent = 'Enviando...';
+                    loader.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        alert('Formulário enviado com sucesso! (Simulação)');
+                        form.reset();
+                        submitBtn.disabled = false;
+                        btnText.textContent = 'Cadastrar';
+                        loader.style.display = 'none';
+                    }, 2000);
+                }
+            });
+
+            // Máscara para telefone
+            const telefone = document.getElementById('telefone');
+            telefone.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 2) {
+                    value = `(${value.substring(0,2)}) ${value.substring(2)}`;
+                }
+                if (value.length > 10) {
+                    value = `${value.substring(0,10)}-${value.substring(10,14)}`;
+                }
+                e.target.value = value;
+            });
+
+            // Função de validação genérica
+            function validateField(field) {
+                const errorElement = document.getElementById(`${field.id}-error`);
+                
+                if (field.required && !field.value.trim()) {
+                    showError(field, errorElement, 'Este campo é obrigatório');
+                    return false;
+                }
+
+                if (field.type === 'email' && !isValidEmail(field.value)) {
+                    showError(field, errorElement, 'E-mail inválido');
+                    return false;
+                }
+
+                if (field.pattern && !new RegExp(field.pattern).test(field.value)) {
+                    showError(field, errorElement, field.title || 'Valor inválido');
+                    return false;
+                }
+
+                hideError(field, errorElement);
+                return true;
+            }
+
+            function showError(field, errorElement, message) {
+                field.style.borderColor = '#e74c3c';
+                if (errorElement) {
+                    errorElement.textContent = message;
+                    errorElement.style.display = 'block';
+                }
+                return false;
+            }
+
+            function hideError(field, errorElement) {
+                field.style.borderColor = '#2ecc71';
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                }
+                return true;
+            }
+
+            function isValidEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+        });
+    </script>
+</body>
+</html>

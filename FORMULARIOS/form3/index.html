@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidatura à Vaga</title>
+    <style>
+        /* Variáveis CSS para temas */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --field-bg: #ffffff;
+            --field-border: #dddddd;
+            --error-color: #e74c3c;
+            --success-color: #2ecc71;
+            --shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            --legend-color: #2c3e50;
+            --link-color: #3498db;
+            --footer-color: #7f8c8d;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #f0f0f0;
+            --primary-color: #5dade2;
+            --secondary-color: #3498db;
+            --field-bg: #2d2d2d;
+            --field-border: #444444;
+            --error-color: #ff6b6b;
+            --success-color: #69db7c;
+            --shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            --legend-color: #f0f0f0;
+            --link-color: #5dade2;
+            --footer-color: #bdc3c7;
+        }
+
+        /* Reset e Estilos Globais */
+        /* Reset CSS Aprimorado para Formulários */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent; /* Remove highlight em mobile */
+  -webkit-font-smoothing: antialiased; /* Melhora renderização de fontes */
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  line-height: 1.5; /* Padrão acessível */
+  text-size-adjust: 100%; /* Previne zoom em iOS */
+  scroll-behavior: smooth; /* Rolagem suave */
+}
+
+body {
+  min-height: 100vh;
+  text-rendering: optimizeSpeed;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Reset específico para elementos de formulário */
+button, input, optgroup, select, textarea {
+  font-family: inherit; /* Herda a fonte do body */
+  font-size: 100%; /* Tamanho consistente entre navegadores */
+  line-height: inherit; /* Herda line-height do body */
+  color: inherit; /* Herda cor do texto */
+  margin: 0; /* Remove margens padrão */
+  padding: 0;
+  background-color: transparent;
+  border: 1px solid currentColor; /* Borda sutil que herda a cor */
+}
+
+/* Remove estilos padrão de lista */
+ol, ul {
+  list-style: none;
+}
+
+/* Elementos de mídia responsivos por padrão */
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Remove animações para quem prefere reduzir */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Melhorias específicas para acessibilidade */
+[hidden] {
+  display: none !important;
+}
+
+[disabled] {
+  cursor: not-allowed !important;
+  opacity: 0.7 !important;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Reset para elementos interativos */
+button, [type="button"], [type="reset"], [type="submit"] {
+  -webkit-appearance: button;
+  cursor: pointer;
+}
+
+button:focus {
+  outline: 3px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Remove setas em inputs number no Chrome, Safari, Edge */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Remove clear button no IE */
+input[type="text"]::-ms-clear,
+input[type="password"]::-ms-reveal {
+  display: none;
+}
+
+/* Remove estilos padrão do datalist */
+datalist {
+  display: none;
+}
+
+/* Corrige alinhamento vertical em alguns navegadores */
+input, select, textarea, button {
+  vertical-align: middle;
+}
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Container do Formulário */
+        .form-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 30px;
+            background: var(--bg-color);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        /* Cabeçalho */
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 15px;
+        }
+
+        .form-header h1 {
+            color: var(--primary-color);
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .form-header p {
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        /* Grupos de Campos */
+        fieldset {
+            border: 1px solid var(--field-border);
+            border-radius: 5px;
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+
+        legend {
+            padding: 0 15px;
+            color: var(--legend-color);
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        /* Layout de Colunas */
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 15px;
+        }
+
+        /* Labels e Inputs */
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="number"],
+        input[type="url"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--field-bg);
+            border: 1px solid var(--field-border);
+            border-radius: 4px;
+            font-size: 16px;
+            color: var(--text-color);
+            transition: border 0.3s, box-shadow 0.3s;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 5px rgba(93, 173, 226, 0.5);
+        }
+
+        /* Validação */
+        input:invalid,
+        textarea:invalid {
+            border-color: var(--error-color);
+        }
+
+        input:valid,
+        textarea:valid {
+            border-color: var(--success-color);
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+            background-color: rgba(231, 76, 60, 0.1);
+            padding: 5px;
+            border-radius: 3px;
+        }
+
+        /* Upload de Arquivo */
+        .file-upload {
+            border: 2px dashed var(--field-border);
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(93, 173, 226, 0.1);
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .file-name {
+            margin-top: 10px;
+            font-size: 14px;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+
+        .file-hint {
+            display: block;
+            margin-top: 5px;
+            font-size: 13px;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+
+        /* Botão */
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 16px 20px;
+            width: 100%;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .submit-btn:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        /* Loader */
+        .loader {
+            display: none;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        .form-footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--footer-color);
+        }
+
+        /* Botão de Toggle */
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .theme-toggle svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            fieldset {
+                padding: 15px;
+            }
+            
+            .theme-toggle {
+                width: 40px;
+                height: 40px;
+                bottom: 15px;
+                right: 15px;
+            }
+        }
+
+        /* Contraste aprimorado para modo de alto contraste */
+        @media (prefers-contrast: more) {
+            :root {
+                --text-color: #000000;
+                --bg-color: #ffffff;
+                --field-border: #000000;
+            }
+            
+            [data-theme="dark"] {
+                --text-color: #ffffff;
+                --bg-color: #000000;
+                --field-border: #ffffff;
+            }
+            
+            input, select, textarea {
+                border-width: 2px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            <h1>Candidatura à Vaga</h1>
+            <p>Preencha o formulário abaixo para se candidatar à vaga desejada</p>
+        </div>
+
+        <form id="jobApplicationForm" action="/processar-candidatura" method="POST" enctype="multipart/form-data">
+            <!-- Dados Pessoais -->
+            <fieldset>
+                <legend>Dados Pessoais</legend>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nome">Nome Completo*</label>
+                        <input type="text" id="nome" name="nome" required minlength="3" 
+                               pattern="[A-Za-zÀ-ú\s]+" title="Apenas letras e espaços">
+                        <div class="error-message" id="nome-error">Por favor, insira seu nome completo</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="data_nascimento">Data de Nascimento*</label>
+                        <input type="date" id="data_nascimento" name="data_nascimento" required>
+                        <div class="error-message" id="data_nascimento-error">Data inválida</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">E-mail*</label>
+                        <input type="email" id="email" name="email" required 
+                               placeholder="seu@email.com">
+                        <div class="error-message" id="email-error">Por favor, insira um e-mail válido</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="telefone">Telefone*</label>
+                        <input type="tel" id="telefone" name="telefone" required 
+                               pattern="\(?\d{2}\)?[\s-]?\d{4,5}[\s-]?\d{4}" 
+                               placeholder="(00) 00000-0000">
+                        <div class="error-message" id="telefone-error">Formato: (00) 00000-0000</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="endereco">Endereço Completo*</label>
+                    <input type="text" id="endereco" name="endereco" required>
+                    <div class="error-message" id="endereco-error">Por favor, insira seu endereço</div>
+                </div>
+            </fieldset>
+
+            <!-- Experiência Profissional -->
+            <fieldset>
+                <legend>Experiência Profissional</legend>
+                
+                <div class="form-group">
+                    <label for="cargo_atual">Cargo Atual/Último Cargo*</label>
+                    <input type="text" id="cargo_atual" name="cargo_atual" required>
+                    <div class="error-message" id="cargo_atual-error">Por favor, informe seu cargo</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="empresa_atual">Empresa Atual/Última Empresa*</label>
+                    <input type="text" id="empresa_atual" name="empresa_atual" required>
+                    <div class="error-message" id="empresa_atual-error">Por favor, informe o nome da empresa</div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="data_inicio">Data de Início*</label>
+                        <input type="date" id="data_inicio" name="data_inicio" required>
+                        <div class="error-message" id="data_inicio-error">Data inválida</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="data_saida">Data de Saída (ou atual)</label>
+                        <input type="date" id="data_saida" name="data_saida">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="descricao_atividades">Principais Atividades*</label>
+                    <textarea id="descricao_atividades" name="descricao_atividades" required></textarea>
+                    <div class="error-message" id="descricao_atividades-error">Descreva suas atividades</div>
+                </div>
+            </fieldset>
+
+            <!-- Formação Acadêmica -->
+            <fieldset>
+                <legend>Formação Acadêmica</legend>
+                
+                <div class="form-group">
+                    <label for="nivel_formacao">Nível de Formação*</label>
+                    <select id="nivel_formacao" name="nivel_formacao" required>
+                        <option value="">Selecione...</option>
+                        <option value="ensino_medio">Ensino Médio</option>
+                        <option value="tecnologo">Tecnólogo</option>
+                        <option value="graduacao">Graduação</option>
+                        <option value="pos_graduacao">Pós-Graduação</option>
+                        <option value="mestrado">Mestrado</option>
+                        <option value="doutorado">Doutorado</option>
+                    </select>
+                    <div class="error-message" id="nivel_formacao-error">Selecione uma opção</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="curso">Curso*</label>
+                    <input type="text" id="curso" name="curso" required>
+                    <div class="error-message" id="curso-error">Informe o curso</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="instituicao">Instituição de Ensino*</label>
+                    <input type="text" id="instituicao" name="instituicao" required>
+                    <div class="error-message" id="instituicao-error">Informe a instituição</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ano_conclusao">Ano de Conclusão*</label>
+                    <input type="number" id="ano_conclusao" name="ano_conclusao" min="1900" max="2099" required>
+                    <div class="error-message" id="ano_conclusao-error">Ano inválido</div>
+                </div>
+            </fieldset>
+
+            <!-- Documentos -->
+            <fieldset>
+                <legend>Documentos</legend>
+                
+                <div class="form-group">
+                    <label for="curriculo">Currículo (PDF ou DOCX)*</label>
+                    <div class="file-upload" id="curriculo-upload" aria-describedby="curriculo-help">
+                        <span>Clique para enviar seu currículo</span>
+                        <input type="file" id="curriculo" name="curriculo" accept=".pdf,.doc,.docx" required>
+                        <div class="file-name" id="curriculo-name">Formatos: PDF/DOCX (Máx. 5MB)</div>
+                    </div>
+                    <small id="curriculo-help" class="file-hint">Tamanho máximo: 5MB. Evite senhas em PDFs.</small>
+                    <div class="error-message" id="curriculo-error">Envie seu currículo</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="carta_apresentacao">Carta de Apresentação (Opcional)</label>
+                    <div class="file-upload" id="carta_apresentacao-upload">
+                        <span>Clique para enviar carta de apresentação</span>
+                        <input type="file" id="carta_apresentacao" name="carta_apresentacao" accept=".pdf,.doc,.docx">
+                        <div class="file-name" id="carta_apresentacao-name">Nenhum arquivo selecionado</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="portfolio">Link para Portfólio (Opcional)</label>
+                    <input type="url" id="portfolio" name="portfolio" placeholder="https://">
+                </div>
+            </fieldset>
+
+            <!-- Termos -->
+            <div class="form-group">
+                <input type="checkbox" id="lgpd" name="lgpd" required>
+                <label for="lgpd">Autorizo o tratamento dos meus dados pessoais conforme a <a href="/politica-privacidade" target="_blank">Lei Geral de Proteção de Dados (LGPD)</a>*</label>
+                <div class="error-message" id="lgpd-error">Você deve concordar com os termos</div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <span id="btnText">Enviar Candidatura</span>
+                <div class="loader" id="loader"></div>
+            </button>
+        </form>
+
+        <div class="form-footer">
+            <p>Já tem uma conta? <a href="/login">Faça login</a></p>
+            <p>* Campos obrigatórios</p>
+        </div>
+    </div>
+
+    <!-- Botão de Toggle de Tema -->
+    <button class="theme-toggle" aria-label="Alternar modo claro/escuro" id="themeToggle">
+        <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M12,18C11.11,18 10.26,17.8 9.5,17.45C11.56,16.5 13,14.42 13,12C13,9.58 11.56,7.5 9.5,6.55C10.26,6.2 11.11,6 12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18M12,8A4,4 0 0,0 8,12A4,4 0 0,0 12,16A4,4 0 0,0 16,12A4,4 0 0,0 12,8M12,3A9,9 0 0,1 21,12A9,9 0 0,1 12,21A9,9 0 0,1 3,12A9,9 0 0,1 12,3Z"/>
+        </svg>
+    </button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('jobApplicationForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const loader = document.getElementById('loader');
+            const themeToggle = document.getElementById('themeToggle');
+
+            // Configuração do tema
+            function setupTheme() {
+                const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+                const savedTheme = localStorage.getItem('theme');
+                
+                // Aplicar tema salvo ou preferência do sistema
+                if (savedTheme) {
+                    document.documentElement.setAttribute('data-theme', savedTheme);
+                } else if (prefersDarkScheme.matches) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                }
+                
+                // Atualizar ARIA label
+                const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+                themeToggle.setAttribute('aria-label', 
+                    currentTheme === 'dark' ? 'Alternar para modo claro' : 'Alternar para modo escuro');
+            }
+
+            // Alternar tema
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                // Atualizar ARIA
+                this.setAttribute('aria-label', 
+                    newTheme === 'dark' ? 'Alternar para modo claro' : 'Alternar para modo escuro');
+            });
+
+            // Configuração do upload de arquivos
+            function setupFileUpload(fieldId) {
+                const uploadArea = document.getElementById(`${fieldId}-upload`);
+                const fileInput = document.getElementById(fieldId);
+                const fileNameDisplay = document.getElementById(`${fieldId}-name`);
+
+                if (!uploadArea || !fileInput || !fileNameDisplay) return;
+
+                uploadArea.addEventListener('click', function() {
+                    fileInput.click();
+                });
+
+                fileInput.addEventListener('change', function() {
+                    if (fileInput.files.length > 0) {
+                        fileNameDisplay.textContent = fileInput.files[0].name;
+                        validateField(fileInput);
+                    }
+                });
+            }
+
+            // Máscara para telefone
+            const telefone = document.getElementById('telefone');
+            if (telefone) {
+                telefone.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length > 2) {
+                        value = `(${value.substring(0,2)}) ${value.substring(2)}`;
+                    }
+                    if (value.length > 10) {
+                        value = `${value.substring(0,10)}-${value.substring(10,14)}`;
+                    }
+                    e.target.value = value;
+                });
+            }
+
+            // Validação em tempo real
+            form.addEventListener('input', function(e) {
+                validateField(e.target);
+            });
+
+            // Validação ao enviar
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                let isValid = true;
+                const fields = form.querySelectorAll('input, select, textarea');
+                
+                fields.forEach(field => {
+                    if (!validateField(field)) {
+                        isValid = false;
+                    }
+                });
+
+                // Validação adicional para arquivos
+                const curriculo = document.getElementById('curriculo');
+                if (curriculo && curriculo.files.length === 0) {
+                    document.getElementById('curriculo-error').style.display = 'block';
+                    isValid = false;
+                }
+
+                // Verificar se as senhas coincidem (se aplicável)
+                const senha = document.getElementById('senha');
+                const confirmarSenha = document.getElementById('confirmar-senha');
+                
+                if (senha && confirmarSenha && senha.value !== confirmarSenha.value) {
+                    document.getElementById('confirmar-senha-error').style.display = 'block';
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    // Simular envio (substitua por AJAX/API real)
+                    submitBtn.disabled = true;
+                    btnText.textContent = 'Enviando...';
+                    loader.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        alert('Candidatura enviada com sucesso! (Simulação)');
+                        form.reset();
+                        
+                        // Resetar nomes de arquivos
+                        const fileNames = document.querySelectorAll('.file-name');
+                        fileNames.forEach(el => {
+                            if (el.id.includes('name')) {
+                                el.textContent = el.id.includes('curriculo') 
+                                    ? 'Formatos: PDF/DOCX (Máx. 5MB)' 
+                                    : 'Nenhum arquivo selecionado';
+                            }
+                        });
+                        
+                        submitBtn.disabled = false;
+                        btnText.textContent = 'Enviar Candidatura';
+                        loader.style.display = 'none';
+                    }, 3000);
+                }
+            });
+
+            // Função de validação genérica
+            function validateField(field) {
+                const errorElement = document.getElementById(`${field.id}-error`);
+                
+                if (!errorElement) return true;
+
+                // Campos de arquivo têm validação especial
+                if (field.type === 'file') {
+                    if (field.required && (!field.files || field.files.length === 0)) {
+                        showError(field, errorElement, 'Este campo é obrigatório');
+                        return false;
+                    }
+                    
+                    if (field.files && field.files.length > 0) {
+                        const file = field.files[0];
+                        const validTypes = ['application/pdf', 'application/msword', 
+                                          'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                        
+                        if (!validTypes.includes(file.type)) {
+                            showError(field, errorElement, 'Formato inválido (use PDF ou DOCX)');
+                            return false;
+                        }
+                        
+                        if (file.size > 5 * 1024 * 1024) { // 5MB
+                            showError(field, errorElement, 'Arquivo muito grande (máx. 5MB)');
+                            return false;
+                        }
+                    }
+                } 
+                // Validação para outros campos
+                else if (field.required && !field.value.trim()) {
+                    showError(field, errorElement, 'Este campo é obrigatório');
+                    return false;
+                } else if (field.type === 'email' && field.value && !isValidEmail(field.value)) {
+                    showError(field, errorElement, 'E-mail inválido');
+                    return false;
+                } else if (field.pattern && field.value && !new RegExp(field.pattern).test(field.value)) {
+                    showError(field, errorElement, field.title || 'Valor inválido');
+                    return false;
+                } else if (field.type === 'checkbox' && field.required && !field.checked) {
+                    showError(field, errorElement, 'Você deve marcar esta opção');
+                    return false;
+                }
+
+                hideError(field, errorElement);
+                return true;
+            }
+
+            function showError(field, errorElement, message) {
+                if (field.type !== 'file') {
+                    field.style.borderColor = 'var(--error-color)';
+                }
+                if (errorElement) {
+                    errorElement.textContent = message;
+                    errorElement.style.display = 'block';
+                }
+                return false;
+            }
+
+            function hideError(field, errorElement) {
+                if (field.type !== 'file') {
+                    field.style.borderColor = field.value ? 'var(--success-color)' : 'var(--field-border)';
+                }
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                }
+                return true;
+            }
+
+            function isValidEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+
+            // Inicializar
+            setupTheme();
+            setupFileUpload('curriculo');
+            setupFileUpload('carta_apresentacao');
+        });
+    </script>
+</body>
+</html>
