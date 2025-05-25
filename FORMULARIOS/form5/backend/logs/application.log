@@ -1,0 +1,4 @@
+{"timestamp":"2025-05-25T02:05:44.493Z","message":"Solicitação de token CSRF recebida","ip":"::1"}
+{"timestamp":"2025-05-25T02:05:44.494Z","message":"Erro ao gerar CSRF token","error":{}}
+{"timestamp":"2025-05-25T02:12:05.069Z","message":"Solicitação de token CSRF recebida","ip":"::1"}
+{"timestamp":"2025-05-25T02:12:05.071Z","message":"Erro ao gerar CSRF token","error":{}}
