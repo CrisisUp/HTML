@@ -57,14 +57,3 @@ describe('API de Contatos', () => {
     });
   });
 });
-
-describe("GET /contatos", () => {
-  it("deve retornar a lista de contatos com status 200", async () => {
-    const response = await request(app).get("/contatos");
-
-    console.log(response.body); // ajuda a depurar
-
-    expect(response.statusCode).toBe(200);
-    expect(Array.isArray(response.body)).toBe(true);
-  });
-});

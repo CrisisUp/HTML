@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1748318347933" clover="3.2.0">
-  <project timestamp="1748318347933" name="All files">
+<coverage generated="1748318991856" clover="3.2.0">
+  <project timestamp="1748318991856" name="All files">
     <metrics statements="74" coveredstatements="62" conditionals="12" coveredconditionals="7" methods="2" coveredmethods="2" elements="88" coveredelements="71" complexity="0" loc="74" ncloc="74" packages="1" files="1" classes="1"/>
     <file name="server.js" path="C:\Users\Admin\Desktop\GERAL\Codigos\HTML\MEU_PROJETO_FRONT-BACK\projeto-front-back-2\backend\server.js">
       <metrics statements="74" coveredstatements="62" conditionals="12" coveredconditionals="7" methods="2" coveredmethods="2"/>
