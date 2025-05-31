@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Galeria de Estilos</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 2rem;
+      transition: all 0.4s ease;
+    }
+    .miniatura {
+      width: 120px;
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      font-size: 0.85em;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    }
+    .miniatura:hover {
+      transform: scale(1.05);
+    }
+    .preview-texto {
+      font-size: 1.4em;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="estiloAtual" style="position:fixed; top:10px; right:10px; background:#eee; padding:10px; border-radius:8px; box-shadow:0 0 5px rgba(0,0,0,0.2); font-family:sans-serif;">
+    Estilo atual: <strong>Nenhum</strong>
+  </div>
+
+  <h1>Bem-vindo à Galeria de Estilos</h1>
+  <p id="paragrafo">Este parágrafo será afetado pela mudança de estilo. Explore as diferentes opções para ver o que acontece!</p>
+
+  <ul>
+    <li>Item de lista 1</li>
+    <li>Item de lista 2</li>
+    <li>Item de lista 3</li>
+  </ul>
+
+  <blockquote>"O design é a alma de tudo o que foi criado pelo homem." – Steve Jobs</blockquote>
+
+  <button style="padding: 10px 20px; font-size: 1rem;">Exemplo de Botão</button>
+
+  <hr>
+
+  <div id="seletor" style="display:flex; flex-wrap:wrap; gap:12px; margin: 40px 0 20px;"></div>
+
+  <script src="estilos.js"></script>
+</body>
+</html>

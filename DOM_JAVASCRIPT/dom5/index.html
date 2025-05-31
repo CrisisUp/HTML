@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Estilização com DOM</title>
+  <style>
+    body {
+      transition: all 0.5s ease;
+    }
+    button {
+      margin: 5px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      transition: transform 0.2s;
+    }
+    button:hover {
+      transform: scale(1.05);
+    }
+    #botoes {
+      margin-top: 20px;
+    }
+    p {
+      font-size: 1.2rem;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎨 Estilize sua Página!</h1>
+  <p id="paragrafo">Este é um parágrafo de exemplo para aplicar os estilos.</p>
+
+  <div id="botoes">
+    <h2>Estilos Iniciais</h2>
+    <button id="btn1">Estilo 1 (Claro)</button>
+    <button id="btn2">Estilo 2 (Colorido)</button>
+    <button id="btn3">Estilo 3 (Dark)</button>
+    <button id="btn4">Estilo 4 (Neon)</button>
+    <button id="btn5">Estilo 5 (Pixel)</button>
+
+    <h2>Estilos Avançados</h2>
+    <button id="btn6">Estilo 6 (Pastel)</button>
+    <button id="btn7">Estilo 7 (Futurista)</button>
+    <button id="btn8">Estilo 8 (Romântico)</button>
+    <button id="btn9">Estilo 9 (Jornal)</button>
+    <button id="btn10">Estilo 10 (Matrix)</button>
+
+    <h2>🔄</h2>
+    <button id="reset">Resetar Estilo</button>
+  </div>
+
+  <script src="estilos.js"></script>
+</body>
+</html>

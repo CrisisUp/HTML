@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Exercício DOM 03</title>
+  <style>
+    .item {
+      margin: 8px 0;
+      padding: 6px;
+      background-color: #f0f0f0;
+      border-radius: 4px;
+      transition: opacity 0.4s ease;
+    }
+
+    .fade-out {
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Lista Interativa com Salvamento</h1>
+
+  <input type="text" id="inputItem" placeholder="Digite um item" />
+  <button id="btnAdicionar">Adicionar</button>
+
+  <div id="lista"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
