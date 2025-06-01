@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cubo 3D Interativo</title>
+    <link rel="stylesheet" href="./style.css">
+    <style>
+        /* Estilos CSS seriam inseridos aqui */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #222;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            perspective: 1000px;
+        }
+        
+        .content {
+            width: 300px;
+            height: 300px;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(-20deg) rotateY(-30deg);
+        }
+        
+        /* Outros estilos necessários... */
+    </style>
+</head>
+<body>
+    <!-- Controles -->
+    <div class="controls">
+        <input type="checkbox" id="d-options" name="options">
+        <label for="d-options"><span></span></label>
+        
+        <input type="radio" id="d-none" name="doors" checked>
+        <label for="d-none"><span>nenhuma</span></label>
+        
+        <input type="radio" id="d-front" name="doors">
+        <label for="d-front"><span>frente</span></label>
+        
+        <input type="radio" id="d-left" name="doors">
+        <label for="d-left"><span>esquerda</span></label>
+        
+        <input type="radio" id="d-right" name="doors">
+        <label for="d-right"><span>direita</span></label>
+        
+        <input type="radio" id="d-upper" name="doors">
+        <label for="d-upper"><span>superior</span></label>
+        
+        <input type="radio" id="d-lower" name="doors">
+        <label for="d-lower"><span>inferior</span></label>
+        
+        <input type="checkbox" id="d-look" name="look">
+        <label for="d-look"><span>olhar</span></label>
+        
+        <input type="checkbox" id="d-number" name="num">
+        <label for="d-number"><span>números</span></label>
+        
+        <input type="checkbox" id="d-enter" name="enter">
+        <label for="d-enter"><span>entrar</span></label>
+    </div>
+
+    <!-- Elementos de desabilitação (hidden) -->
+    <span class="disable" id="h-number"></span>
+    <span class="disable" id="h-look"></span>
+    <span class="disable" id="h-right"></span>
+    <span class="disable" id="h-front"></span>
+    <span class="disable" id="h-left"></span>
+    <span class="disable" id="h-upper"></span>
+    <span class="disable" id="h-lower"></span>
+    <span class="disable" id="h-none"></span>
+    <span class="disable" id="h-enter"></span>
+    <span class="disable" id="h-options"></span>
+
+    <!-- Botão de recarregar -->
+    <a class="reload" href="https://codepen.io/josetxu/pen/PodPWaK" target="_top">
+        <span>recarregar</span>
+    </a>
+
+    <!-- Cubo 3D Principal -->
+    <div class="content">
+        <div class="cube room">
+            <!-- Lados do cubo principal -->
+            <div class="side"></div>
+            <div class="side"></div>
+            <div class="side"></div>
+            <div class="side"></div>
+            <div class="side"></div>
+            <div class="side"></div>
+
+            <!-- Portas e elementos internos -->
+            <div class="side front">
+                <div class="cube door">
+                    <div class="side"></div>
+                    <div class="side"></div>
+                    <div class="side"></div>
+                    <div class="side"></div>
+                    <div class="side"></div>
+                    <div class="side"></div>
+                    <!-- Cilindros e maçanetas -->
+                    <div class="cylinder"></div>
+                    <div class="cylinder"></div>
+                    <div class="cylinder"></div>
+                    <div class="cylinder knob1"></div>
+                    <div class="cylinder knob2"></div>
+                </div>
+                <div class="cube tunnel">
+                    <div class="side"></div>
+                    <div class="side"></div>
+                    <div class="side"><span></span></div>
+                    <div class="side"><span></span></div>
+                    <div class="side"><span></span></div>
+                    <div class="side"><span></span></div>
+                </div>
+                <!-- Linhas e mini cubos -->
+                <div class="cube line vl"></div>
+                <div class="cube line vr"></div>
+                <div class="cube line ht"></div>
+                <div class="cube line hb"></div>
+                <div class="cube mini lt"></div>
+                <div class="cube mini rt"></div>
+                <div class="cube mini lb"></div>
+                <div class="cube mini rb"></div>
+                <!-- Desenhos nas paredes -->
+                <div class="drawing fig-1"></div>
+                <div class="drawing fig-2"></div>
+                <div class="drawing fig-3"></div>
+                <div class="drawing fig-4"></div>
+                <div class="drawing fig-5"></div>
+                <div class="drawing fig-6"></div>
+                <div class="drawing fig-7"></div>
+                <div class="drawing fig-8"></div>
+            </div>
+
+            <!-- Repetir para outras faces (left, right, upper, lower) -->
+            <div class="side left">
+                <!-- Estrutura similar à face front -->
+            </div>
+            <div class="side right">
+                <!-- Estrutura similar à face front -->
+            </div>
+            <div class="side upper">
+                <!-- Estrutura similar à face front -->
+            </div>
+            <div class="side lower">
+                <!-- Estrutura similar à face front -->
+            </div>
+
+            <!-- Armadilhas -->
+            <div class="green trap"></div>
+            <div class="red trap"></div>
+            <div class="orange trap">
+                <div class="cylinder"></div>
+                <div class="cylinder"></div>
+                <!-- ... 36 cilindros no total ... -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Créditos -->
+    <a class="by" target="_blank" href="https://josetxu.com">JOSETXU</a>
+
+    <!-- Nota de copyright -->
+    <!--
+    Copyright (c) 2023 por Josetxu (https://codepen.io/josetxu/pen/PodPWaK)
+    
+    Permissão é concedida, gratuitamente, a qualquer pessoa que obtenha uma cópia
+    deste software e arquivos de documentação associados (o "Software"), para lidar
+    no Software sem restrição, incluindo sem limitação os direitos de usar, copiar,
+    modificar, fundir, publicar, distribuir, sublicenciar e/ou vender cópias do Software,
+    e para permitir que as pessoas a quem o Software é fornecido o façam, sujeito às
+    seguintes condições:
+    
+    O aviso de copyright acima e este aviso de permissão devem ser incluídos em todas
+    as cópias ou partes substanciais do Software.
+    
+    O SOFTWARE É FORNECIDO "COMO ESTÁ", SEM GARANTIA DE QUALQUER TIPO, EXPRESSA OU
+    IMPLÍCITA, INCLUINDO MAS NÃO SE LIMITANDO ÀS GARANTIAS DE COMERCIALIZAÇÃO,
+    ADEQUAÇÃO A UM PROPÓSITO ESPECÍFICO E NÃO VIOLAÇÃO. EM NENHUM CASO OS AUTORES OU
+    TITULARES DOS DIREITOS AUTORAIS SERÃO RESPONSÁVEIS POR QUALQUER REIVINDICAÇÃO,
+    DANOS OU OUTRA RESPONSABILIDADE, SEJA EM UMA AÇÃO DE CONTRATO, DELITO OU DE OUTRA
+    FORMA, DECORRENTE DE, FORA DE OU EM CONEXÃO COM O SOFTWARE OU O USO OU OUTRAS
+    NEGOCIAÇÕES NO SOFTWARE.
+    -->
+</body>
+</html>

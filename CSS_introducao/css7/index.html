@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Simulação interativa do Sistema Solar com planetas em órbitas realistas">
+    <meta name="keywords" content="sistema solar, simulação, planetas, órbitas, astronomia">
+    <title>Simulação Avançada do Sistema Solar</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="solar-system">
+        <div class="sun" data-info="Sol\nDiâmetro: 1.392.700 km\nTemperatura: 5.500°C"></div>
+        
+        <!-- Planetas com dados reais -->
+        <div class="planet mercury" data-info="Mercúrio\nDiâmetro: 4.879 km\nDistância do Sol: 57,9 milhões km\nPeríodo orbital: 88 dias">
+            <div class="planet-surface"></div>
+            <div class="orbit-path"></div>
+        </div>
+        <div class="planet venus" data-info="Vênus\nDiâmetro: 12.104 km\nDistância do Sol: 108 milhões km\nPeríodo orbital: 225 dias">
+            <div class="planet-surface"></div>
+            <div class="orbit-path"></div>
+        </div>
+        <div class="planet earth" data-info="Terra\nDiâmetro: 12.742 km\nDistância do Sol: 149,6 milhões km\nPeríodo orbital: 365,25 dias">
+            <div class="planet-surface"></div>
+            <div class="orbit-path"></div>
+            <div class="moon" data-info="Lua\nDiâmetro: 3.474 km\nDistância da Terra: 384.400 km"></div>
+        </div>
+        <div class="planet mars" data-info="Marte\nDiâmetro: 6.779 km\nDistância do Sol: 227,9 milhões km\nPeríodo orbital: 687 dias">
+            <div class="planet-surface"></div>
+            <div class="orbit-path"></div>
+        </div>
+        <div class="planet jupiter" data-info="Júpiter\nDiâmetro: 139.820 km\nDistância do Sol: 778,3 milhões km\nPeríodo orbital: 11,9 anos">
+            <div class="planet-surface"></div>
+            <div class="orbit-path"></div>
+        </div>
+        <div class="planet saturn" data-info="Saturno\nDiâmetro: 116.460 km\nDistância do Sol: 1,4 bilhões km\nPeríodo orbital: 29,5 anos">
+            <div class="planet-surface"></div>
+            <div class="ring"></div>
+            <div class="orbit-path"></div>
+        </div>
+        <div class="planet uranus" data-info="Urano\nDiâmetro: 50.724 km\nDistância do Sol: 2,9 bilhões km\nPeríodo orbital: 84 anos">
+            <div class="planet-surface"></div>
+            <div class="ring"></div>
+            <div class="orbit-path"></div>
+        </div>
+        <div class="planet neptune" data-info="Netuno\nDiâmetro: 49.244 km\nDistância do Sol: 4,5 bilhões km\nPeríodo orbital: 164,8 anos">
+            <div class="planet-surface"></div>
+            <div class="orbit-path"></div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="speed-controls">
+            <button id="slow-down" title="Desacelerar" aria-label="Diminuir velocidade">⏪</button>
+            <button id="pause-btn" title="Pausar/Continuar" aria-label="Pausar simulação">⏸</button>
+            <button id="speed-up" title="Acelerar" aria-label="Aumentar velocidade">⏩</button>
+            <span id="speed-display">1x</span>
+        </div>
+        <div class="view-controls">
+            <button id="zoom-in" title="Zoom In" aria-label="Aumentar zoom">+</button>
+            <button id="zoom-out" title="Zoom Out" aria-label="Diminuir zoom">-</button>
+            <button id="reset-view" title="Resetar Visualização" aria-label="Resetar visualização">⌂</button>
+        </div>
+    </div>
+
+    <div class="info-panel" aria-live="polite">
+        <h2>Informações</h2>
+        <div id="planet-info">Passe o mouse sobre um corpo celeste</div>
+    </div>
+
+    <div class="notification" id="notification" aria-live="assertive"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

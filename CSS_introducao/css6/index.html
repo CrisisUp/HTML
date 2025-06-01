@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Solar System</title>
+    <link rel="stylesheet" href="./style.css">
+    <style>
+        /* Adicione seus estilos CSS aqui */
+        .universe, .solarsystem, .sun, .planet {
+            position: relative;
+        }
+        .controls {
+            margin-top: 20px;
+        }
+        .controls__group {
+            margin-bottom: 10px;
+        }
+        .button {
+            cursor: pointer;
+            margin: 0 5px;
+            padding: 5px 10px;
+            background: #eee;
+            border-radius: 3px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <input type="radio" id="correct-orbit-size" name="orbit-size">
+    <input type="radio" id="ideal-orbit-size" name="orbit-size" checked>
+    <input type="radio" id="real-time" name="velocity">
+    <input type="radio" id="one-year-per-minute" name="velocity" checked>
+    <input type="radio" id="one-year-per-second" name="velocity">
+    <input type="radio" id="topview" name="perspective">
+    <input type="radio" id="isometric" name="perspective">
+    <input type="radio" id="threedee" name="perspective" checked>
+
+    <div class="universe">
+        <div class="solarsystem">
+            <div class="sun">
+                <div class="planet__structure planet__structure--1"></div>
+                <div class="planet__structure planet__structure--2"></div>
+                <div class="planet__structure planet__structure--3"></div>
+                <div class="planet__structure planet__structure--4"></div>
+                <div class="planet__structure planet__structure--5"></div>
+                <div class="planet__structure planet__structure--6"></div>
+            </div>
+            
+            <div class="mercury-orbit sun-orbit">
+                <div class="ascending-node ascending-node--mercury">
+                    <div class="inclination inclination--mercury">
+                        <div class="orbit__visual"></div>
+                        <div class="orbit__shape orbit__shape--mercury">
+                            <div class="planet mercury">
+                                <div class="planet__structure planet__structure--1"></div>
+                                <div class="planet__structure planet__structure--2"></div>
+                                <div class="planet__structure planet__structure--3"></div>
+                                <div class="planet__structure planet__structure--4"></div>
+                                <div class="planet__structure planet__structure--5"></div>
+                                <div class="planet__structure planet__structure--6"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Os outros planetas seguem o mesmo padrão -->
+            <div class="venus-orbit sun-orbit">
+                <!-- Estrutura similar a Mercury -->
+            </div>
+            
+            <div class="earth-orbit sun-orbit">
+                <!-- Estrutura similar a Mercury -->
+            </div>
+            
+            <div class="mars-orbit sun-orbit">
+                <!-- Estrutura similar a Mercury -->
+            </div>
+            
+            <div class="jupiter-orbit sun-orbit">
+                <!-- Estrutura similar a Mercury -->
+            </div>
+            
+            <div class="saturn-orbit sun-orbit">
+                <!-- Estrutura similar a Mercury -->
+                <div class="planet-orbit planet-orbit--saturn">
+                    <div class="rings-of-saturn"></div>
+                </div>
+            </div>
+            
+            <div class="uranus-orbit sun-orbit">
+                <!-- Estrutura similar a Mercury -->
+            </div>
+            
+            <div class="neptune-orbit sun-orbit">
+                <!-- Estrutura similar a Mercury -->
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <h1>The Solar System</h1>
+        
+        <div class="controls">
+            <div class="controls__group">
+                <span>Orbit Size:</span>
+                <label for="correct-orbit-size" class="button correct-size">Correct</label>
+                <label for="ideal-orbit-size" class="button ideal-size">Idealized</label>
+            </div>
+            
+            <div class="controls__group">
+                <span>Velocity:</span>
+                <label for="real-time" class="button real-time">Realtime</label>
+                <label for="one-year-per-minute" class="button one-year-per-minute">1 Year / Min</label>
+                <label for="one-year-per-second" class="button one-year-per-second">1 Year / Sec</label>
+            </div>
+            
+            <div class="controls__group">
+                <span>Perspective:</span>
+                <label for="threedee" class="button threedee">3D</label>
+                <label for="topview" class="button topview">Top</label>
+                <label for="isometric" class="button isometric">Isometric</label>
+            </div>
+        </div>
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+</html>

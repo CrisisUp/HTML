@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+<!-- The following markup replaces the invalid Pug/Jade syntax with valid HTML structure. -->
+<div class="controls">
+    <div class="controls__group">
+        <span>Orbit Size:</span>
+        <label for="correct-orbit-size" class="button correct-size">Correct</label>
+        <label for="ideal-orbit-size" class="button ideal-size">Idealized</label>
+        <input type="radio" id="correct-orbit-size" name="orbit-size">
+        <input type="radio" id="ideal-orbit-size" name="orbit-size" checked>
+    </div>
+    <div class="controls__group">
+        <span>Velocity:</span>
+        <label for="real-time" class="button real-time">Realtime</label>
+        <label for="one-year-per-minute" class="button one-year-per-minute">1 Year / Min</label>
+        <label for="one-year-per-second" class="button one-year-per-second">1 Year / Sec</label>
+        <input type="radio" id="real-time" name="velocity">
+        <input type="radio" id="one-year-per-minute" name="velocity" checked>
+        <input type="radio" id="one-year-per-second" name="velocity">
+    </div>
+    <div class="controls__group">
+        <span>Perspective:</span>
+        <label for="threedee" class="button threedee">3d</label>
+        <label for="topview" class="button topview">Top</label>
+        <label for="isometric" class="button isometric">Isometric</label>
+        <input type="radio" id="topview" name="perspective">
+        <input type="radio" id="isometric" name="perspective">
+        <input type="radio" id="threedee" name="perspective" checked>
+    </div>
+</div>
+<div class="universe">
+    <div class="solarsystem">
+        <div class="sun"></div>
+        <div class="planet mercury-orbit sun-orbit">
+            <div class="planet mercury"></div>
+        </div>
+        <div class="planet venus-orbit sun-orbit">
+            <div class="planet venus"></div>
+        </div>
+        <div class="planet earth-orbit sun-orbit">
+            <div class="planet earth"></div>
+        </div>
+        <div class="planet mars-orbit sun-orbit">
+            <div class="planet mars"></div>
+        </div>
+        <div class="planet jupiter-orbit sun-orbit">
+            <div class="planet jupiter"></div>
+        </div>
+        <div class="planet saturn-orbit sun-orbit">
+            <div class="planet saturn"></div>
+            <div class="rings-of-saturn"></div>
+        </div>
+        <div class="planet uranus-orbit sun-orbit">
+            <div class="planet uranus"></div>
+        </div>
+        <div class="planet neptun-orbit sun-orbit">
+            <div class="planet neptun"></div>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <h1>The Solar System</h1>
+</div>
+<script src="./script.js"></script>
+</body>
+
+</html>
