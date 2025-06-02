@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Aprenda DOM com TypeScript</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin: 40px; background: #f4f7f8; color: #222; }
+    button { margin: 10px; padding: 10px 20px; cursor: pointer; background-color: #007acc; border: none; border-radius: 6px; color: white; }
+    button:hover { background-color: #005f99; }
+    #explicacao {
+      margin-top: 20px;
+      background: #222; color: #0f0;
+      font-family: monospace;
+      white-space: pre-wrap;
+      padding: 15px;
+      border-radius: 6px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Interagindo com o DOM e TypeScript</h1>
+
+<p id="mensagem">Clique no botão para mudar este texto!</p>
+<button id="botao">Mudar texto</button>
+
+<br/>
+
+<label for="nome">Digite seu nome:</label><br/>
+<input type="text" id="nome" placeholder="Seu nome aqui" />
+<button id="saudar">Saudar</button>
+
+<p id="saudacao"></p>
+
+<div id="explicacao"></div>
+
+<script type="module" src="./dist/script.js"></script>
+
+</body>
+</html>

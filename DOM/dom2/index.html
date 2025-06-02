@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Estudo do DOM</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .caixa { padding: 10px; border: 1px solid #ccc; margin: 5px 0; }
+    .destaque { background-color: yellow; }
+    button { margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+  <h1 id="titulo">Aprendendo DOM</h1>
+
+  <p class="caixa">Parágrafo 1</p>
+  <p class="caixa destaque">Parágrafo 2 (destaque)</p>
+  <p class="caixa">Parágrafo 3</p>
+
+  <div class="caixa">Caixa genérica</div>
+
+  <button onclick="usarGetElementById()">getElementById</button>
+  <button onclick="usarGetElementsByClassName()">getElementsByClassName</button>
+  <button onclick="usarGetElementsByTagName()">getElementsByTagName</button>
+  <button onclick="usarQuerySelector()">querySelector</button>
+  <button onclick="usarQuerySelectorAll()">querySelectorAll</button>
+
+  <script>
+    function usarGetElementById() {
+      const titulo = document.getElementById("titulo");
+      titulo.style.color = "blue";
+      titulo.textContent = "Selecionado por ID!";
+    }
+
+    function usarGetElementsByClassName() {
+      const caixas = document.getElementsByClassName("caixa");
+      for (let i = 0; i < caixas.length; i++) {
+        caixas[i].style.backgroundColor = "#e0f7fa";
+      }
+    }
+
+    function usarGetElementsByTagName() {
+      const paragrafos = document.getElementsByTagName("p");
+      for (let p of paragrafos) {
+        p.style.fontWeight = "bold";
+      }
+    }
+
+    function usarQuerySelector() {
+      const especial = document.querySelector(".destaque");
+      especial.style.border = "2px dashed red";
+    }
+
+    function usarQuerySelectorAll() {
+      const todasCaixas = document.querySelectorAll(".caixa");
+      todasCaixas.forEach(el => {
+        el.style.borderRadius = "8px";
+      });
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Explorador do DOM - Aprendizado Visual</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #121212;
+      color: #e0e0e0;
+      padding: 2rem;
+    }
+    h1 {
+      color: #00ffcc;
+    }
+    button {
+      margin: 0.5rem;
+      padding: 0.7rem 1.2rem;
+      border: none;
+      border-radius: 5px;
+      background-color: #333;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #555;
+    }
+    .painel {
+      background-color: #1e1e1e;
+      padding: 1rem;
+      margin-top: 1rem;
+      border-radius: 5px;
+      font-family: 'Courier New', monospace;
+      white-space: pre-wrap;
+    }
+    #area {
+      border: 2px dashed #444;
+      min-height: 80px;
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 5px;
+    }
+    .destaque {
+      background-color: #006666;
+      color: #fff;
+      padding: 0.3rem 0.6rem;
+      border-radius: 3px;
+    }
+    .tooltip {
+      position: relative;
+      cursor: help;
+    }
+    .tooltip:hover::after {
+      content: attr(data-title);
+      position: absolute;
+      top: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #222;
+      color: #fff;
+      padding: 0.4rem 0.8rem;
+      border-radius: 5px;
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎯 Explorador do DOM</h1>
+  <p>Clique nos botões para ver como manipulamos o DOM!</p>
+
+  <div>
+    <button onclick="toggleFundo()" class="tooltip" data-title="classList.toggle">Alternar fundo</button>
+    <button onclick="criarParagrafo()" class="tooltip" data-title="createElement + appendChild">Criar parágrafo</button>
+    <button onclick="removerParagrafo()" class="tooltip" data-title="removeChild">Remover parágrafo</button>
+    <button onclick="mostrarDataset()" class="tooltip" data-title="dataset">Mostrar dataset</button>
+    <button onclick="resetar()" class="tooltip" data-title="innerHTML">Resetar</button>
+  </div>
+
+  <div id="area">
+    <p id="info" data-nivel="iniciante">Esse é um parágrafo inicial.</p>
+  </div>
+
+  <div class="painel" id="painelCodigo">
+    <strong>// Código executado aparecerá aqui</strong>
+  </div>
+
+  <script>
+    const area = document.getElementById('area');
+    const painel = document.getElementById('painelCodigo');
+    let paragrafoExtra;
+
+    function exibirCodigo(codigo) {
+      painel.textContent = `> ${codigo}`;
+    }
+
+    function toggleFundo() {
+      area.classList.toggle('destaque');
+      exibirCodigo("area.classList.toggle('destaque');");
+    }
+
+    function criarParagrafo() {
+      if (!paragrafoExtra) {
+        paragrafoExtra = document.createElement('p');
+        paragrafoExtra.textContent = 'Novo parágrafo criado com JavaScript!';
+        area.appendChild(paragrafoExtra);
+        exibirCodigo("const p = document.createElement('p');\np.textContent = 'Novo parágrafo criado com JavaScript!';\narea.appendChild(p);");
+      }
+    }
+
+    function removerParagrafo() {
+      if (paragrafoExtra && area.contains(paragrafoExtra)) {
+        area.removeChild(paragrafoExtra);
+        exibirCodigo("area.removeChild(paragrafoExtra);");
+        paragrafoExtra = null;
+      }
+    }
+
+    function mostrarDataset() {
+      const info = document.querySelector('#info');
+      const nivel = info.dataset.nivel;
+      exibirCodigo("const nivel = document.querySelector('#info').dataset.nivel;\nconsole.log(nivel);");
+      alert('Nível: ' + nivel);
+    }
+
+    function resetar() {
+      area.innerHTML = '<p id="info" data-nivel="iniciante">Esse é um parágrafo inicial.</p>';
+      paragrafoExtra = null;
+      exibirCodigo("area.innerHTML = '<p id=\"info\" data-nivel=\"iniciante\">Esse é um parágrafo inicial.</p>';");
+    }
+  </script>
+</body>
+</html>

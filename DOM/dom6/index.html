@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Estudos DOM Visual</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f4f4f4;
+      margin: 20px;
+    }
+    h1, h3 {
+      color: #333;
+    }
+    button {
+      margin: 5px;
+      padding: 8px 12px;
+      border: none;
+      background-color: #008CBA;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005f7a;
+    }
+    #resultado {
+      margin-top: 20px;
+      padding: 10px;
+      background: white;
+      border-radius: 5px;
+      min-height: 50px;
+    }
+    #codigo {
+      margin-top: 20px;
+      background: #222;
+      color: #0f0;
+      padding: 10px;
+      border-radius: 5px;
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+    .destaque {
+      color: red;
+      font-weight: bold;
+    }
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: max-content;
+      background-color: #555;
+      color: #fff;
+      text-align: center;
+      border-radius: 5px;
+      padding: 5px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧠 Aprendizado Visual de DOM</h1>
+
+  <div class="tooltip">
+    <button onclick="mudarTexto()">Alterar Texto</button>
+    <span class="tooltiptext">Altera o texto usando getElementById</span>
+  </div>
+  <div class="tooltip">
+    <button onclick="trocarCor()">Trocar Cor</button>
+    <span class="tooltiptext">Modifica o style diretamente</span>
+  </div>
+  <div class="tooltip">
+    <button onclick="criarElemento()">Criar Elemento</button>
+    <span class="tooltiptext">Usa createElement + appendChild</span>
+  </div>
+  <div class="tooltip">
+    <button onclick="removerUltimo()">Remover Último</button>
+    <span class="tooltiptext">Usa parentElement.removeChild</span>
+  </div>
+  <div class="tooltip">
+    <button onclick="alternarClasse()">Alternar Classe</button>
+    <span class="tooltiptext">Usa classList.toggle</span>
+  </div>
+  <div class="tooltip">
+    <button onclick="usarQuerySelector()">querySelector</button>
+    <span class="tooltiptext">Seleciona com CSS selector</span>
+  </div>
+  <div class="tooltip">
+    <button onclick="mostrarDataset()">Mostrar Dataset</button>
+    <span class="tooltiptext">Acessa data-atributos</span>
+  </div>
+  <div class="tooltip">
+    <button onclick="resetar()">Resetar</button>
+    <span class="tooltiptext">Volta ao estado inicial</span>
+  </div>
+
+  <div id="resultado">
+    <p id="paragrafo" data-autor="OpenAI">Este é um parágrafo inicial.</p>
+  </div>
+
+  <h3>Código usado:</h3>
+  <div id="codigo">Clique em um botão para ver o código JavaScript correspondente.</div>
+
+  <script>
+    function mostrarCodigo(codigo) {
+      document.getElementById("codigo").textContent = codigo;
+    }
+
+    function mudarTexto() {
+      const p = document.getElementById("paragrafo");
+      p.textContent = "Texto alterado via getElementById!";
+      mostrarCodigo(`const p = document.getElementById("paragrafo");\np.textContent = "Texto alterado via getElementById!";`);
+    }
+
+    function trocarCor() {
+      const p = document.getElementById("paragrafo");
+      p.style.color = p.style.color === "green" ? "black" : "green";
+      mostrarCodigo(`const p = document.getElementById("paragrafo");\np.style.color = p.style.color === "green" ? "black" : "green";`);
+    }
+
+    function criarElemento() {
+      const novo = document.createElement("p");
+      novo.textContent = "🆕 Novo parágrafo criado!";
+      document.getElementById("resultado").appendChild(novo);
+      mostrarCodigo(`const novo = document.createElement("p");\nnovo.textContent = "🆕 Novo parágrafo criado!";\ndocument.getElementById("resultado").appendChild(novo);`);
+    }
+
+    function removerUltimo() {
+      const resultado = document.getElementById("resultado");
+      if (resultado.children.length > 1) {
+        resultado.removeChild(resultado.lastElementChild);
+        mostrarCodigo(`const resultado = document.getElementById("resultado");\nresultado.removeChild(resultado.lastElementChild);`);
+      } else {
+        mostrarCodigo("// Nenhum elemento extra para remover.");
+      }
+    }
+
+    function alternarClasse() {
+      const p = document.getElementById("paragrafo");
+      p.classList.toggle("destaque");
+      mostrarCodigo(`const p = document.getElementById("paragrafo");\np.classList.toggle("destaque");`);
+    }
+
+    function usarQuerySelector() {
+      const par = document.querySelector("#paragrafo");
+      par.textContent = "Selecionado com querySelector";
+      mostrarCodigo(`const par = document.querySelector("#paragrafo");\npar.textContent = "Selecionado com querySelector";`);
+    }
+
+    function mostrarDataset() {
+      const p = document.getElementById("paragrafo");
+      const autor = p.dataset.autor;
+      p.textContent = `Autor: ${autor}`;
+      mostrarCodigo(`const p = document.getElementById("paragrafo");\nconst autor = p.dataset.autor;\np.textContent = \`Autor: \${autor}\`;`);
+    }
+
+    function resetar() {
+      document.getElementById("resultado").innerHTML = 
+        `<p id="paragrafo" data-autor="OpenAI">Este é um parágrafo inicial.</p>`;
+      mostrarCodigo(`document.getElementById("resultado").innerHTML = \n  \`<p id=\"paragrafo\" data-autor=\"OpenAI\">Este é um parágrafo inicial.</p>\`;`);
+    }
+  </script>
+
+</body>
+</html>

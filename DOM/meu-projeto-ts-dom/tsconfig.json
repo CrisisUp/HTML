@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es6",            // JS alvo moderno
+    "module": "es6",            // padrão de módulos ES
+    "rootDir": "./src",         // pasta fonte
+    "outDir": "./dist",         // saída compilada
+    "strict": true,             // ativar checagem rigorosa
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src"]
+}

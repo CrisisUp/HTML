@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Aprendendo DOM</title>
+  <style>
+    body {
+      font-family: monospace;
+      background-color: #1e1e1e;
+      color: #f0f0f0;
+      padding: 20px;
+    }
+    button {
+      margin: 5px;
+      padding: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    #terminal {
+      background: #000;
+      color: #0f0;
+      padding: 10px;
+      margin-top: 20px;
+      min-height: 150px;
+      border-radius: 5px;
+      white-space: pre-wrap;
+    }
+    .destacado {
+      color: yellow;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧠 Aprendizado Visual de DOM</h1>
+
+  <div id="area">Área de teste <span class="destacado" data-exemplo="valorData">🔧</span></div>
+
+  <button onclick="executar('getElement')">getElementById</button>
+  <button onclick="executar('querySelector')">querySelector</button>
+  <button onclick="executar('querySelectorAll')">querySelectorAll</button>
+  <button onclick="executar('parentElement')">parentElement</button>
+  <button onclick="executar('style')">style</button>
+  <button onclick="executar('dataset')">dataset</button>
+  <button onclick="executar('classList')">classList.toggle</button>
+
+  <div id="terminal">// Código aparecerá aqui</div>
+
+  <script>
+    const terminal = document.getElementById("terminal");
+    const area = document.getElementById("area");
+    let alterna = {};
+
+    function executar(tipo) {
+      if (!alterna[tipo]) alterna[tipo] = false;
+
+      switch (tipo) {
+        case "getElement":
+          terminal.textContent =
+            "const el = document.getElementById('area');\nel.textContent = 'Alterado com getElementById';";
+          area.textContent = "Alterado com getElementById";
+          break;
+
+        case "querySelector":
+          terminal.textContent =
+            "const el = document.querySelector('.destacado');\nel.textContent = 'Selecionado com querySelector';";
+          document.querySelector(".destacado").textContent = "Selecionado com querySelector";
+          break;
+
+        case "querySelectorAll":
+          terminal.textContent =
+            "const elementos = document.querySelectorAll('span');\nelementos.forEach(el => el.textContent = 'Todos mudados');";
+          document.querySelectorAll("span").forEach(el => el.textContent = "Todos mudados");
+          break;
+
+        case "parentElement":
+          terminal.textContent =
+            "const filho = document.querySelector('span');\nfilho.parentElement.style.border = '2px dashed red';";
+          document.querySelector("span").parentElement.style.border = "2px dashed red";
+          break;
+
+        case "style":
+          terminal.textContent =
+            `area.style.backgroundColor = '${alterna[tipo] ? "" : "navy"}';`;
+          area.style.backgroundColor = alterna[tipo] ? "" : "navy";
+          break;
+
+        case "dataset":
+          const valor = document.querySelector(".destacado").dataset.exemplo;
+          terminal.textContent = `const valor = document.querySelector('.destacado').dataset.exemplo;\nconsole.log(valor); // '${valor}'`;
+          break;
+
+        case "classList":
+          terminal.textContent =
+            "area.classList.toggle('destacado');";
+          area.classList.toggle("destacado");
+          break;
+      }
+
+      alterna[tipo] = !alterna[tipo];
+    }
+  </script>
+</body>
+</html>

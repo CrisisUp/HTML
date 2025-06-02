@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Explorando Estilizações</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f4f4;
+      padding: 2rem;
+      color: #333;
+    }
+
+    h1 {
+      color: #2c3e50;
+      font-size: 2.5rem;
+      text-align: center;
+      text-shadow: 1px 1px 2px #ccc;
+    }
+
+    .texto {
+      font-size: 1.2rem;
+      line-height: 1.8;
+      max-width: 800px;
+      margin: 2rem auto;
+    }
+
+    .negrito {
+      font-weight: bold;
+    }
+
+    .italico {
+      font-style: italic;
+    }
+
+    .sublinhado {
+      text-decoration: underline;
+    }
+
+    .destacado {
+      background-color: yellow;
+    }
+
+    .maiusculo {
+      text-transform: uppercase;
+    }
+
+    button {
+      margin: 0.5rem;
+      padding: 0.6rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      border-radius: 6px;
+      background-color: #3498db;
+      color: white;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    .painel {
+      background: #222;
+      color: #0f0;
+      font-family: monospace;
+      padding: 1rem;
+      margin-top: 2rem;
+      white-space: pre-wrap;
+      border-radius: 6px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Explorando Estilizações no DOM</h1>
+
+  <div class="texto">
+    Este é um exemplo com <span class="negrito">texto em negrito</span>, 
+    <span class="italico">texto em itálico</span>, 
+    <span class="sublinhado">texto sublinhado</span>, 
+    <span class="destacado">texto destacado</span>, 
+    e <span class="maiusculo">texto em maiúsculo</span>.
+  </div>
+
+  <div style="text-align:center;">
+    <button onclick="mostrar('negrito')">Negrito</button>
+    <button onclick="mostrar('italico')">Itálico</button>
+    <button onclick="mostrar('sublinhado')">Sublinhado</button>
+    <button onclick="mostrar('destacado')">Destacado</button>
+    <button onclick="mostrar('maiusculo')">Maiúsculo</button>
+  </div>
+
+  <div id="painel" class="painel">// O código e o resultado aparecem aqui</div>
+
+  <script>
+    function mostrar(estilo) {
+      const span = document.querySelector(`.${estilo}`);
+      const texto = span.textContent;
+      const painel = document.getElementById('painel');
+      
+      let cssDescricao = '';
+      switch (estilo) {
+        case 'negrito': cssDescricao = 'font-weight: bold;'; break;
+        case 'italico': cssDescricao = 'font-style: italic;'; break;
+        case 'sublinhado': cssDescricao = 'text-decoration: underline;'; break;
+        case 'destacado': cssDescricao = 'background-color: yellow;'; break;
+        case 'maiusculo': cssDescricao = 'text-transform: uppercase;'; break;
+      }
+
+      painel.textContent =
+`// Selecionando o elemento com a classe "${estilo}"
+const span = document.querySelector('.${estilo}');
+
+// Resultado:
+"${texto}"
+
+// Estilo aplicado via CSS:
+${cssDescricao}`;
+    }
+  </script>
+
+</body>
+</html>

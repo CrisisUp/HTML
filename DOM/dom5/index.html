@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Estudos DOM com Código</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+      background-color: #f4f4f4;
+    }
+    h1 {
+      color: #333;
+    }
+    button {
+      margin: 5px;
+      padding: 8px 12px;
+      border: none;
+      background-color: #008CBA;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005f7a;
+    }
+    #resultado {
+      margin-top: 20px;
+      padding: 10px;
+      background: white;
+      border-radius: 5px;
+      min-height: 50px;
+    }
+    #codigo {
+      margin-top: 20px;
+      background: #222;
+      color: #0f0;
+      padding: 10px;
+      border-radius: 5px;
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+    .destaque {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎯 Painel de Estudos DOM com Códigos</h1>
+
+  <button onclick="mudarTexto()">Alterar Texto</button>
+  <button onclick="trocarCor()">Trocar Cor</button>
+  <button onclick="criarElemento()">Criar Elemento</button>
+  <button onclick="removerUltimo()">Remover Último</button>
+  <button onclick="alternarClasse()">Alternar Classe</button>
+  <button onclick="resetar()">Resetar</button>
+
+  <div id="resultado">
+    <p id="paragrafo">Este é um parágrafo inicial.</p>
+  </div>
+
+  <h3>Código usado:</h3>
+  <div id="codigo">Clique em um botão para ver o código JavaScript correspondente.</div>
+
+  <script>
+    function mostrarCodigo(codigo) {
+      document.getElementById("codigo").textContent = codigo;
+    }
+
+    function mudarTexto() {
+      const p = document.getElementById("paragrafo");
+      p.textContent = "✅ O texto foi alterado dinamicamente com JavaScript!";
+      mostrarCodigo(`const p = document.getElementById("paragrafo");
+p.textContent = "✅ O texto foi alterado dinamicamente com JavaScript!";`);
+    }
+
+    function trocarCor() {
+      const p = document.getElementById("paragrafo");
+      p.style.color = p.style.color === "green" ? "black" : "green";
+      mostrarCodigo(`const p = document.getElementById("paragrafo");
+p.style.color = p.style.color === "green" ? "black" : "green";`);
+    }
+
+    function criarElemento() {
+      const novo = document.createElement("p");
+      novo.textContent = "🆕 Novo parágrafo criado!";
+      document.getElementById("resultado").appendChild(novo);
+      mostrarCodigo(`const novo = document.createElement("p");
+novo.textContent = "🆕 Novo parágrafo criado!";
+document.getElementById("resultado").appendChild(novo);`);
+    }
+
+    function removerUltimo() {
+      const resultado = document.getElementById("resultado");
+      if (resultado.lastElementChild && resultado.children.length > 1) {
+        resultado.removeChild(resultado.lastElementChild);
+        mostrarCodigo(`const resultado = document.getElementById("resultado");
+resultado.removeChild(resultado.lastElementChild);`);
+      } else {
+        mostrarCodigo("// Nenhum elemento extra para remover.");
+      }
+    }
+
+    function alternarClasse() {
+      const p = document.getElementById("paragrafo");
+      p.classList.toggle("destaque");
+      mostrarCodigo(`const p = document.getElementById("paragrafo");
+p.classList.toggle("destaque");`);
+    }
+
+    function resetar() {
+      document.getElementById("resultado").innerHTML = `
+        <p id="paragrafo">Este é um parágrafo inicial.</p>
+      `;
+      mostrarCodigo(`document.getElementById("resultado").innerHTML = \`
+  <p id="paragrafo">Este é um parágrafo inicial.</p>
+\`;`);
+    }
+  </script>
+
+</body>
+</html>

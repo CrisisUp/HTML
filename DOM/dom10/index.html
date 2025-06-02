@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Estudando o DOM - Visual e Interativo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 50px;
+      background-color: #f0f4f8;
+      color: #333;
+    }
+    h1 {
+      color: #007acc;
+      margin-bottom: 0;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      margin-right: 10px;
+      background-color: #007acc;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #005f99;
+    }
+    .caixa {
+      margin-top: 30px;
+    }
+    input[type="text"] {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 200px;
+    }
+    #explicacao {
+      margin-top: 40px;
+      padding: 20px;
+      background-color: #222;
+      color: #0f0;
+      font-family: monospace;
+      text-align: left;
+      white-space: pre-wrap;
+      border-radius: 8px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      display: none;
+      box-shadow: 0 0 10px #0f0;
+    }
+    #explicacao-header {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #0ff;
+      text-align: center;
+      font-family: 'Courier New', Courier, monospace;
+    }
+  </style>
+</head>
+<body>
+  <h1>Interagindo com o DOM</h1>
+
+  <p id="mensagem">Clique no botão abaixo para mudar este texto!</p>
+  <button id="botao">Mudar texto</button>
+
+  <div class="caixa">
+    <label for="nome">Digite seu nome:</label><br/>
+    <input type="text" id="nome" placeholder="Seu nome aqui" />
+    <button id="saudar">Saudar</button>
+    <p id="saudacao"></p>
+  </div>
+
+  <div id="explicacao">
+    <div id="explicacao-header">Trecho de código usado:</div>
+    <pre id="codigo"></pre>
+  </div>
+
+  <script>
+    const botao = document.getElementById("botao");
+    const mensagem = document.getElementById("mensagem");
+    const campoNome = document.getElementById("nome");
+    const botaoSaudar = document.getElementById("saudar");
+    const paragrafoSaudacao = document.getElementById("saudacao");
+    const painelExplicacao = document.getElementById("explicacao");
+    const codigo = document.getElementById("codigo");
+
+    botao.addEventListener("click", () => {
+      mensagem.textContent = "Você clicou no botão! 🎉";
+      painelExplicacao.style.display = "block";
+      codigo.textContent =
+`// Altera texto do parágrafo com ID "mensagem"
+const mensagem = document.getElementById("mensagem");
+mensagem.textContent = "Você clicou no botão! 🎉";`;
+    });
+
+    botaoSaudar.addEventListener("click", () => {
+      const nome = campoNome.value.trim();
+      if (nome) {
+        paragrafoSaudacao.textContent = "Olá, " + nome + "! 👋";
+      } else {
+        paragrafoSaudacao.textContent = "Por favor, digite seu nome.";
+      }
+
+      painelExplicacao.style.display = "block";
+      codigo.textContent =
+`// Captura valor do campo com ID "nome"
+// Mostra saudação no parágrafo com ID "saudacao"
+const nome = campoNome.value.trim();
+if (nome) {
+  paragrafoSaudacao.textContent = \`Olá, \${nome}! 👋\`;
+} else {
+  paragrafoSaudacao.textContent = "Por favor, digite seu nome.";
+}`;
+    });
+  </script>
+</body>
+</html>

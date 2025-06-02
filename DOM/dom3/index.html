@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DOM Interativo - Toggle</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    .caixa { padding: 10px; margin: 5px; border: 1px solid #ccc; }
+    .destaque { background-color: yellow; }
+    #titulo { color: darkblue; font-size: 24px; }
+    button { margin: 5px; padding: 5px 10px; }
+    .saida { margin-top: 15px; font-style: italic; color: #444; }
+  </style>
+</head>
+<body>
+
+  <h1 id="titulo">Explorando o DOM</h1>
+
+  <div class="caixa destaque">Caixa 1</div>
+  <div class="caixa">Caixa 2</div>
+  <div class="caixa">Caixa 3</div>
+
+  <p>Parágrafo 1</p>
+  <p>Parágrafo 2</p>
+
+  <button onclick="destacarTitulo()">Destacar Título</button>
+  <button onclick="colorirCaixas()">Colorir Caixas</button>
+  <button onclick="listarParagrafos()">Listar Parágrafos</button>
+  <button onclick="selecionarTodos()">Mostrar Todos os Seletores</button>
+
+  <div id="saida" class="saida"></div>
+
+  <script>
+    const saida = document.getElementById("saida");
+
+    let destaqueAtivo = false;
+    let caixasAtivas = false;
+    let seletoresAtivos = false;
+
+    function mostrarLinha(codigo) {
+      const p = document.createElement("p");
+      p.textContent = "Executado: " + codigo;
+      saida.appendChild(p);
+    }
+
+    function destacarTitulo() {
+      const titulo = document.getElementById("titulo");
+      if (!destaqueAtivo) {
+        titulo.style.backgroundColor = "lightblue";
+        mostrarLinha(`document.getElementById("titulo")`);
+      } else {
+        titulo.style.backgroundColor = "";
+        mostrarLinha(`Reverter: document.getElementById("titulo")`);
+      }
+      destaqueAtivo = !destaqueAtivo;
+    }
+
+    function colorirCaixas() {
+      const caixas = document.getElementsByClassName("caixa");
+      for (let i = 0; i < caixas.length; i++) {
+        caixas[i].style.borderColor = caixasAtivas ? "" : "green";
+      }
+      mostrarLinha(`${caixasAtivas ? "Reverter: " : ""}document.getElementsByClassName("caixa")`);
+      caixasAtivas = !caixasAtivas;
+    }
+
+    function listarParagrafos() {
+      const paragrafos = document.getElementsByTagName("p");
+      alert("Quantidade de <p>: " + paragrafos.length);
+      mostrarLinha(`document.getElementsByTagName("p") (somente leitura)`);
+    }
+
+    function selecionarTodos() {
+      const especial = document.querySelector(".destaque");
+      const botoes = document.querySelectorAll("button");
+
+      if (!seletoresAtivos) {
+        especial.style.fontWeight = "bold";
+        botoes.forEach(btn => {
+          btn.style.backgroundColor = "purple";
+          btn.style.color = "white";
+        });
+        mostrarLinha(`document.querySelector(".destaque")`);
+        mostrarLinha(`document.querySelectorAll("button")`);
+      } else {
+        especial.style.fontWeight = "";
+        botoes.forEach(btn => {
+          btn.style.backgroundColor = "";
+          btn.style.color = "";
+        });
+        mostrarLinha(`Reverter: document.querySelector + document.querySelectorAll`);
+      }
+
+      seletoresAtivos = !seletoresAtivos;
+    }
+  </script>
+
+</body>
+</html>

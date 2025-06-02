@@ -1,0 +1,12 @@
+{
+  "name": "ts-dom-project",
+  "version": "1.0.0",
+  "description": "Projeto para aprender DOM com TypeScript",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.1.6"
+  }
+}

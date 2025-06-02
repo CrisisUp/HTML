@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Estudando o DOM</title>
+  <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 50px;
+      background-color: #f0f4f8;
+      color: #333;
+    }
+
+    h1 {
+      color: #007acc;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      background-color: #007acc;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #005f99;
+    }
+
+    .caixa {
+      margin-top: 30px;
+    }
+
+    input[type="text"] {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Interagindo com o DOM</h1>
+
+  <p id="mensagem">Clique no botão abaixo para mudar este texto!</p>
+
+  <button id="botao">Clique aqui</button>
+
+  <div class="caixa">
+    <label for="nome">Digite seu nome:</label>
+    <input type="text" id="nome" placeholder="Seu nome aqui" />
+    <button id="saudar">Saudar</button>
+    <p id="saudacao"></p>
+  </div>
+
+  <script>
+    // Altera o conteúdo de um parágrafo ao clicar no botão
+    const botao = document.getElementById("botao");
+    const mensagem = document.getElementById("mensagem");
+
+    botao.addEventListener("click", () => {
+      mensagem.textContent = "Você clicou no botão! 🎉";
+    });
+
+    // Saudação com o nome digitado
+    const campoNome = document.getElementById("nome");
+    const botaoSaudar = document.getElementById("saudar");
+    const paragrafoSaudacao = document.getElementById("saudacao");
+
+    botaoSaudar.addEventListener("click", () => {
+      const nome = campoNome.value.trim();
+      if (nome) {
+        paragrafoSaudacao.textContent = `Olá, ${nome}! 👋`;
+      } else {
+        paragrafoSaudacao.textContent = "Por favor, digite seu nome.";
+      }
+    });
+  </script>
+</body>
+</html>
