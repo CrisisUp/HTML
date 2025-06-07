@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio Hackathon: Promova a Reciclagem</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: url('recycling.jpg') no-repeat center center/cover;
+            background-color: #e8f5e9;
+            color: #333;
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(to right, #4caf50, #81c784);
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            display: inline-flex;
+            align-items: center;
+        }
+
+        header p#counter {
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .rules-btn {
+            background: linear-gradient(to right, #1976d2, #2196f3);
+            color: white;
+            padding: 0.4rem;
+            font-size: 1.2rem;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.2s, filter 0.2s;
+            position: relative;
+        }
+
+        .theme-btn {
+            background: linear-gradient(to right, #6a1b9a, #ab47bc);
+            color: white;
+            padding: 0.4rem;
+            font-size: 1.2rem;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.2s, filter 0.2s;
+        }
+
+        .rules-btn:hover,
+        .theme-btn:hover {
+            transform: scale(1.05);
+            filter: brightness(1.15);
+        }
+
+        .rules-tooltip {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            color: #333;
+            padding: 0.8rem;
+            border-radius: 4px;
+            border: 2px solid #4caf50;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+            font-size: 0.9rem;
+            width: 220px;
+            z-index: 10;
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .rules-btn:hover .rules-tooltip {
+            display: block;
+            opacity: 1;
+        }
+
+        .rules-tooltip ul {
+            list-style: none;
+            margin-top: 0.5rem;
+        }
+
+        .rules-tooltip li {
+            margin-bottom: 0.3rem;
+        }
+
+        main {
+            max-width: 600px;
+            margin: 1.5rem auto;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: background 0.3s;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        input[type="text"] {
+            padding: 0.6rem;
+            font-size: 1rem;
+            border: 1px solid #4caf50;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+        }
+
+        button {
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.2s, filter 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            filter: brightness(1.15);
+        }
+
+        #add {
+            background: linear-gradient(to right, #2e7d32, #4caf50);
+            color: white;
+            padding: 0.6rem 1rem;
+            font-size: 1.2rem;
+        }
+
+        #clear {
+            background: linear-gradient(to right, #d32f2f, #f44336);
+            color: white;
+            padding: 0.6rem 1rem;
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            color: #4caf50;
+            margin: 1rem 0 0.5rem;
+            transition: color 0.3s;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+            padding: 0.8rem;
+            margin-bottom: 0.8rem;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.4s ease-in;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        #completedList li {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            text-decoration: line-through;
+            animation: star 0.5s ease;
+        }
+
+        li i {
+            margin-right: 0.5rem;
+            color: #4caf50;
+        }
+
+        li i.fa-bottle-water {
+            color: #2196f3;
+        }
+
+        li i.fa-newspaper {
+            color: #ffeb3b;
+        }
+
+        li i.fa-wine-bottle {
+            color: #4caf50;
+        }
+
+        li i.fa-check {
+            color: #4caf50;
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .complete,
+        .edit,
+        .delete {
+            padding: 0.4rem;
+            font-size: 1.1rem;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .complete {
+            background: linear-gradient(to right, #2e7d32, #66bb6a);
+        }
+
+        .edit {
+            background: linear-gradient(to right, #1976d2, #2196f3);
+        }
+
+        .delete {
+            background: linear-gradient(to right, #d32f2f, #f44336);
+        }
+
+        .delete:hover {
+            animation: animate__shakeX 0.5s;
+        }
+
+        .message {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            display: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+            animation: fadeIn 0.5s ease;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .message.success {
+            color: #4caf50;
+            background: #e8f5e9;
+        }
+
+        .message.error {
+            color: #f44336;
+            background: #ffebee;
+        }
+
+        .badge {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #4caf50;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+            animation: bounceIn 0.5s ease;
+            transition: background-color 0.3s;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            color: #4caf50;
+            display: none;
+            transition: color 0.3s;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .modal-content h3 {
+            color: #4caf50;
+            margin-bottom: 1rem;
+            transition: color 0.3s;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 0.6rem;
+            margin-bottom: 1rem;
+            border: 1px solid #4caf50;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+        }
+
+        .modal-content button {
+            margin: 0 0.5rem;
+            padding: 0.6rem 1rem;
+            font-size: 1rem;
+        }
+
+        .modal-content .save {
+            background: linear-gradient(to right, #2e7d32, #4caf50);
+            color: white;
+        }
+
+        .modal-content .cancel {
+            background: linear-gradient(to right, #d32f2f, #f44336);
+            color: white;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            color: #4caf50;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        /* Modo Noturno */
+        .dark-mode {
+            background: url('recycling.jpg') no-repeat center center/cover;
+            background-color: rgba(26, 26, 26, 0.8);
+            background-blend-mode: darken;
+            color: #e0e0e0;
+        }
+
+        .dark-mode header {
+            background: linear-gradient(to right, #2e7d32, #4caf50);
+        }
+
+        .dark-mode main {
+            background: rgba(40, 40, 40, 0.9);
+        }
+
+        .dark-mode li {
+            background-color: #333;
+            color: #e0e0e0;
+        }
+
+        .dark-mode #completedList li {
+            background-color: #2e7d32;
+        }
+
+        .dark-mode .modal-content {
+            background: #333;
+            color: #e0e0e0;
+        }
+
+        .dark-mode .rules-tooltip {
+            background: #333;
+            color: #e0e0e0;
+            border-color: #81c784;
+        }
+
+        .dark-mode .message.success {
+            background: #2e7d32;
+            color: #e0e0e0;
+        }
+
+        .dark-mode .message.error {
+            background: #b71c1c;
+            color: #e0e0e0;
+        }
+
+        .dark-mode footer {
+            color: #81c784;
+        }
+
+        .dark-mode h2,
+        .dark-mode .modal-content h3 {
+            color: #81c784;
+        }
+
+        .dark-mode input[type="text"],
+        .dark-mode .modal-content input {
+            border-color: #81c784;
+            background: #444;
+            color: #e0e0e0;
+        }
+
+        .dark-mode .loading {
+            color: #81c784;
+        }
+
+        .dark-mode li i.fa-check,
+        .dark-mode li i.fa-wine-bottle,
+        .dark-mode li i.fa-recycle {
+            color: #81c784;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes star {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @media (min-width: 600px) {
+            header h1 {
+                font-size: 2.2rem;
+            }
+
+            form {
+                flex-direction: row;
+            }
+
+            input[type="text"] {
+                flex-grow: 1;
+            }
+
+            #add {
+                padding: 0.6rem 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div style="display: flex; align-items: center; justify-content: center; width: 100%; position: relative;">
+            <h1><i class="fas fa-recycle"></i> Promova a Reciclagem</h1>
+            <div style="display: flex; gap: 0.5rem; position: absolute; right: 1rem;">
+                <button class="theme-btn" aria-label="Ativar modo noturno" onclick="toggleDarkMode()">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="rules-btn" aria-label="Ver regras do jogo">
+                    <i class="fas fa-info-circle"></i>
+                    <div class="rules-tooltip">
+                        <strong>Regras do Jogo:</strong>
+                        <ul>
+                            <li>Adicionar dica: +10 pontos</li>
+                            <li>Concluir dica: +20 pontos</li>
+                            <li>Editar dica: +5 pontos</li>
+                            <li>Excluir dica: -5 pontos</li>
+                            <li>Desmarcar dica: -20 pontos</li>
+                            <li>Suba de nível a cada 50 pontos</li>
+                            <li>Ganhe badges ao alcançar novos níveis</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p id="counter">Nível 1 | 0 pontos | 0/0 dicas concluídas</p>
+    </header>
+    <main>
+        <p class="message" id="message"></p>
+        <div class="badge" id="badge"></div>
+        <div class="loading" id="loading"><i class="fas fa-spinner fa-spin"></i></div>
+        <div class="modal" id="editModal">
+            <div class="modal-content">
+                <h3>Editar Dica de Reciclagem</h3>
+                <input type="text" id="editInput" placeholder="Digite a nova dica">
+                <button class="save" onclick="saveEdit()" aria-label="Salvar edição"><i class="fas fa-save"></i>
+                    Salvar</button>
+                <button class="cancel" onclick="closeModal()" aria-label="Cancelar edição"><i class="fas fa-times"></i>
+                    Cancelar</button>
+            </div>
+        </div>
+        <form onsubmit="addTask(event)">
+            <input type="text" id="taskInput" placeholder="Ex.: Separar plásticos para reciclagem" required
+                aria-label="Digite uma dica de reciclagem">
+            <button id="add" type="submit" aria-label="Adicionar nova dica"><i class="fas fa-plus"></i></button>
+        </form>
+        <button id="clear" onclick="clearStorage()" aria-label="Limpar todas as dicas e pontos"><i
+                class="fas fa-trash-can"></i></button>
+        <h2>Dicas Pendentes</h2>
+        <ul id="taskList" role="list"></ul>
+        <h2 id="completedTitle">Dicas Concluídas</h2>
+        <ul id="completedList" role="list"></ul>
+    </main>
+    <footer>
+        Recicle hoje, preserve o amanhã! ♻️
+    </footer>
+    <script>
+        // Inicializa tasks com as 20 dicas, se localStorage estiver vazio
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [
+            { text: "Separar garrafas de vidro", completed: false },
+            { text: "Reutilizar potes plásticos", completed: false },
+            { text: "Compostar restos de comida", completed: false },
+            { text: "Reciclar latas de alumínio", completed: false },
+            { text: "Doar roupas usadas", completed: false },
+            { text: "Separar papelão limpo", completed: false },
+            { text: "Reutilizar sacolas de pano", completed: false },
+            { text: "Reciclar baterias usadas", completed: false },
+            { text: "Separar embalagens metálicas", completed: false },
+            { text: "Reutilizar frascos de vidro", completed: false },
+            { text: "Reciclar eletrônicos quebrados", completed: false },
+            { text: "Separar resíduos orgânicos", completed: false },
+            { text: "Reutilizar caixas de papelão", completed: false },
+            { text: "Reciclar revistas antigas", completed: false },
+            { text: "Separar tampinhas plásticas", completed: false },
+            { text: "Doar móveis em bom estado", completed: false },
+            { text: "Reciclar cartuchos de tinta", completed: false },
+            { text: "Separar plásticos recicláveis", completed: false },
+            { text: "Reutilizar garrafas PET", completed: false },
+            { text: "Reciclar embalagens tetra pak", completed: false }
+        ];
+        let points = JSON.parse(localStorage.getItem('points')) || 0;
+        let level = Math.floor(points / 50) + 1;
+        let editIndex = null;
+
+        // Função para sanitizar entrada
+        function sanitizeInput(input) {
+            const div = document.createElement('div');
+            div.textContent = input;
+            return div.innerHTML;
+        }
+
+        // Carregar modo salvo do localStorage ao iniciar
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+                document.querySelector('.theme-btn i').classList.replace('fa-moon', 'fa-sun');
+                document.querySelector('.theme-btn').setAttribute('aria-label', 'Ativar modo diurno');
+            }
+            updateList();
+        });
+
+        // Alternar modo noturno/diurno
+        function toggleDarkMode() {
+            const isDarkMode = document.body.classList.toggle('dark-mode');
+            const themeIcon = document.querySelector('.theme-btn i');
+            const themeBtn = document.querySelector('.theme-btn');
+
+            if (isDarkMode) {
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+                themeBtn.setAttribute('aria-label', 'Ativar modo diurno');
+                localStorage.setItem('darkMode', 'true');
+            } else {
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+                themeBtn.setAttribute('aria-label', 'Ativar modo noturno');
+                localStorage.setItem('darkMode', 'false');
+            }
+        }
+
+        function addTask(event) {
+            event.preventDefault();
+            const input = document.getElementById('taskInput');
+            const taskText = sanitizeInput(input.value.trim());
+
+            if (taskText === '') {
+                showMessage('Por favor, digite uma dica válida!', 'error');
+                return;
+            }
+
+            if (tasks.length >= 50) {
+                showMessage('Limite de 50 dicas atingido!', 'error');
+                return;
+            }
+
+            tasks.push({ text: taskText, completed: false });
+            points += 10;
+            updateLevel();
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            localStorage.setItem('points', JSON.stringify(points));
+            updateList();
+            input.value = '';
+            showMessage('Dica de reciclagem adicionada! +10 pontos ♻️', 'success');
+        }
+
+        function clearStorage() {
+            if (!confirm('Tem certeza que deseja limpar todas as dicas e pontos?')) return;
+            showLoading();
+            setTimeout(() => {
+                localStorage.clear();
+                tasks = [
+                    { text: "Separar garrafas de vidro", completed: false },
+                    { text: "Reutilizar potes plásticos", completed: false },
+                    { text: "Compostar restos de comida", completed: false },
+                    { text: "Reciclar latas de alumínio", completed: false },
+                    { text: "Doar roupas usadas", completed: false },
+                    { text: "Separar papelão limpo", completed: false },
+                    { text: "Reutilizar sacolas de pano", completed: false },
+                    { text: "Reciclar baterias usadas", completed: false },
+                    { text: "Separar embalagens metálicas", completed: false },
+                    { text: "Reutilizar frascos de vidro", completed: false },
+                    { text: "Reciclar eletrônicos quebrados", completed: false },
+                    { text: "Separar resíduos orgânicos", completed: false },
+                    { text: "Reutilizar caixas de papelão", completed: false },
+                    { text: "Reciclar revistas antigas", completed: false },
+                    { text: "Separar tampinhas plásticas", completed: false },
+                    { text: "Doar móveis em bom estado", completed: false },
+                    { text: "Reciclar cartuchos de tinta", completed: false },
+                    { text: "Separar plásticos recicláveis", completed: false },
+                    { text: "Reutilizar garrafas PET", completed: false },
+                    { text: "Reciclar embalagens tetra pak", completed: false }
+                ];
+                points = 0;
+                level = 1;
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                localStorage.setItem('points', JSON.stringify(points));
+                localStorage.setItem('darkMode', document.body.classList.contains('dark-mode').toString());
+                updateList();
+                showMessage('Dados limpos! Iniciando novamente. 🗑️', 'success');
+                hideLoading();
+            }, 1000);
+        }
+
+        function getMaterialIcon(taskText) {
+            const text = taskText.toLowerCase();
+            if (text.includes('plástico') || text.includes('plastico')) {
+                return 'fa-bottle-water';
+            } else if (text.includes('papel') || text.includes('jornal') || text.includes('papelão')) {
+                return 'fa-newspaper';
+            } else if (text.includes('vidro')) {
+                return 'fa-wine-bottle';
+            } else {
+                return 'fa-recycle';
+            }
+        }
+
+        function updateLevel() {
+            const newLevel = Math.floor(points / 50) + 1;
+            if (newLevel > level) {
+                level = newLevel;
+                showBadge(`Parabéns! Você alcançou o Nível ${level}! 🏆`);
+            }
+        }
+
+        function updateList() {
+            const list = document.getElementById('taskList');
+            const completedList = document.getElementById('completedList');
+            const completedTitle = document.getElementById('completedTitle');
+            list.innerHTML = '';
+            completedList.innerHTML = '';
+
+            const completedCount = tasks.filter(task => task.completed).length;
+            const totalCount = tasks.length;
+            document.getElementById('counter').textContent =
+                `Nível ${level} | ${points} pontos | ${completedCount}/${totalCount} dicas concluídas`;
+            completedTitle.textContent = `Dicas Concluídas (${completedCount})`;
+
+            tasks.forEach((task, index) => {
+                const li = document.createElement('li');
+                if (task.completed) {
+                    li.classList.add('completed', 'animate__animated', 'animate__fadeIn');
+                } else {
+                    li.classList.add('animate__animated', 'animate__fadeIn');
+                }
+
+                const textSpan = document.createElement('span');
+                const iconClass = task.completed ? 'fa-check' : getMaterialIcon(task.text);
+                textSpan.innerHTML = `<i class="fas ${iconClass}"></i> ${sanitizeInput(task.text)}`;
+
+                const actionsDiv = document.createElement('div');
+                actionsDiv.className = 'actions';
+
+                const completeBtn = document.createElement('button');
+                completeBtn.innerHTML = task.completed ? '<i class="fas fa-undo"></i>' : '<i class="fas fa-check"></i>';
+                completeBtn.className = 'complete';
+                completeBtn.setAttribute('aria-label', task.completed ? 'Desmarcar tarefa' : 'Concluir tarefa');
+                completeBtn.onclick = () => toggleComplete(index);
+
+                const editBtn = document.createElement('button');
+                editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+                editBtn.className = 'edit';
+                editBtn.setAttribute('aria-label', 'Editar tarefa');
+                editBtn.onclick = () => openEditModal(index);
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+                deleteBtn.className = 'delete animate__animated';
+                deleteBtn.setAttribute('aria-label', 'Excluir tarefa');
+                deleteBtn.onclick = () => {
+                    if (!confirm('Tem certeza que deseja excluir esta dica?')) return;
+                    tasks.splice(index, 1);
+                    points = Math.max(0, points - 5);
+                    updateLevel();
+                    localStorage.setItem('tasks', JSON.stringify(tasks));
+                    localStorage.setItem('points', JSON.stringify(points));
+                    updateList();
+                    showMessage('Dica removida! -5 pontos 🗑️', 'success');
+                };
+
+                actionsDiv.appendChild(completeBtn);
+                actionsDiv.appendChild(editBtn);
+                actionsDiv.appendChild(deleteBtn);
+
+                li.appendChild(textSpan);
+                li.appendChild(actionsDiv);
+
+                if (task.completed) {
+                    completedList.appendChild(li);
+                } else {
+                    list.appendChild(li);
+                }
+            });
+        }
+
+        function openEditModal(index) {
+            editIndex = index;
+            const input = document.getElementById('editInput');
+            input.value = tasks[index].text;
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function saveEdit() {
+            const input = document.getElementById('editInput');
+            const newText = sanitizeInput(input.value.trim());
+            if (newText === '') {
+                showMessage('Por favor, digite uma dica válida!', 'error');
+                return;
+            }
+            tasks[editIndex].text = newText;
+            points += 5;
+            updateLevel();
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            localStorage.setItem('points', JSON.stringify(points));
+            updateList();
+            closeModal();
+            showMessage('Dica editada! +5 pontos ✏️', 'success');
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+            editIndex = null;
+        }
+
+        function toggleComplete(index) {
+            tasks[index].completed = !tasks[index].completed;
+            points += tasks[index].completed ? 20 : -20;
+            points = Math.max(0, points);
+            updateLevel();
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            localStorage.setItem('points', JSON.stringify(points));
+            updateList();
+            showMessage(tasks[index].completed ? 'Dica concluída! +20 pontos ✅' : 'Dica desmarcada! -20 pontos 🔄', 'success');
+        }
+
+        function showMessage(text, type = 'success') {
+            const message = document.getElementById('message');
+            message.innerHTML = text;
+            message.className = `message ${type}`;
+            message.style.display = 'block';
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 2000);
+        }
+
+        function showBadge(text) {
+            const badge = document.getElementById('badge');
+            badge.textContent = text;
+            badge.style.display = 'block';
+            setTimeout(() => {
+                badge.style.display = 'none';
+            }, 3000);
+        }
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        // Fechar modal ao clicar fora
+        document.getElementById('editModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('editModal')) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+
+</html>

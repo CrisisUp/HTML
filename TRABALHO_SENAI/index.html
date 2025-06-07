@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio Hackathon: Reduza o Desperdício de Água</title>
+    <style>
+        /* CSS: Estilização com tema sustentável e abordagem mobile-first */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #e6f3e6; /* Verde claro para tema sustentável */
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #2e7d32; /* Verde escuro */
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+        }
+
+        main {
+            max-width: 600px;
+            margin: 1rem auto;
+            padding: 0 1rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        input[type="text"] {
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: 1px solid #2e7d32;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #add {
+            background-color: #2e7d32;
+            color: white;
+        }
+
+        #add:hover {
+            background-color: #1b5e20;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.3s ease-in;
+        }
+
+        li.completed {
+            text-decoration: line-through;
+            background-color: #c8e6c9; /* Verde claro para tarefas concluídas */
+        }
+
+        .edit, .delete {
+            margin-left: 0.5rem;
+            padding: 0.3rem 0.6rem;
+            font-size: 0.9rem;
+        }
+
+        .edit {
+            background-color: #0288d1; /* Azul para edição */
+            color: white;
+        }
+
+        .edit:hover {
+            background-color: #01579b;
+        }
+
+        .delete {
+            background-color: #d32f2f; /* Vermelho para exclusão */
+            color: white;
+        }
+
+        .delete:hover {
+            background-color: #b71c1c;
+        }
+
+        .message {
+            text-align: center;
+            color: #2e7d32;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        /* Animação para adição de itens */
+        @keyframes slideIn {
+            from {
+                transform: translateY(-10px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsividade */
+        @media (min-width: 600px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            form {
+                flex-direction: row;
+            }
+
+            input[type="text"] {
+                flex-grow: 1;
+            }
+
+            button {
+                padding: 0.5rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>💧 Reduza o Desperdício de Água</h1>
+    </header>
+    <main>
+        <p class="message" id="message"></p>
+        <form onsubmit="addTask(event)">
+            <input type="text" id="taskInput" placeholder="Ex.: Tomar banhos mais curtos" required>
+            <button id="add" type="submit">Adicionar</button>
+        </form>
+        <ul id="taskList"></ul>
+    </main>
+    <script>
+        // JavaScript: Lógica para CRUD com localStorage
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+        // Inicializa a lista ao carregar a página
+        updateList();
+
+        function addTask(event) {
+            event.preventDefault();
+            const input = document.getElementById('taskInput');
+            const taskText = input.value.trim();
+
+            if (taskText !== '') {
+                tasks.push({ text: taskText, completed: false });
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                updateList();
+                input.value = ''; // Limpa o campo
+                showMessage('Dica adicionada com sucesso!');
+            }
+        }
+
+        function updateList() {
+            const list = document.getElementById('taskList');
+            list.innerHTML = ''; // Limpa a lista
+
+            tasks.forEach((task, index) => {
+                const li = document.createElement('li');
+                if (task.completed) {
+                    li.classList.add('completed');
+                }
+
+                // Span para o texto, clicável para marcar/desmarcar
+                const textSpan = document.createElement('span');
+                textSpan.textContent = task.text;
+                textSpan.style.cursor = 'pointer';
+                textSpan.onclick = () => toggleComplete(index);
+
+                // Botão de edição
+                const editBtn = document.createElement('button');
+                editBtn.textContent = 'Editar';
+                editBtn.className = 'edit';
+                editBtn.onclick = () => editTask(index);
+
+                // Botão de exclusão
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Excluir';
+                deleteBtn.className = 'delete';
+                deleteBtn.onclick = () => {
+                    tasks.splice(index, 1);
+                    localStorage.setItem('tasks', JSON.stringify(tasks));
+                    updateList();
+                    showMessage('Dica removida com sucesso!');
+                };
+
+                li.appendChild(textSpan);
+                li.appendChild(editBtn);
+                li.appendChild(deleteBtn);
+                list.appendChild(li);
+            });
+        }
+
+        function editTask(index) {
+            const newText = prompt('Edite a dica:', tasks[index].text);
+            if (newText !== null && newText.trim() !== '') {
+                tasks[index].text = newText.trim();
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                updateList();
+                showMessage('Dica editada com sucesso!');
+            }
+        }
+
+        function toggleComplete(index) {
+            tasks[index].completed = !tasks[index].completed;
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            updateList();
+            showMessage(tasks[index].completed ? 'Dica marcada como concluída!' : 'Dica desmarcada!');
+        }
+
+        function showMessage(text) {
+            const message = document.getElementById('message');
+            message.textContent = text;
+            message.style.display = 'block';
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

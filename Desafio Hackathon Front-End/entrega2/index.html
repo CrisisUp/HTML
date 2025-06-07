@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio Hackathon: Promova a Reciclagem</title>
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Animate.css para animações -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: url('recycling.jpg') no-repeat center center/cover;
+            background-color: #e8f5e9;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(to right, #4caf50, #81c784);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        header p#counter {
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        main {
+            max-width: 600px;
+            margin: 1.5rem auto;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        input[type="text"] {
+            padding: 0.6rem;
+            font-size: 1rem;
+            border: 1px solid #4caf50;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 0.6rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.2s, filter 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            filter: brightness(1.2);
+        }
+
+        #add {
+            background: linear-gradient(to right, #4caf50, #81c784);
+            color: white;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            padding: 0.8rem;
+            margin-bottom: 0.8rem;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.4s ease-in;
+        }
+
+        li.completed {
+            text-decoration: line-through;
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            animation: star 0.5s ease; /* Animação ao completar */
+        }
+
+        li i {
+            margin-right: 0.5rem;
+            color: #4caf50;
+        }
+
+        li i.fa-bottle-water {
+            color: #2196f3;
+        }
+
+        li i.fa-newspaper {
+            color: #ffeb3b;
+        }
+
+        li i.fa-wine-bottle {
+            color: #4caf50;
+        }
+
+        .edit, .delete {
+            margin-left: 0.5rem;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .edit {
+            background-color: #2196f3;
+            color: white;
+        }
+
+        .delete {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .delete:hover {
+            animation: animate__shakeX 0.5s;
+        }
+
+        .message {
+            text-align: center;
+            color: #4caf50;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            display: none;
+            background: #e8f5e9;
+            padding: 0.5rem;
+            border-radius: 4px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .badge {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #4caf50;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+            animation: bounceIn 0.5s ease;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            color: #4caf50;
+            font-size: 0.9rem;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes star {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsividade */
+        @media (min-width: 600px) {
+            header h1 {
+                font-size: 2.2rem;
+            }
+
+            form {
+                flex-direction: row;
+            }
+
+            input[type="text"] {
+                flex-grow: 1;
+            }
+
+            button {
+                padding: 0.6rem 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><i class="fas fa-recycle"></i> Promova a Reciclagem</h1>
+        <p id="counter">Nível 1 | 0 pontos | 0/0 dicas concluídas</p>
+    </header>
+    <main>
+        <p class="message" id="message"></p>
+        <div class="badge" id="badge"></div>
+        <form onsubmit="addTask(event)">
+            <input type="text" id="taskInput" placeholder="Ex.: Separar plásticos para reciclagem" required>
+            <button id="add" type="submit"><i class="fas fa-plus"></i> Adicionar</button>
+        </form>
+        <ul id="taskList"></ul>
+    </main>
+    <footer>
+        Recicle hoje, preserve o amanhã! ♻️
+    </footer>
+    <script>
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let points = JSON.parse(localStorage.getItem('points')) || 0;
+        let level = Math.floor(points / 50) + 1;
+
+        updateList();
+
+        function addTask(event) {
+            event.preventDefault();
+            const input = document.getElementById('taskInput');
+            const taskText = input.value.trim();
+
+            if (taskText !== '') {
+                tasks.push({ text: taskText, completed: false });
+                points += 10; // +10 pontos por adicionar
+                updateLevel();
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                localStorage.setItem('points', JSON.stringify(points));
+                updateList();
+                input.value = '';
+                showMessage('Dica de reciclagem adicionada! +10 pontos ♻️');
+            }
+        }
+
+        function getMaterialIcon(taskText) {
+            const text = taskText.toLowerCase();
+            if (text.includes('plástico') || text.includes('plastico')) {
+                return 'fa-bottle-water';
+            } else if (text.includes('papel') || text.includes equidistant('jornal')) {
+                return 'fa-newspaper';
+            } else if (text.includes('vidro')) {
+                return 'fa-wine-bottle';
+            } else {
+                return 'fa-recycle';
+            }
+        }
+
+        function updateLevel() {
+            const newLevel = Math.floor(points / 50) + 1;
+            if (newLevel > level) {
+                level = newLevel;
+                showBadge(`Parabéns! Você alcançou o Nível ${level}! 🏆`);
+            }
+        }
+
+        function updateList() {
+            const list = document.getElementById('taskList');
+            list.innerHTML = '';
+
+            const completedCount = tasks.filter(task => task.completed).length;
+            const totalCount = tasks.length;
+            document.getElementById('counter').textContent = 
+                `Nível ${level} | ${points} pontos | ${completedCount}/${totalCount} dicas concluídas`;
+
+            tasks.forEach((task, index) => {
+                const li = document.createElement('li');
+                if (task.completed) {
+                    li.classList.add('completed', 'animate__animated', 'animate__star');
+                }
+
+                const textSpan = document.createElement('span');
+                const iconClass = getMaterialIcon(task.text);
+                textSpan.innerHTML = `<i class="fas ${iconClass}"></i> ${task.text}`;
+                textSpan.style.cursor = 'pointer';
+                textSpan.onclick = () => toggleComplete(index);
+
+                const editBtn = document.createElement('button');
+                editBtn.innerHTML = '<i class="fas fa-edit"></i> Editar';
+                editBtn.className = 'edit';
+                editBtn.onclick = () => editTask(index);
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.innerHTML = '<i class="fas fa-trash"></i> Excluir';
+                deleteBtn.className = 'delete animate__animated';
+                deleteBtn.onclick = () => {
+                    tasks.splice(index, 1);
+                    points = Math.max(0, points - 5); // -5 pontos por excluir
+                    updateLevel();
+                    localStorage.setItem('tasks', JSON.stringify(tasks));
+                    localStorage.setItem('points', JSON.stringify(points));
+                    updateList();
+                    showMessage('Dica removida! -5 pontos 🗑️');
+                };
+
+                li.appendChild(textSpan);
+                li.appendChild(editBtn);
+                li.appendChild(deleteBtn);
+                list.appendChild(li);
+            });
+        }
+
+        function editTask(index) {
+            const newText = prompt('Edite a dica de reciclagem:', tasks[index].text);
+            if (newText !== null && newText.trim() !== '') {
+                tasks[index].text = newText.trim();
+                points += 5; // +5 pontos por editar
+                updateLevel();
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                localStorage.setItem('points', JSON.stringify(points));
+                updateList();
+                showMessage('Dica editada! +5 pontos ✏️');
+            }
+        }
+
+        function toggleComplete(index) {
+            tasks[index].completed = !tasks[index].completed;
+            points += tasks[index].completed ? 20 : -20; // +20 por completar, -20 por desmarcar
+            points = Math.max(0, points);
+            updateLevel();
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            localStorage.setItem('points', JSON.stringify(points));
+            updateList();
+            showMessage(tasks[index].completed ? 'Dica concluída! +20 pontos ✅' : 'Dica desmarcada! -20 pontos 🔄');
+        }
+
+        function showMessage(text) {
+            const message = document.getElementById('message');
+            message.innerHTML = text;
+            message.style.display = 'block';
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 2000);
+        }
+
+        function showBadge(text) {
+            const badge = document.getElementById('badge');
+            badge.textContent = text;
+            badge.style.display = 'block';
+            setTimeout(() => {
+                badge.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
