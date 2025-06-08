@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Roleta de Nomes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #111;
+      color: #fff;
+    }
+
+    #container {
+      margin-top: 40px;
+    }
+
+    #roleta {
+      margin: 0 auto;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      border: 10px solid #444;
+      position: relative;
+      transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
+      overflow: hidden;
+    }
+
+    .setor {
+      position: absolute;
+      width: 50%;
+      height: 50%;
+      top: 50%;
+      left: 50%;
+      transform-origin: 0% 0%;
+      background: red;
+      clip-path: polygon(0 0, 100% 0, 0 100%);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding-left: 10px;
+      color: #000;
+      font-weight: bold;
+    }
+
+    #ponteiro {
+      margin: 20px auto;
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 30px solid #0f0;
+      transition: transform 0.2s;
+    }
+
+    #ponteiro.destacar {
+      animation: destaque 1s infinite alternate;
+    }
+
+    @keyframes destaque {
+      from {
+        transform: scale(1);
+      }
+      to {
+        transform: scale(1.2);
+      }
+    }
+
+    input, button {
+      margin: 10px;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    #resultado {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎡 Roleta de Nomes</h1>
+  <div>
+    <input type="text" id="nomeInput" placeholder="Digite um nome..." />
+    <button id="adicionarBtn">Adicionar</button>
+    <button id="sortearBtn">Sortear</button>
+  </div>
+
+  <div id="ponteiro"></div>
+  <div id="roleta"></div>
+  <div id="resultado"></div>
+
+  <script>
+    const nomes = [];
+    const cores = [
+      "#f44336", "#e91e63", "#9c27b0", "#3f51b5", "#2196f3", "#009688",
+      "#4caf50", "#ff9800", "#795548", "#607d8b", "#ff5722", "#8bc34a"
+    ];
+
+    const roleta = document.getElementById("roleta");
+    const ponteiro = document.getElementById("ponteiro");
+    const resultadoDiv = document.getElementById("resultado");
+    const nomeInput = document.getElementById("nomeInput");
+    const adicionarBtn = document.getElementById("adicionarBtn");
+    const sortearBtn = document.getElementById("sortearBtn");
+
+    let rotacaoAtual = 0;
+    let isSpinning = false;
+
+    function desenharSetores() {
+      roleta.innerHTML = "";
+      const total = nomes.length;
+      if (total === 0) return;
+
+      const anguloPorSetor = 360 / total;
+
+      nomes.forEach((nome, i) => {
+        const setor = document.createElement("div");
+        setor.className = "setor";
+        const anguloInicio = i * anguloPorSetor;
+
+        setor.style.transform = `rotate(${anguloInicio}deg) skewY(${90 - anguloPorSetor}deg)`;
+        setor.style.background = cores[i % cores.length];
+        setor.textContent = nome;
+
+        roleta.appendChild(setor);
+      });
+    }
+
+    function playTickSound(count, interval) {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      for (let i = 0; i < count; i++) {
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        oscillator.type = "square";
+        oscillator.frequency.setValueAtTime(1000, audioCtx.currentTime);
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+
+        const startTime = audioCtx.currentTime + (i * interval) / 1000;
+        oscillator.start(startTime);
+        oscillator.stop(startTime + 0.05);
+      }
+    }
+
+    adicionarBtn.addEventListener("click", () => {
+      const nome = nomeInput.value.trim();
+      if (nome && !nomes.includes(nome)) {
+        nomes.push(nome);
+        nomeInput.value = "";
+        desenharSetores();
+        sortearBtn.disabled = false;
+      }
+    });
+
+    sortearBtn.addEventListener("click", () => {
+      if (nomes.length === 0 || isSpinning) return;
+
+      isSpinning = true;
+      sortearBtn.disabled = true;
+      ponteiro.classList.remove("destacar");
+
+      const anguloPorNome = 360 / nomes.length;
+      const voltas = 5 + Math.random() * 3;
+      const destinoExtra = Math.random() * 360;
+      const destino = 360 * voltas + destinoExtra;
+      rotacaoAtual += destino;
+
+      roleta.style.transform = `rotate(${rotacaoAtual}deg)`;
+      resultadoDiv.textContent = "Sorteando...";
+      resultadoDiv.style.color = "#0f0";
+      playTickSound(40, 100);
+
+      setTimeout(() => {
+        const anguloFinal = (rotacaoAtual % 360 + 360) % 360;
+        const anguloRelativo = (360 - anguloFinal) % 360;
+        const indice = Math.floor(anguloRelativo / anguloPorNome);
+
+        const nomeSorteado = nomes[indice];
+        ponteiro.classList.add("destacar");
+        resultadoDiv.style.color = cores[indice % cores.length];
+        resultadoDiv.textContent = `🎯 Nome sorteado: ${nomeSorteado}`;
+        isSpinning = false;
+        sortearBtn.disabled = nomes.length === 0;
+      }, 4000);
+    });
+  </script>
+</body>
+</html>

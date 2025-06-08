@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Roleta Radial com Som e Ponteiro</title>
+    <style>
+        body {
+            margin: 0;
+            background: #111;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        #roleta-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin-bottom: 20px;
+        }
+
+        #ponteiro {
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            border-right: 25px solid red;
+            /* era border-left */
+            z-index: 2;
+        }
+
+        #roleta {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 8px solid #444;
+            border-radius: 50%;
+            background: radial-gradient(circle, #222 60%, #333);
+            transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
+        }
+
+        .letra {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: center;
+            font-weight: bold;
+            color: #0ff;
+            font-size: 14px;
+        }
+
+        #formulario {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        input,
+        button {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 16px;
+        }
+
+        input {
+            width: 200px;
+        }
+
+        button {
+            background: #0ff;
+            color: #000;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0cc;
+        }
+
+        #resultado {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #0f0;
+            height: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Roleta Radial</h1>
+
+    <div id="roleta-container">
+        <div id="ponteiro"></div>
+        <div id="roleta"></div>
+    </div>
+
+    <form id="formulario">
+        <input type="text" id="nomeInput" placeholder="Digite um nome" required />
+        <button type="submit">Adicionar</button>
+    </form>
+
+    <button id="sortearBtn">Sortear Nome</button>
+    <div id="resultado"></div>
+
+    <audio id="somClique" preload="auto">
+        <source src="data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAAAAAA..." type="audio/mp3">
+        Seu navegador não suporta áudio.
+    </audio>
+
+    <script>
+        const roleta = document.getElementById("roleta");
+        const formulario = document.getElementById("formulario");
+        const nomeInput = document.getElementById("nomeInput");
+        const sortearBtn = document.getElementById("sortearBtn");
+        const resultado = document.getElementById("resultado");
+        const somClique = document.getElementById("somClique");
+
+        let nomes = ["Lucas", "Bia", "Ana", "Rafa"];
+        let rotacaoAtual = 0;
+        let clicando = false;
+
+        function desenharNomes() {
+            roleta.innerHTML = "";
+            const total = nomes.length;
+            const maxRaio = 150;
+
+            nomes.forEach((nome, i) => {
+                const angulo = (2 * Math.PI * i) / total;
+                const anguloGraus = angulo * 180 / Math.PI;
+
+                for (let j = 0; j < nome.length; j++) {
+                    const letra = nome[j];
+                    const passo = maxRaio / nome.length;
+                    const distancia = passo * (j + 1);
+
+                    const x = roleta.offsetWidth / 2 + distancia * Math.cos(angulo);
+                    const y = roleta.offsetHeight / 2 + distancia * Math.sin(angulo);
+
+                    const elemento = document.createElement("div");
+                    elemento.className = "letra";
+                    elemento.innerText = letra;
+
+                    elemento.style.left = `${x}px`;
+                    elemento.style.top = `${y}px`;
+                    elemento.style.transform = `translate(-50%, -50%) rotate(${anguloGraus}deg)`;
+
+                    roleta.appendChild(elemento);
+                }
+            });
+        }
+
+        formulario.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const nome = nomeInput.value.trim();
+            if (nome) {
+                nomes.push(nome);
+                nomeInput.value = "";
+                desenharNomes();
+            }
+        });
+
+        sortearBtn.addEventListener("click", () => {
+            if (nomes.length === 0 || clicando) return;
+
+            clicando = true;
+            const sorteado = Math.floor(Math.random() * nomes.length);
+            const anguloPorNome = 360 / nomes.length;
+            const alvo = sorteado * anguloPorNome;
+            const voltas = 5;
+            const destino = 360 * voltas + (360 - alvo);
+
+            rotacaoAtual += destino;
+            roleta.style.transform = `rotate(${rotacaoAtual}deg)`;
+
+            resultado.textContent = "Sorteando...";
+
+            // 🔊 Efeito de clique girando
+            let cliques = 40;
+            let intervalo = setInterval(() => {
+                somClique.currentTime = 0;
+                somClique.play();
+                cliques--;
+                if (cliques <= 0) clearInterval(intervalo);
+            }, 100);
+
+            setTimeout(() => {
+                resultado.textContent = `🎯 Nome sorteado: ${nomes[sorteado]}`;
+                clicando = false;
+            }, 4000);
+        });
+
+        desenharNomes();
+    </script>
+</body>
+
+</html>
