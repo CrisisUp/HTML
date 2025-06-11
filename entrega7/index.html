@@ -12,9 +12,6 @@
     <!-- Google Fonts: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        .div1 {display: flex; align-items: center; justify-content: center; width: 100%; position: relative;}
-        .div2 {display: flex; gap: 0.5rem; position: absolute; right: 1rem;}
-
         * {
             margin: 0;
             padding: 0;
@@ -104,7 +101,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             display: none;
             font-size: 0.9rem;
-            width: 360px;
+            width: 220px;
             z-index: 10;
             transition: opacity 0.3s ease;
             opacity: 0;
@@ -185,7 +182,9 @@
             transition: color 0.3s;
         }
 
-        ul {list-style: none;}
+        ul {
+            list-style: none;
+        }
 
         li {
             display: flex;
@@ -212,12 +211,26 @@
             color: #4caf50;
         }
 
-        li i.fa-bottle-water {color: #2196f3;}
-        li i.fa-newspaper {color: #ffeb3b;}
-        li i.fa-wine-bottle {color: #4caf50;}
-        li i.fa-check {color: #4caf50;}
+        li i.fa-bottle-water {
+            color: #2196f3;
+        }
 
-        .actions {display: flex; gap: 0.3rem;}
+        li i.fa-newspaper {
+            color: #ffeb3b;
+        }
+
+        li i.fa-wine-bottle {
+            color: #4caf50;
+        }
+
+        li i.fa-check {
+            color: #4caf50;
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.3rem;
+        }
 
         .complete,
         .edit,
@@ -232,10 +245,21 @@
             color: white;
         }
 
-        .complete {background: linear-gradient(to right, #2e7d32, #66bb6a);}
-        .edit {background: linear-gradient(to right, #1976d2, #2196f3);}
-        .delete {background: linear-gradient(to right, #d32f2f, #f44336);}
-        .delete:hover {animation: animate__shakeX 0.5s;}
+        .complete {
+            background: linear-gradient(to right, #2e7d32, #66bb6a);
+        }
+
+        .edit {
+            background: linear-gradient(to right, #1976d2, #2196f3);
+        }
+
+        .delete {
+            background: linear-gradient(to right, #d32f2f, #f44336);
+        }
+
+        .delete:hover {
+            animation: animate__shakeX 0.5s;
+        }
 
         .message {
             text-align: center;
@@ -248,8 +272,15 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        .message.success {color: #4caf50; background: #e8f5e9;}
-        .message.error {color: #f44336; background: #ffebee;}
+        .message.success {
+            color: #4caf50;
+            background: #e8f5e9;
+        }
+
+        .message.error {
+            color: #f44336;
+            background: #ffebee;
+        }
 
         .badge {
             position: fixed;
@@ -347,61 +378,137 @@
             color: #e0e0e0;
         }
 
-        .dark-mode header {background: linear-gradient(to right, #2e7d32, #4caf50);}
+        .dark-mode header {
+            background: linear-gradient(to right, #2e7d32, #4caf50);
+        }
 
-        .dark-mode main {background: rgba(40, 40, 40, 0.9);}
-        .dark-mode li {background-color: #333; color: #e0e0e0;}
-        .dark-mode #completedList li {background-color: #2e7d32;}
-        .dark-mode .modal-content {background: #333; color: #e0e0e0;}
-        .dark-mode .rules-tooltip {background: #333; color: #e0e0e0; border-color: #81c784;}
-        .dark-mode .message.success {background: #2e7d32; color: #e0e0e0;}
-        .dark-mode .message.error {background: #b71c1c; color: #e0e0e0;}
-        .dark-mode footer {color: #81c784;}
+        .dark-mode main {
+            background: rgba(40, 40, 40, 0.9);
+        }
+
+        .dark-mode li {
+            background-color: #333;
+            color: #e0e0e0;
+        }
+
+        .dark-mode #completedList li {
+            background-color: #2e7d32;
+        }
+
+        .dark-mode .modal-content {
+            background: #333;
+            color: #e0e0e0;
+        }
+
+        .dark-mode .rules-tooltip {
+            background: #333;
+            color: #e0e0e0;
+            border-color: #81c784;
+        }
+
+        .dark-mode .message.success {
+            background: #2e7d32;
+            color: #e0e0e0;
+        }
+
+        .dark-mode .message.error {
+            background: #b71c1c;
+            color: #e0e0e0;
+        }
+
+        .dark-mode footer {
+            color: #81c784;
+        }
+
         .dark-mode h2,
-        .dark-mode .modal-content h3 {color: #81c784;}
+        .dark-mode .modal-content h3 {
+            color: #81c784;
+        }
+
         .dark-mode input[type="text"],
-        .dark-mode .modal-content input {border-color: #81c784; background: #444; color: #e0e0e0;}
-        .dark-mode .loading {color: #81c784;}
+        .dark-mode .modal-content input {
+            border-color: #81c784;
+            background: #444;
+            color: #e0e0e0;
+        }
+
+        .dark-mode .loading {
+            color: #81c784;
+        }
+
         .dark-mode li i.fa-check,
         .dark-mode li i.fa-wine-bottle,
-        .dark-mode li i.fa-recycle {color: #81c784;}
+        .dark-mode li i.fa-recycle {
+            color: #81c784;
+        }
 
         @keyframes slideIn {
-            from {transform: translateY(-20px); opacity: 0;}
-            to {transform: translateY(0); opacity: 1;}
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         @keyframes fadeIn {
-            from {opacity: 0;}
-            to {opacity: 1;}
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         @keyframes star {
-            0% {transform: scale(1);}
-            50% {transform: scale(1.1);}
-            100% {transform: scale(1);}
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
 
         @media (min-width: 600px) {
-            header h1 {font-size: 2.2rem;}
-            form {flex-direction: row;}
-            input[type="text"] {flex-grow: 1;}
-            #add {padding: 0.6rem 1.2rem;}
+            header h1 {
+                font-size: 2.2rem;
+            }
+
+            form {
+                flex-direction: row;
+            }
+
+            input[type="text"] {
+                flex-grow: 1;
+            }
+
+            #add {
+                padding: 0.6rem 1.2rem;
+            }
         }
     </style>
 </head>
 
 <body>
     <header>
-        <div class="div1">
-            <h1><i class="fas fa-recycle"></i> Promova a Reciclagem</h1>
-            <div class="div2">
-                <button class="theme-btn" aria-label="Ativar modo noturno" onclick="toggleDarkMode()">
-                    <i class="fas fa-moon"></i>
+        <div>
+            <h1><i></i>Promova a Reciclagem</h1>
+            <div>
+                <button>
+                    <i></i>
                 </button>
-                <div class="rules-btn" aria-label="Ver regras do jogo">
-                    <i class="fas fa-info-circle"></i>
-                    <div class="rules-tooltip">
+                <div>
+                    <i></i>
+                    <div>
                         <strong>Regras do Jogo:</strong>
                         <ul>
                             <li>Adicionar dica: +10 pontos</li>
@@ -416,33 +523,29 @@
                 </div>
             </div>
         </div>
-        <p id="counter">Nível 1 | 0 pontos | 0/0 dicas concluídas</p>
+        <p>Nível 1 | 0 pontos | 0/0 dicas concluídas</p>
     </header>
     <main>
-        <p class="message" id="message"></p>
-        <div class="badge" id="badge"></div>
-        <div class="loading" id="loading"><i class="fas fa-spinner fa-spin"></i></div>
-        <div class="modal" id="editModal">
-            <div class="modal-content">
+        <p></p>
+        <div></div>
+        <div><i></i></div>
+        <div>
+            <div>
                 <h3>Editar Dica de Reciclagem</h3>
-                <input type="text" id="editInput" placeholder="Digite a nova dica">
-                <button class="save" onclick="saveEdit()" aria-label="Salvar edição"><i class="fas fa-save"></i>
-                    Salvar</button>
-                <button class="cancel" onclick="closeModal()" aria-label="Cancelar edição"><i class="fas fa-times"></i>
-                    Cancelar</button>
+                <input type="text" placeholder="Digite a nova dica">
+                <button><i></i>Salvar</button>
+                <button><i></i>Cancelar</button>
             </div>
         </div>
-        <form onsubmit="addTask(event)">
-            <input type="text" id="taskInput" placeholder="Ex.: Separar plásticos para reciclagem" required
-                aria-label="Digite uma dica de reciclagem">
-            <button id="add" type="submit" aria-label="Adicionar nova dica"><i class="fas fa-plus"></i></button>
+        <form>
+            <input type="text" placeholder="Ex.: Separar plásticos para reciclagem" required>
+            <button type="submit"><i></i></button>
         </form>
-        <button id="clear" onclick="clearStorage()" aria-label="Limpar todas as dicas e pontos"><i
-                class="fas fa-trash-can"></i></button>
+        <button><i></i></button>
         <h2>Dicas Pendentes</h2>
-        <ul id="taskList" role="list"></ul>
-        <h2 id="completedTitle">Dicas Concluídas</h2>
-        <ul id="completedList" role="list"></ul>
+        <ul></ul>
+        <h2>Dicas Concluídas</h2>
+        <ul></ul>
     </main>
     <footer>
         Recicle hoje, preserve o amanhã! ♻️

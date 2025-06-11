@@ -1,0 +1,69 @@
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    margin-right: 0;
+  }
+
+  .main-grid {
+    flex-direction: column;
+  }
+
+  .conteudo-principal {
+    padding-right: 0;
+    max-width: 100%; /* Permitir largura total em telas menores */
+  }
+
+  .ofertas {
+    position: static;
+    width: 100%;
+    max-width: 100%;
+    margin: var(--espaco-xs) 0;
+    max-height: none;
+  }
+
+  aside.imagem-lateral {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    z-index: 0;
+  }
+
+  aside.imagem-lateral img {
+    height: 100%;
+    max-height: 300px;
+  }
+
+  .oferta-card {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--espaco-sm);
+  }
+
+  .oferta-card img {
+    width: 60px;
+    height: 60px;
+    margin-right: var(--espaco-sm);
+  }
+
+  .oferta-card h4, .preco-antigo, .preco-oferta {
+    margin: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  body {
+    font-size: 0.9rem;
+  }
+
+  button,
+  input,
+  .adicionar-oferta {
+    width: 100%;
+  }
+
+  .acao-btn {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.8rem;
+  }
+}

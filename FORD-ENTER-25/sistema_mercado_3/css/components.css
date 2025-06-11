@@ -1,0 +1,66 @@
+ section {
+      margin-bottom: var(--espaco-md);
+    }
+
+    .dica {
+      margin-top: var(--espaco-md);
+    }
+
+    .dica h3 {
+      font-size: var(--fonte-titulo);
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--espaco-sm);
+      max-width: 400px;
+    }
+
+    input {
+      padding: var(--espaco-xs);
+      border: 1px solid var(--cor-primaria);
+      border-radius: var(--borda-radius);
+      font-size: 1rem;
+    }
+
+    input:invalid {
+      border-color: var(--cor-erro);
+    }
+
+    input::placeholder {
+      color: #666;
+      font-style: italic;
+    }
+
+    button {
+      padding: var(--espaco-xs) var(--espaco-sm);
+      border: none;
+      border-radius: var(--borda-radius);
+      background-color: var(--cor-primaria);
+      color: var(--cor-branco);
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2a4b66;
+    }
+
+    button:focus {
+      outline: 3px solid #ffc107;
+    }
+
+    #notaFiscal {
+      white-space: pre-wrap;
+      background: var(--cor-branco);
+      padding: var(--espaco-sm);
+      border-radius: var(--borda-radius);
+      box-shadow: var(--sombra);
+      transition: background-color 0.3s ease;
+    }
+
+    #notaFiscal.mostrar {
+      background-color: var(--cor-sucesso);
+    }

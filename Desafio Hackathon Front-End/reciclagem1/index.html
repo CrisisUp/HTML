@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio Hackathon: Promova a Reciclagem</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <!-- CSS Externo -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <div style="display: flex; align-items: center; justify-content: center; width: 100%; position: relative;">
+            <h1><i class="fas fa-recycle"></i> Promova a Reciclagem</h1>
+            <div style="display: flex; gap: 0.5rem; position: absolute; right: 1rem;">
+                <button class="theme-btn" aria-label="Ativar modo noturno" id="themeBtn">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="rules-btn" aria-label="Ver regras do jogo">
+                    <i class="fas fa-info-circle"></i>
+                    <div class="rules-tooltip">
+                        <strong>Regras do Jogo:</strong>
+                        <ul>
+                            <li>Adicionar dica: +10 pontos</li>
+                            <li>Concluir dica: +20 pontos</li>
+                            <li>Editar dica: +5 pontos</li>
+                            <li>Excluir dica: -5 pontos</li>
+                            <li>Desmarcar dica: -20 pontos</li>
+                            <li>Suba de nível a cada 50 pontos</li>
+                            <li>Ganhe badges ao alcançar novos níveis</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p id="counter">Nível 1 | 0 pontos | 0/0 dicas concluídas</p>
+    </header>
+    <main>
+        <p class="message" id="message"></p>
+        <div class="badge" id="badge"></div>
+        <div class="loading" id="loading"><i class="fas fa-spinner fa-spin"></i></div>
+        <div class="modal" id="editModal">
+            <div class="modal-content">
+                <h3>Editar Dica de Reciclagem</h3>
+                <input type="text" id="editInput" placeholder="Digite a nova dica">
+                <button class="save" id="saveEditBtn" aria-label="Salvar edição"><i class="fas fa-save"></i> Salvar</button>
+                <button class="cancel" id="cancelEditBtn" aria-label="Cancelar edição"><i class="fas fa-times"></i> Cancelar</button>
+            </div>
+        </div>
+        <form id="taskForm">
+            <input type="text" id="taskInput" placeholder="Ex.: Separar plásticos para reciclagem" required
+                aria-label="Digite uma dica de reciclagem">
+            <button id="add" type="submit" aria-label="Adicionar nova dica"><i class="fas fa-plus"></i></button>
+        </form>
+        <button id="clear" aria-label="Limpar todas as dicas e pontos"><i class="fas fa-trash-can"></i></button>
+        <h2>Dicas Pendentes</h2>
+        <ul id="taskList" role="list"></ul>
+        <h2 id="completedTitle">Dicas Concluídas</h2>
+        <ul id="completedList" role="list"></ul>
+    </main>
+    <footer>
+        Recicle hoje, preserve o amanhã! ♻️
+    </footer>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

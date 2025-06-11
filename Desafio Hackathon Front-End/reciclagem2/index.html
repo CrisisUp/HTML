@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio Hackathon: Promova a Reciclagem</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <a href="#main-content" class="sr-only sr-only-focusable">Pular para conteúdo principal</a>
+    
+    <header role="banner">
+        <div class="header-container">
+            <h1 aria-label="Aplicativo Promova a Reciclagem"><i class="fas fa-recycle" aria-hidden="true"></i> Promova a Reciclagem</h1>
+            <div class="header-buttons">
+                <button class="theme-btn" aria-label="Ativar modo noturno" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="rules-btn" aria-label="Ver regras do jogo" tabindex="0">
+                    <i class="fas fa-info-circle" aria-hidden="true"></i>
+                    <div class="rules-tooltip" role="tooltip">
+                        <strong>Regras do Jogo:</strong>
+                        <ul>
+                            <li>Adicionar dica: +10 pontos</li>
+                            <li>Concluir dica: +20 pontos</li>
+                            <li>Editar dica: +5 pontos</li>
+                            <li>Excluir dica: -5 pontos</li>
+                            <li>Desmarcar dica: -20 pontos</li>
+                            <li>Suba de nível a cada 50 pontos</li>
+                            <li>Ganhe badges ao alcançar novos níveis</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p id="counter" aria-live="polite">Nível 1 | 0 pontos | 0/0 dicas concluídas</p>
+    </header>
+
+    <main id="main-content" role="main">
+        <p class="message" id="message" role="alert" aria-live="assertive"></p>
+        <div class="badge" id="badge" role="status" aria-live="polite"></div>
+        <div class="loading" id="loading" aria-live="assertive"><i class="fas fa-spinner fa-spin" aria-hidden="true"></i></div>
+        
+        <div class="modal" id="editModal" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+            <div class="modal-content">
+                <h3 id="editModalTitle">Editar Dica de Reciclagem</h3>
+                <input type="text" id="editInput" placeholder="Digite a nova dica" aria-labelledby="editModalTitle">
+                <button class="save" id="saveEdit" aria-label="Salvar edição"><i class="fas fa-save" aria-hidden="true"></i> Salvar</button>
+                <button class="cancel" id="cancelEdit" aria-label="Cancelar edição"><i class="fas fa-times" aria-hidden="true"></i> Cancelar</button>
+            </div>
+        </div>
+
+        <form id="taskForm" role="form" aria-labelledby="formTitle">
+            <h2 id="formTitle" class="sr-only">Adicionar nova dica</h2>
+            <label for="taskInput" class="sr-only">Digite uma dica de reciclagem</label>
+            <input type="text" id="taskInput" placeholder="Ex.: Separar plásticos para reciclagem" required
+                aria-required="true" aria-describedby="inputHelp">
+            <span id="inputHelp" class="sr-only">Pressione Enter para adicionar a dica</span>
+            <button id="add" type="submit" aria-label="Adicionar nova dica"><i class="fas fa-plus" aria-hidden="true"></i></button>
+        </form>
+
+        <button id="clear" aria-label="Limpar todas as dicas e pontos"><i class="fas fa-trash-can" aria-hidden="true"></i> Limpar Tudo</button>
+
+        <section aria-labelledby="pendingTasksTitle">
+            <h2 id="pendingTasksTitle">Dicas Pendentes</h2>
+            <ul id="taskList" role="list"></ul>
+        </section>
+
+        <section aria-labelledby="completedTitle">
+            <h2 id="completedTitle">Dicas Concluídas</h2>
+            <ul id="completedList" role="list"></ul>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
+        Recicle hoje, preserve o amanhã! <span aria-hidden="true">♻️</span>
+    </footer>
+
+    <script src="js/data.js" type="module"></script>
+    <script src="js/theme.js" type="module"></script>
+    <script src="js/ui.js" type="module"></script>
+    <script src="js/events.js" type="module"></script>
+    <script src="js/utils.js" type="module"></script>
+    <script src="js/main.js" type="module"></script>
+</body>
+</html>

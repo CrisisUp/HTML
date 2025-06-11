@@ -1,0 +1,240 @@
+section {
+  margin-bottom: var(--espaco-md);
+}
+
+.dica {
+  margin-top: var(--espaco-md);
+}
+
+.dica h3 {
+  font-size: var(--fonte-titulo);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-sm);
+  max-width: 400px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.erro-mensagem {
+  color: var(--cor-erro);
+  font-size: 0.9rem;
+  min-height: 1.5rem;
+  /* Espaço reservado para mensagens de erro */
+}
+
+input {
+  padding: var(--espaco-xs);
+  border: 1px solid var(--cor-primaria);
+  border-radius: var(--borda-radius);
+  font-size: 1rem;
+}
+
+input:invalid {
+  border-color: var(--cor-erro);
+}
+
+input::placeholder {
+  color: #666;
+  font-style: italic;
+}
+
+button {
+  padding: var(--espaco-xs) var(--espaco-sm);
+  border: none;
+  border-radius: var(--borda-radius);
+  background-color: var(--cor-primaria);
+  color: var(--cor-branco);
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #2a4b66;
+}
+
+button:focus {
+  outline: 3px solid #ffc107;
+}
+
+#tabelaProdutos,
+#tabelaNotaFiscal {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: var(--espaco-sm);
+  background: var(--cor-branco);
+  border-radius: var(--borda-radius);
+  box-shadow: var(--sombra);
+}
+
+#tabelaNotaFiscal.mostrar {
+  background-color: var(--cor-sucesso);
+}
+
+#tabelaProdutos th,
+#tabelaNotaFiscal th,
+#tabelaProdutos td,
+#tabelaNotaFiscal td {
+  padding: var(--espaco-xs);
+  border: 1px solid var(--cor-primaria);
+  text-align: left;
+}
+
+#tabelaProdutos th,
+#tabelaNotaFiscal th {
+  background-color: var(--cor-primaria);
+  color: var(--cor-branco);
+}
+
+#tabelaProdutos tbody tr:hover,
+#tabelaNotaFiscal tbody tr:hover {
+  background-color: var(--cor-secundaria);
+}
+
+#totalNota td {
+  font-weight: bold;
+}
+
+.acao-btn {
+  padding: 0.3rem 0.6rem;
+  margin-right: var(--espaco-xs);
+  font-size: 0.9rem;
+}
+
+/* Formulário */
+#produtoForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-xs);
+  width: 100%; /* Garantir que o formulário ocupe a largura do contêiner */
+}
+
+/* Tabelas */
+#listaProdutos table,
+#notaFiscal table {
+  width: 100%; /* Limitar ao contêiner pai */
+  border-collapse: collapse;
+}
+
+/* Dica */
+.dica {
+  margin-top: var(--espaco-sm);
+  padding: var(--padding-sm);
+  width: 100%; /* Alinhar com o formulário */
+}
+
+/* Ofertas */
+.ofertas {
+  margin: 0;
+}
+
+.ofertas h3 {
+  font-size: var(--fonte-titulo);
+  color: var(--cor-primaria);
+  margin-bottom: var(--espaco-xs); /* Reduzir margem */
+}
+
+.ofertas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-xs); /* Reduzir espaçamento */
+}
+
+.oferta-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--espaco-xs);
+  border: 1px solid var(--cor-primaria);
+  border-radius: var(--borda-radius);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.oferta-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.oferta-card::before {
+  content: "Oferta!";
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  background-color: var(--cor-primaria);
+  color: var(--cor-branco);
+  padding: 2px 8px;
+  font-size: 0.8rem;
+  border-radius: var(--borda-radius);
+}
+
+.oferta-card img {
+  width: 80px; /* Reduzir tamanho para economizar espaço */
+  height: 80px;
+  object-fit: cover;
+  border-radius: var(--borda-radius);
+  margin-bottom: var(--espaco-xs);
+}
+
+.oferta-card h4 {
+  font-size: 1rem; /* Reduzir fonte */
+  color: var(--cor-texto);
+  margin-bottom: var(--espaco-xs);
+}
+
+.preco-antigo {
+  text-decoration: line-through;
+  color: #888;
+  font-size: 0.8rem;
+}
+
+.preco-oferta {
+  color: var(--cor-primaria);
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-bottom: var(--espaco-xs);
+}
+
+.adicionar-oferta {
+  padding: var(--espaco-xs) var(--espaco-sm);
+  border: none;
+  border-radius: var(--borda-radius);
+  background-color: var(--cor-sucesso);
+  color: var(--cor-texto);
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.adicionar-oferta:hover {
+  background-color: #d0e8ff;
+}
+
+.adicionar-oferta:active {
+  transform: scale(0.95);
+}
+
+.notificacao {
+  position: fixed;
+  top: var(--espaco-sm);
+  right: var(--espaco-sm);
+  padding: var(--espaco-sm);
+  background-color: var(--cor-sucesso);
+  color: var(--cor-texto);
+  border-radius: var(--borda-radius);
+  box-shadow: var(--sombra);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+}
+
+.notificacao.mostrar {
+  opacity: 1;
+}

@@ -1,0 +1,27 @@
+:root {
+      /* Cores */
+      --cor-primaria: #345D7E;
+      --cor-secundaria: #C9D6DC;
+      --cor-texto: #4B3B2B;
+      --cor-sucesso: #e9f5ff;
+      --cor-branco: #ffffff;
+      --cor-erro: #ffcccc;
+
+      /* Espaçamentos */
+      --espaco-xs: 0.5rem;
+      --espaco-sm: 1rem;
+      --espaco-md: 2rem;
+
+      /* Bordas e sombras */
+      --borda-radius: 8px;
+      --sombra: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+      /* Fontes */
+      --fonte-base: 16px;
+      --fonte-titulo: 1.5rem;
+
+      /* Layout */
+      --largura-conteudo: 55%;
+      --largura-imagem: 45%;
+      --altura-total: 100dvh;
+    }

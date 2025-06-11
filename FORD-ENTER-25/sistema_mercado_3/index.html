@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mercadinho da Esquina</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body>
+    <header>
+        <h1>Mercadinho da Esquina</h1>
+        <p aria-label="Slogan do mercadinho">Sempre com os melhores preços!</p>
+    </header>
+
+    <div class="container">
+        <main>
+            <section>
+                <h2>Cadastro de Produtos</h2>
+                <form id="produtoForm">
+                    <input type="text" id="nome" placeholder="Nome do Produto" required aria-label="Nome do Produto"
+                        aria-required="true">
+                    <input type="number" id="valor" placeholder="Valor Unitário (R$)" step="0.01" min="0" required
+                        aria-label="Valor Unitário em Reais" aria-required="true">
+                    <input type="number" id="quantidade" placeholder="Quantidade" min="1" required
+                        aria-label="Quantidade de Produtos" aria-required="true">
+                    <button type="submit" aria-label="Adicionar produto à lista">Adicionar Produto</button>
+                    <button type="button" id="finalizar" aria-label="Finalizar compra e gerar nota fiscal">Finalizar
+                        Compra</button>
+                    <button type="button" id="limpar" aria-label="Limpar nota fiscal">Limpar Nota</button>
+                </form>
+            </section>
+
+            <section>
+                <h2>Nota Fiscal</h2>
+                <article id="notaFiscal" role="region" aria-label="Nota Fiscal do Cliente" aria-live="polite">
+                    Nenhuma compra registrada ainda.
+                </article>
+            </section>
+
+            <section class="dica">
+                <h3>Dica:</h3>
+                <p>Utilize valores decimais com ponto (ex: 2.50) ou vírgula (ex: 2,50) — o sistema entende ambos!</p>
+            </section>
+        </main>
+
+        <aside class="imagem-lateral" aria-hidden="true">
+            <img src="../mercado-1.avif" alt="Foto ilustrativa do mercado"
+                onerror="this.src='https://via.placeholder.com/600x800'" />
+        </aside>
+    </div>
+
+    <footer>
+        <p>© 2025 Mercadinho da Esquina</p>
+    </footer>
+    <script src="js/init.js"></script>
+    <script src="js/produtos.js"></script>
+    <script src="js/notaFiscal.js"></script>
+    <script src="js/utilitarios.js"></script>
+    <script src="js/eventos.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

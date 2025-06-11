@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercadinho da esquina</title>
+</head>
+<body>
+    <script>
+        let produtos = [];
+        let continuar = true;
+
+        while (continuar) {
+            let nome = prompt("Digite o nome do produto: ");
+            let valorUnitario = parseFloat(prompt("Digite o valor unitário do produto: ")
+            .replace(",", "."));
+            let quantidade = parseInt(prompt("Digite a quantidade comprada: "));
+
+            if (isNaN(valorUnitario) || isNaN(quantidade)) {
+                alert("Valor ou quantidade inválida. Tente novamente.");
+                continue;
+            }
+
+            let valorTotal = valorUnitario * quantidade;
+            produtos.push({ nome, quantidade, valorUnitario, valorTotal });
+            let resposta = prompt("Deseja adicionar outro produto? (sim/não)").toLowerCase();
+            if (resposta !== "sim") { continuar = false; }
+        }
+
+        let notaFiscal = "Nota Fiscal:\n\n";
+        let valorFinal = 0;
+
+        produtos.forEach((produto, index) => {
+            notaFiscal += `${index + 1}. ${produto.nome} - ${produto.uantidade} un. x ${produto.valorUnitario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+            } = ${produto.valorTotal
+                .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                }\n`;
+            valorFinal += produto.valorTotal;
+        });
+
+        notaFiscal += `\nTotal da compra: ${valorFinal
+        .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+        alert(notaFiscal);
+    </script>
+</body>
+</html>

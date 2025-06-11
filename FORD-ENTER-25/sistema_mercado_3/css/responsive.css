@@ -1,0 +1,34 @@
+@media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        margin-right: 0;
+      }
+
+      main {
+        flex: 1 1 100%;
+        margin: var(--espaco-sm);
+      }
+
+      aside.imagem-lateral {
+        position: relative;
+        width: 100%;
+        height: 300px;
+        z-index: 0;
+      }
+
+      aside.imagem-lateral img {
+        height: 100%;
+        max-height: 300px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9rem;
+      }
+
+      button,
+      input {
+        width: 100%;
+      }
+    }
