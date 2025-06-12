@@ -56,7 +56,7 @@ header p {
 .ofertas {
   flex: 0 0 300px; /* Largura fixa */
   position: fixed; /* Usar fixed para evitar deslocamento */
-  top: calc(var(--espaco-xs) * 2 + 80px); /* Abaixo do header */
+  top: calc(var(--espaco-xs) * 2 + 100px); /* Abaixo do header */
   right: calc(var(--largura-imagem) + var(--espaco-sm)); /* À esquerda do aside.imagem-lateral */
   width: 300px;
   padding: var(--espaco-xs);

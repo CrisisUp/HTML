@@ -27,7 +27,7 @@
       --fonte-principal: 'Poppins', sans-serif;
 
       /* Layout */
-      --largura-conteudo: 65%;
-      --largura-imagem: 35%;
+      --largura-conteudo: 60%;
+      --largura-imagem: 40%;
       --altura-total: 100dvh;
     }
