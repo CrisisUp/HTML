@@ -1,11 +1,18 @@
-// js/produtos.js
-
-// Converte valor numérico em string que pode vir com vírgula para número float
-function parseValor(valor) {
-    if (typeof valor === 'string') {
-        valor = valor.replace(',', '.');
-    }
-    return parseFloat(valor);
+function mostrarErro(mensagem, isErro = true) {
+    const erroExistente = document.querySelector('.error-message, .info-message');
+    if (erroExistente) erroExistente.remove();
+    const erroDiv = document.createElement('div');
+    erroDiv.className = isErro ? 'error-message' : 'info-message';
+    erroDiv.textContent = mensagem;
+    erroDiv.setAttribute('role', 'alert');
+    const fecharBtn = document.createElement('button');
+    fecharBtn.textContent = '×';
+    fecharBtn.className = 'fechar-erro';
+    fecharBtn.onclick = () => erroDiv.remove();
+    erroDiv.appendChild(fecharBtn);
+    const mainGrid = document.querySelector('.main-grid');
+    if (mainGrid) mainGrid.prepend(erroDiv);
+    setTimeout(() => erroDiv.remove(), 3000);
 }
 
 function adicionarProduto(nome, valorUnitario, quantidade) {
@@ -14,52 +21,50 @@ function adicionarProduto(nome, valorUnitario, quantidade) {
         return;
     }
 
-    // Converter valorUnitario para número float caso venha como string com vírgula
     valorUnitario = parseValor(valorUnitario);
+    quantidade = Number(quantidade);
 
-    // Validar dados mínimos (nome não vazio, valor positivo, quantidade positiva)
     if (!nome.trim()) {
-        alert('Nome do produto não pode ser vazio.');
+        mostrarErro('Nome do produto não pode ser vazio.');
         return;
     }
-    if (isNaN(valorUnitario) || valorUnitario <= 0) {
-        alert('Valor unitário inválido.');
+    if (nome.trim().length > 100) {
+        mostrarErro('Nome do produto não pode exceder 100 caracteres.');
+        return;
+    }
+    if (valorUnitario === null || valorUnitario <= 0) {
+        mostrarErro('Valor unitário inválido ou negativo.');
         return;
     }
     if (!Number.isInteger(quantidade) || quantidade <= 0) {
-        alert('Quantidade inválida.');
+        mostrarErro('Quantidade deve ser um número inteiro positivo.');
         return;
     }
 
-    // Verificar se produto com mesmo nome já existe (excluindo o que está editando)
     const produtoExistente = window.app.produtos.find((p, idx) => p.nome === nome && idx !== window.app.editIndex);
     if (produtoExistente) {
-        alert('Produto já cadastrado. Edite-o ou escolha outro nome.');
+        mostrarErro('Produto já cadastrado. Edite-o ou escolha outro nome.');
         return;
     }
 
-    const valorTotal = valorUnitario * quantidade;
+    const valorTotal = Number((valorUnitario * quantidade).toFixed(2));
     const produto = { nome, quantidade, valorUnitario, valorTotal };
+    const nomeSanitizado = nome.replace(/[<>]/g, '');
 
-    if (window.app.editIndex !== null) {
-        // Atualizar produto existente
+    if (window.app.editIndex !== -1) {
         window.app.produtos[window.app.editIndex] = produto;
-        window.app.editIndex = null;
-        // Resetar texto do botão para "Adicionar Produto"
+        mostrarErro(`Produto "${nomeSanitizado}" atualizado com sucesso.`, false);
+        window.app.editIndex = -1;
         document.getElementById('adicionarBtn').textContent = 'Adicionar Produto';
     } else {
-        // Adicionar novo produto
         window.app.produtos.push(produto);
+        mostrarErro(`Produto "${nomeSanitizado}" adicionado com sucesso.`, false);
     }
 
     atualizarTabelaProdutos();
-
-    // Limpar formulário após adicionar/editar
     document.getElementById('nome').value = '';
     document.getElementById('valor').value = '';
     document.getElementById('quantidade').value = '';
-
-    // Dar foco ao campo nome para melhor UX
     document.getElementById('nome').focus();
 }
 
@@ -68,19 +73,19 @@ function limparProdutos() {
         console.error('app ou app.produtos não definido.');
         return;
     }
+    if (!confirm('Deseja limpar todos os produtos?')) return;
     window.app.produtos = [];
-    window.app.editIndex = null;
+    window.app.editIndex = -1;
     atualizarTabelaProdutos();
-
-    // Resetar texto do botão
+    if (typeof limparNotaFiscal === 'function') limparNotaFiscal();
     document.getElementById('adicionarBtn').textContent = 'Adicionar Produto';
-
-    // Limpar campos do formulário
     document.getElementById('nome').value = '';
     document.getElementById('valor').value = '';
     document.getElementById('quantidade').value = '';
-
     document.getElementById('nome').focus();
+    if (document.querySelector('.main-grid')) {
+        mostrarErro('Lista de produtos limpa com sucesso.', false);
+    }
 }
 
 function atualizarTabelaProdutos() {
@@ -90,83 +95,77 @@ function atualizarTabelaProdutos() {
         return;
     }
     tbody.innerHTML = '';
-
     if (!window.app?.produtos?.length) {
-        tbody.innerHTML = '<tr><td colspan="5">Nenhum produto adicionado.</td></tr>';
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 5;
+        td.textContent = 'Nenhum produto adicionado.';
+        td.className = 'tabela-vazia';
+        tr.appendChild(td);
+        tbody.appendChild(tr);
         return;
     }
-
     window.app.produtos.forEach((p, i) => {
         const tr = document.createElement('tr');
-
-        // Nome
         const tdNome = document.createElement('td');
         tdNome.textContent = p.nome;
         tr.appendChild(tdNome);
-
-        // Quantidade
         const tdQuantidade = document.createElement('td');
         tdQuantidade.textContent = p.quantidade;
         tr.appendChild(tdQuantidade);
-
-        // Valor Unitário formatado
         const tdValorUnitario = document.createElement('td');
         tdValorUnitario.textContent = p.valorUnitario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         tr.appendChild(tdValorUnitario);
-
-        // Valor Total formatado
         const tdValorTotal = document.createElement('td');
         tdValorTotal.textContent = p.valorTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         tr.appendChild(tdValorTotal);
-
-        // Ações (Editar e Remover)
         const tdAcoes = document.createElement('td');
-
         const btnEditar = document.createElement('button');
+        btnEditar.className = 'btn btn-editar';
         btnEditar.textContent = 'Editar';
-        btnEditar.setAttribute('aria-label', `Editar produto ${p.nome}`);
+        btnEditar.setAttribute('aria-label', `Editar produto ${p.nome.replace(/[<>]/g, '')}`);
         btnEditar.onclick = () => editarProduto(i);
         tdAcoes.appendChild(btnEditar);
-
         const btnRemover = document.createElement('button');
+        btnRemover.className = 'btn btn-remover';
         btnRemover.textContent = 'Remover';
-        btnRemover.setAttribute('aria-label', `Remover produto ${p.nome}`);
+        btnRemover.setAttribute('aria-label', `Remover produto ${p.nome.replace(/[<>]/g, '')}`);
         btnRemover.onclick = () => removerProduto(i);
         tdAcoes.appendChild(btnRemover);
-
         tr.appendChild(tdAcoes);
-
         tbody.appendChild(tr);
     });
+    if (typeof atualizarNotaFiscal === 'function') atualizarNotaFiscal();
 }
 
 function editarProduto(index) {
     if (!window.app?.produtos[index]) return;
     const p = window.app.produtos[index];
     document.getElementById('nome').value = p.nome;
-    document.getElementById('valor').value = p.valorUnitario;
+    document.getElementById('valor').value = p.valorUnitario.toFixed(2);
     document.getElementById('quantidade').value = p.quantidade;
     document.getElementById('adicionarBtn').textContent = 'Atualizar Produto';
     window.app.editIndex = index;
-
-    // Dar foco ao campo nome para editar rápido
     document.getElementById('nome').focus();
+    if (document.querySelector('.main-grid')) {
+        mostrarErro(`Editando produto "${p.nome.replace(/[<>]/g, '')}".`, false);
+    }
 }
 
 function removerProduto(index) {
     if (!window.app?.produtos[index]) return;
-    if (!confirm(`Deseja remover o produto "${window.app.produtos[index].nome}"?`)) return;
-
+    const nomeSanitizado = window.app.produtos[index].nome.replace(/[<>]/g, '');
+    if (!confirm(`Deseja remover o produto "${nomeSanitizado}"?`)) return;
     window.app.produtos.splice(index, 1);
-
-    // Se estava editando este produto, resetar estado
     if (window.app.editIndex === index) {
-        window.app.editIndex = null;
+        window.app.editIndex = -1;
         document.getElementById('adicionarBtn').textContent = 'Adicionar Produto';
         document.getElementById('nome').value = '';
         document.getElementById('valor').value = '';
         document.getElementById('quantidade').value = '';
     }
-
     atualizarTabelaProdutos();
+    if (document.querySelector('.main-grid')) {
+        mostrarErro(`Produto "${nomeSanitizado}" removido com sucesso.`, false);
+    }
 }

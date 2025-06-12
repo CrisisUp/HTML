@@ -1,11 +1,22 @@
-/* js/init.js */
-
 // Converte string com vírgula para número float
 function parseValor(valor) {
     if (typeof valor === 'string') {
         valor = valor.replace(',', '.');
     }
-    return parseFloat(valor);
+    const numero = parseFloat(valor);
+    if (isNaN(numero) || numero < 0) {
+        console.warn('Valor inválido ou negativo:', valor);
+        return null;
+    }
+    return numero;
+}
+
+function mostrarErro(mensagem) {
+    const erroDiv = document.createElement('div');
+    erroDiv.className = 'error-message';
+    erroDiv.textContent = mensagem;
+    document.querySelector('.main-grid').prepend(erroDiv);
+    setTimeout(() => erroDiv.remove(), 3000);
 }
 
 function inicializarApp() {
@@ -17,30 +28,27 @@ function inicializarApp() {
             limparBtn: document.getElementById('limpar'),
             tabelaNota: document.getElementById('corpoTabelaNota'),
             valorTotal: document.getElementById('valor-total'),
-            notaFiscal: document.getElementById('notaFiscal')
+            notaFiscal: document.getElementById('notaFiscal'),
         },
-        editIndex: null,
-        produtos: []
+        editIndex: -1, // -1 indica que nenhum produto está sendo editado
+        produtos: [],
     };
 
     console.log('app.elementos inicializado:', app.elementos);
 
+    // Verifica se os elementos foram encontrados
+    const elementosCriticos = ['form', 'tabelaNota'];
     for (const [key, value] of Object.entries(app.elementos)) {
-        if (!value) { 
+        if (!value && elementosCriticos.includes(key)) {
+            throw new Error(`Elemento crítico ${key} não encontrado no DOM`);
+        } else if (!value) {
             console.warn(`Elemento ${key} não encontrado no DOM`);
         }
     }
 
-    window.app = app;
+    // Mescla com o objeto existente, preservando dados anteriores
+    window.app = { ...window.app, ...app };
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    if (window.loadComponents) {
-        window.loadComponents.then(() => inicializarApp()).catch(err => console.error('Erro ao carregar componentes:', err));
-    } else {
-        inicializarApp();
-    }
-});
 
 function inicializarOfertas() {
     const botoes = document.querySelectorAll('.adicionar-oferta');
@@ -51,8 +59,8 @@ function inicializarOfertas() {
             const valorStr = botao.getAttribute('data-valor');
             const valor = parseValor(valorStr);
 
-            if (!nome || isNaN(valor)) {
-                alert('Valor unitário inválido ou nome do produto ausente.');
+            if (!nome || valor === null || valor <= 0) {
+                mostrarErro('Valor unitário inválido, negativo ou nome do produto ausente.');
                 return;
             }
 
@@ -67,3 +75,15 @@ function inicializarOfertas() {
         });
     });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.loadComponents) {
+        window.loadComponents.then(() => {
+            inicializarApp();
+            inicializarOfertas();
+        }).catch(err => console.error('Erro ao carregar componentes:', err));
+    } else {
+        inicializarApp();
+        inicializarOfertas();
+    }
+});
