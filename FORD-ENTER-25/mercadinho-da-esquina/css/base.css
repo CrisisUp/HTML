@@ -1,0 +1,43 @@
+/* Reset e configurações globais */
+:root {
+    /* Cores */
+    --cor-primaria: #339e67;
+    --cor-secundaria: #de9c31;
+    --cor-texto: #161f1a;
+    --cor-sucesso: #e9f5ff;
+    --cor-branco: #ffffff;
+    --cor-erro: #ffcccc;
+
+    /* Espaçamentos */
+    --espaco-xs: 0.5rem;
+    --espaco-sm: 1rem;
+    --espaco-md: 2rem;
+
+    /* Bordas e sombras */
+    --borda-radius: 8px;
+    --sombra: 0 4px 12px rgba(22, 31, 26, 0.1);
+
+    /* Fontes */
+    --fonte-base: 16px;
+    --fonte-titulo: 1.5rem;
+    --fonte-family-principal: 'Poppins', sans-serif;
+
+    /* Layout */
+    --altura-total: 100dvh;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fonte-family-principal), sans-serif;
+    background-color: var(--cor-secundaria);
+    color: var(--cor-texto);
+    line-height: 1.6;
+    font-size: var(--fonte-base);
+    margin: 0;
+    padding: 0;
+}

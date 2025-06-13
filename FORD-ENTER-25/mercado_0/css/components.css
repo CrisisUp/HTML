@@ -149,8 +149,8 @@ button:focus, .adicionar-oferta:focus {outline: 3px solid var(--cor-titulo);}
 }
 
 .oferta-card img {
-    width: 80px;
-    height: 80px;
+    width: var(--quadrado);
+    height: var(--quadrado);
     object-fit: cover;
     border-radius: var(--borda-radius);
     margin-bottom: var(--espaco-xs);

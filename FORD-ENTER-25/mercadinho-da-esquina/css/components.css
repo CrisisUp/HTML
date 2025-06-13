@@ -1,0 +1,121 @@
+/* Estilos de componentes */
+section {
+    margin-bottom: var(--espaco-md);
+}
+
+.form-container {
+    display: flex;
+    gap: var(--espaco-sm);
+}
+
+.inputs {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaco-sm);
+}
+
+.botoes {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaco-sm);
+    width: 150px;
+}
+
+button {
+    padding: var(--espaco-xs) var(--espaco-sm);
+    border: none;
+    border-radius: var(--borda-radius);
+    background-color: var(--cor-primaria);
+    color: var(--cor-branco);
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #2a8c58;
+}
+
+button:focus {
+    outline: 3px solid var(--cor-secundaria);
+}
+
+input {
+    padding: var(--espaco-xs);
+    border: 1px solid var(--cor-primaria);
+    border-radius: var(--borda-radius);
+    font-size: 1rem;
+    max-width: 350px;
+    width: 100%;
+}
+
+input:invalid {
+    border-color: var(--cor-erro);
+}
+
+input::placeholder {
+    color: #666;
+    font-style: italic;
+}
+
+.mensagem {
+    padding: var(--espaco-sm);
+    border: 1px solid rgba(22, 31, 26, 0.2);
+    border-radius: var(--borda-radius);
+    margin-bottom: var(--espaco-sm);
+    text-align: center;
+    font-size: 1rem;
+    transition: opacity 0.5s ease;
+    max-width: 350px;
+}
+
+.mensagem.sucesso {
+    background-color: var(--cor-sucesso);
+    color: var(--cor-texto);
+}
+
+.mensagem.erro {
+    background-color: var(--cor-erro);
+    color: var(--cor-texto);
+}
+
+#notaFiscal {
+    background: var(--cor-branco);
+    padding: var(--espaco-sm);
+    border-radius: var(--borda-radius);
+    box-shadow: var(--sombra);
+    transition: background-color 0.3s ease;
+}
+
+#notaFiscal.mostrar {
+    background-color: var(--cor-sucesso);
+}
+
+#notaFiscal table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--espaco-sm);
+}
+
+#notaFiscal th,
+#notaFiscal td {
+    padding: var(--espaco-sm);
+    border: 1px solid var(--cor-primaria);
+    text-align: left;
+}
+
+#notaFiscal th {
+    background-color: var(--cor-primaria);
+    color: var(--cor-branco);
+}
+
+#notaFiscal tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#notaFiscal .total {
+    font-weight: bold;
+}
